@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="bootstrap.css" type="text/css" rel="stylesheet" />
+    <style>
+        li {
+            list-style-type: square;
+        }
+
+        input[type="checkbox"i] {
+            appearance: none; 
+            background-color:crimson;
+            border: 1px solid #cacece;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+            padding: 9px;
+            border-radius: 3px;
+            display: inline-block;
+            position: relative;
+            margin-right: 4px;
+            margin-bottom: -3px;
+        }
+
+        input:checked {
+            background-color: chartreuse;
+            color: white;
+        }
+
+        input:checked:after {
+            color: white;
+        }
+
+        .tasks input {
+            color: chartreuse;
+        }
+
+        dt {
+            margin-top: 3px;
+        }
+
+        dd text {
+            margin-top: -4px;
+        }
+    </style>
+</head>
+
+<body style="margin: 5px; min-width: 300px">
+    <div style="margin: auto">
+        <h1>My Tasks</h1>
+    </div>
+    <label class="tasks">
+        <dl>
+            <dt>Programming</dt>
+            <dd><input type="checkbox">Fix Hadoop Code</input></dd>
+            <dd><input type="checkbox">White Paper</input></dd>
+            <dt>For Fun</dt>
+            <dd><input type="checkbox">Bake a Pie</input></dd>
+        </dl>
+    </label>
+    <script src="popup.js"></script>
+</body>
+
+</html>

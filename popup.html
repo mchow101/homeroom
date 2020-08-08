@@ -3,15 +3,15 @@
 
 <head>
     <link rel="stylesheet" href="bootstrap.css" type="text/css" />
-    <script src = 'jquery-3.5.1.js'></script>
+    <script src='jquery-3.5.1.js'></script>
     <style>
         li {
             list-style-type: square;
         }
 
         input[type="checkbox"i] {
-            appearance: none; 
-            background-color:#FC5130;
+            appearance: none;
+            background-color: #FC5130;
             border: 1px solid #cacece;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
             padding: 9px;
@@ -22,13 +22,14 @@
             margin-bottom: -3px;
         }
 
-        #plus{
+        #plus {
             background-color: #fcaf58;
             color: white;
             padding: 3px;
 
         }
-        .new-todo{
+
+        .new-todo {
             /*border: none;*/
             border: transparent
         }
@@ -43,7 +44,7 @@
             color: white;
         }
 
-        .tasks input {
+        input {
             color: #4e598c;
         }
 
@@ -76,19 +77,20 @@
     </div>
     <label class="task-list" style="width: 100%">
         <dl>
-            <h5 class="section-header featurette-heading">Programming</h5>
-            <div class="task-section lead" id = 'general'>
+            <h5 class="section-header featurette-heading"><span class="featurette-heading">+</span>
+                Programming</h5>
+            <div class="task-section lead" id='general'>
                 <dd><input type="checkbox" class="task">Fix Hadoop Code</input></dd>
                 <dd><input type="checkbox" class="task">White Paper</input></dd>
-                <dd><button id = "plus">add</button><input type="text" id = "task-to-add" class = 'new-todo'></input></dd>
+                <dd><button id="plus">add</button><input type="text" id="task-to-add" class='new-todo'></input></dd>
             </div>
-            <h5 class="section-header featurette-heading">For Fun</h5>
+            <h5 class="section-header featurette-heading"><span class="featurette-heading">+</span>
+                For Fun</h5>
             <div class="task-section lead">
                 <dd><input type="checkbox" class="task">Bake a Pie</input></dd>
             </div>
         </dl>
     </label>
-    
     <script src="popup.js"></script>
 </body>
 

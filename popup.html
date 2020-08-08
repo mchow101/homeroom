@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <link href="bootstrap.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="bootstrap.css" type="text/css" />
     <style>
         li {
             list-style-type: square;
@@ -46,15 +46,17 @@
 
 <body style="margin: 5px; min-width: 300px">
     <div style="margin: auto">
-        <h1>My Tasks</h1>
+        <h1 class="featurette-heading">My Tasks</h1>
     </div>
-    <label class="tasks">
+    <p class="test lead">Test</p>
+
+    <label class="task-list">
         <dl>
             <dt>Programming</dt>
-            <dd><input type="checkbox">Fix Hadoop Code</input></dd>
-            <dd><input type="checkbox">White Paper</input></dd>
+            <dd><input type="checkbox" class="task">Fix Hadoop Code</input></dd>
+            <dd><input type="checkbox" class="task">White Paper</input></dd>
             <dt>For Fun</dt>
-            <dd><input type="checkbox">Bake a Pie</input></dd>
+            <dd><input type="checkbox" class="task">Bake a Pie</input></dd>
         </dl>
     </label>
     <script src="popup.js"></script>

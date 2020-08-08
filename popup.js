@@ -1,15 +1,13 @@
-// let changeColor = document.getElementById('changeColor');
+let tasks = document.getElementsByClassName('task');
 
-// chrome.storage.sync.get('color', function (data) {
-//     changeColor.style.backgroundColor = data.color;
-//     changeColor.setAttribute('value', data.color);
-// });
-
-// changeColor.onclick = function (element) {
-//     let color = element.target.value;
-//     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-//         chrome.tabs.executeScript(
-//             tabs[0].id,
-//             { code: 'document.body.style.backgroundColor = "' + color + '";' });
-//     });
-// };
+for (var i = 0; i < tasks.length; i++) {
+    tasks[i].addEventListener("click", function (result) {
+        console.log(result.target.checked);
+        chrome.storage.sync.set({ i : result.target.checked }, function () {
+            console.log(i + result.target.checked + " Storage");
+        });
+    });
+    chrome.storage.sync.get([i], function (result) {
+        console.log('Value currently is ' + result);
+    });
+}

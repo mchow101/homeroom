@@ -1,22 +1,22 @@
 
-$(document).ready(function(){
-  
-    $( ".widget input[type=submit]").button();
-    $('#plus').click(function(){
-    /*makes a new todo. i want to do this without append-mit seems sloppy to me
-    or like there is a more efficient way to do this) but i'm too lazy rn. eventually...
-    in the future i will want to exchange the general id for the id
-    of the category that the user is in 
-    */
+$(document).ready(function () {
+
+    $(".widget input[type=submit]").button();
+    $('#plus').click(function () {
+        /*makes a new todo. i want to do this without append-mit seems sloppy to me
+        or like there is a more efficient way to do this) but i'm too lazy rn. eventually...
+        in the future i will want to exchange the general id for the id
+        of the category that the user is in 
+        */
         //if $('#task-to-do'.val()){
         var new_task = '#task-to-do'.val();
 
-        $('#general').append("<dd><input class = 'task' type = 'checkbox'/>"+ new_task+ "</input></dd>");
-      
-   
+        $('#general').append("<dd><input class = 'task' type = 'checkbox'/>" + new_task + "</input></dd>");
+
+
     });
-    
-    
+
+
     /* currently not being used
     $('.minus').click(function(){
       //deletes EVERYTHING. :D
@@ -36,14 +36,11 @@ $(document).ready(function(){
       
       
     });*/
-  
-    
-  });
+
+
+});
 
 let tasks = document.getElementsByClassName('task');
-
-for (var i = 0; i < tasks.length; i++) {
-  
 let sections = document.getElementsByClassName('section-header');
 for (var i = 0; i < sections.length; i++) {
     sections[i].addEventListener("click", function () {
@@ -54,5 +51,5 @@ for (var i = 0; i < sections.length; i++) {
         } else {
             content.style.display = "block";
         }
-    }
+    });
 }

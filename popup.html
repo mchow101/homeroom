@@ -3,6 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="bootstrap.css" type="text/css" />
+    <script src = 'jquery-3.5.1.js'></script>
     <style>
         li {
             list-style-type: square;
@@ -17,9 +18,21 @@
             border-radius: 3px;
             display: inline-block;
             position: relative;
-            margin-right: 0;
-            margin-bottom: -0.25rem;
+            margin-right: 4px;
+            margin-bottom: -3px;
         }
+
+        #plus{
+            background-color: #fcaf58;
+            color: white;
+            padding: 3px;
+
+        }
+        .new-todo{
+            /*border: none;*/
+            border: transparent
+        }
+
 
         input:checked {
             background-color: #4e598c;
@@ -34,34 +47,48 @@
             color: #4e598c;
         }
 
-        dt {
-            margin-top: 1rem;
+        .section-header {
+            border-style: none;
+            border-radius: 10px;
+            background-color: #fcaf58;
+            color: #fc5130;
+            cursor: pointer;
+            padding: 1px 1px 3px 10px;
+            width: 100%;
+            text-align: left;
+            outline: none;
+        }
+
+        .task-section {
+            display: none;
+            overflow: hidden;
         }
 
         dd text {
-            margin-top: -1.25rem;
+            margin-top: -4px;
         }
     </style>
 </head>
 
-<body style="margin: 1rem; min-width: 300px">
-    <div style="margin: auto">
+<body style="margin: 5px; min-width: 300px; background-color: #f9c784;">
+    <div style="padding-left: 20%; color: #fc5130;">
         <h1 class="featurette-heading">My Tasks</h1>
     </div>
-    <p class="test lead">Test</p>
-
-    <label class="task-list">
-        <form>
-            <dt>Programming</dt>
-            <input type="checkbox" class="task" id="1">
-            <label for="1">Fix Hadoop Code</label><br>
-            <input type="checkbox" class="task" id="2">
-            <label for="2">White Paper</label><br>
-            <dt>For Fun</dt>
-            <input type="checkbox" class="task" id="3">
-            <label for="3">Bake a pie</label><br>
-        </form>
+    <label class="task-list" style="width: 100%">
+        <dl>
+            <h5 class="section-header featurette-heading">Programming</h5>
+            <div class="task-section lead" id = 'general'>
+                <dd><input type="checkbox" class="task">Fix Hadoop Code</input></dd>
+                <dd><input type="checkbox" class="task">White Paper</input></dd>
+                <dd><button id = "plus">add</button><input type="text" id = "task-to-add" class = 'new-todo'></input></dd>
+            </div>
+            <h5 class="section-header featurette-heading">For Fun</h5>
+            <div class="task-section lead">
+                <dd><input type="checkbox" class="task">Bake a Pie</input></dd>
+            </div>
+        </dl>
     </label>
+    
     <script src="popup.js"></script>
 </body>
 

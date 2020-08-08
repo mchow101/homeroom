@@ -3,6 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="bootstrap.css" type="text/css" />
+    <script src = 'jquery-3.5.1.js'></script>
     <style>
         li {
             list-style-type: square;
@@ -20,6 +21,18 @@
             margin-right: 4px;
             margin-bottom: -3px;
         }
+
+        #plus{
+            background-color: #fcaf58;
+            color: white;
+            padding: 3px;
+
+        }
+        .new-todo{
+            /*border: none;*/
+            border: transparent
+        }
+
 
         input:checked {
             background-color: chartreuse;
@@ -52,9 +65,10 @@
 
     <label class="task-list">
         <dl>
-            <dt>Programming</dt>
+            <dt id = 'general'>Programming</dt>
             <dd><input type="checkbox" class="task">Fix Hadoop Code</input></dd>
             <dd><input type="checkbox" class="task">White Paper</input></dd>
+            <dd><button id = "plus">add</button><input type="text" id = "task-to-add" class = 'new-todo'></input></dd>
             <dt>For Fun</dt>
             <dd><input type="checkbox" class="task">Bake a Pie</input></dd>
         </dl>

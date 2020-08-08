@@ -17,8 +17,8 @@
             border-radius: 3px;
             display: inline-block;
             position: relative;
-            margin-right: 4px;
-            margin-bottom: -3px;
+            margin-right: 0;
+            margin-bottom: -0.25rem;
         }
 
         input:checked {
@@ -35,29 +35,32 @@
         }
 
         dt {
-            margin-top: 3px;
+            margin-top: 1rem;
         }
 
         dd text {
-            margin-top: -4px;
+            margin-top: -1.25rem;
         }
     </style>
 </head>
 
-<body style="margin: 5px; min-width: 300px">
+<body style="margin: 1rem; min-width: 300px">
     <div style="margin: auto">
         <h1 class="featurette-heading">My Tasks</h1>
     </div>
     <p class="test lead">Test</p>
 
     <label class="task-list">
-        <dl>
+        <form>
             <dt>Programming</dt>
-            <dd><input type="checkbox" class="task">Fix Hadoop Code</input></dd>
-            <dd><input type="checkbox" class="task">White Paper</input></dd>
+            <input type="checkbox" class="task" id="1">
+            <label for="1">Fix Hadoop Code</label><br>
+            <input type="checkbox" class="task" id="2">
+            <label for="2">White Paper</label><br>
             <dt>For Fun</dt>
-            <dd><input type="checkbox" class="task">Bake a Pie</input></dd>
-        </dl>
+            <input type="checkbox" class="task" id="3">
+            <label for="3">Bake a pie</label><br>
+        </form>
     </label>
     <script src="popup.js"></script>
 </body>

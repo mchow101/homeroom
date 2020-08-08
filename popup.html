@@ -22,7 +22,7 @@
             margin-bottom: -3px;
         }
 
-        #plus{
+        .todo-adder{
             background-color: #fcaf58;
             color: white;
             padding: 3px;
@@ -78,13 +78,33 @@
         <dl>
             <h5 class="section-header featurette-heading">Programming</h5>
             <div class="task-section lead" id = 'general'>
+<<<<<<< HEAD
                 <dd><input type="checkbox" class="task">Fix Hadoop Code</input></dd>
                 <dd><input type="checkbox" class="task">White Paper</input></dd>
-                <dd><button id = "plus">add</button><input type="text" id = "task-to-add" class = 'new-todo'></input></dd>
+                <dd><button class = "todo-adder">add</button><input type="text" class = 'task'></input></dd>
             </div>
             <h5 class="section-header featurette-heading">For Fun</h5>
             <div class="task-section lead">
                 <dd><input type="checkbox" class="task">Bake a Pie</input></dd>
+                <dd><button class = "todo-adder">add</button><input type="text" class = 'task'></input></dd>
+=======
+                <label>
+                    <input type="checkbox" class="task" />
+                    <span>Fix Hadoop Code</span>
+                </label>
+                <label>
+                    <input type="checkbox" class="task"/>
+                    <span >White Paper</span>
+                </label>
+                <dd><button id = "plus">add</button><input type="text" id = "task-to-add" class = 'new-todo'></input></dd>
+            </div>
+            <h5 class="section-header featurette-heading">For Fun</h5>
+            <div class="task-section lead">
+                <label>
+                    <input type="checkbox" class="task" />
+                    <span>Bake a pie</span>
+                </label>
+>>>>>>> e683a937033666afefba803186fa965c954177f0
             </div>
         </dl>
     </label>

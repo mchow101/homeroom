@@ -1,8 +1,8 @@
 
 $(document).ready(function () {
 
-    $(".widget input[type=submit]").button();
-    $('#plus').click(function () {
+    //$(".widget input[type=submit]").button(); //not currently using
+    $('.todo-adder').click(function () {
         /*makes a new todo. i want to do this without append-mit seems sloppy to me
         or like there is a more efficient way to do this) but i'm too lazy rn. eventually...
         in the future i will want to exchange the general id for the id
@@ -42,14 +42,22 @@ $(document).ready(function () {
 
 let tasks = document.getElementsByClassName('task');
 let sections = document.getElementsByClassName('section-header');
+let addToDos - document.getElementsByClassName('todo-adder')
 for (var i = 0; i < sections.length; i++) {
     sections[i].addEventListener("click", function () {
         var content = this.nextElementSibling;
+
         console.log("content: " + content.textContent);
         if (content.style.display === "block") {
             content.style.display = "none";
         } else {
             content.style.display = "block";
         }
+      
+
+
+
+  
+      });
     });
 }

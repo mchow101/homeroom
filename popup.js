@@ -48,7 +48,7 @@ $(document).ready(function () {
             }
         });
     }
-    
+
     $('.plus').click(function () {
         var content = $(this).next().val()
         if (content != "") {
@@ -93,7 +93,7 @@ $(document).ready(function () {
         }
     }
 
-    for (var i = 0; i < setterBtns.length; i++) {
+    /*for (var i = 0; i < setterBtns.length; i++) {
         setterBtns[i].addEventListener("click", function (event) {
             var param = this.dataset.setter;
             switch (param) {
@@ -112,7 +112,7 @@ $(document).ready(function () {
             }
             displayTimeLeft(wholeTime);
         });
-    }
+    }*/
 
     function timer(seconds) { //counts time, takes seconds
         let remainTime = Date.now() + (seconds * 1000);

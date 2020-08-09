@@ -154,25 +154,29 @@ $(document).ready(function () {
     const displayOutput = document.querySelector('.display-remain-time')
     const pauseBtn = document.getElementById('pause');
     const setterBtns = document.querySelectorAll('button[data-setter]');
+    const workInput = document.getElementById('work-period');
 
     let intervalTimer;
     let timeLeft;
-    let wholeTime = 0.5 * 60; // manage this to set the whole time 
+    //let wholeTime = 25;
+
+    let workTime = document.getElementById('work-period').value * 60; // manage this to set the whole time 
+    //let breakTime = document.getElementById('break-period').value * 60;
+
     let isPaused = false;
     let isStarted = false;
 
-
-    update(wholeTime, wholeTime); //refreshes progress bar
-    displayTimeLeft(wholeTime);
+    update(workTime, workTime); //refreshes progress bar
+    displayTimeLeft(workTime);
 
     function changeWholeTime(seconds) {
-        if ((wholeTime + seconds) > 0) {
-            wholeTime += seconds;
-            update(wholeTime, wholeTime);
+        if ((workTime + seconds) > 0) {
+          workTime += seconds;
+            update(workTime, workTime);
         }
     }
 
-    for (var i = 0; i < setterBtns.length; i++) {
+    /*for (var i = 0; i < setterBtns.length; i++) {
         setterBtns[i].addEventListener("click", function (event) {
             var param = this.dataset.setter;
             switch (param) {
@@ -191,7 +195,7 @@ $(document).ready(function () {
             }
             displayTimeLeft(wholeTime);
         });
-    }
+    }*/
 
     function timer(seconds) { //counts time, takes seconds
         let remainTime = Date.now() + (seconds * 1000);
@@ -206,7 +210,7 @@ $(document).ready(function () {
                     btn.disabled = false;
                     btn.style.opacity = 1;
                 });
-                displayTimeLeft(wholeTime);
+                displayTimeLeft(workTime);
                 pauseBtn.classList.remove('pause');
                 pauseBtn.classList.add('play');
                 return;
@@ -217,7 +221,7 @@ $(document).ready(function () {
 
     function pauseTimer(event) {
         if (isStarted === false) {
-            timer(wholeTime);
+            timer(workTime);
             isStarted = true;
             this.classList.remove('play');
             this.classList.add('pause');
@@ -245,8 +249,10 @@ $(document).ready(function () {
         let seconds = timeLeft % 60;
         let displayString = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         displayOutput.textContent = displayString;
-        update(timeLeft, wholeTime);
+        update(timeLeft, workTime);
     }
 
     pauseBtn.addEventListener('click', pauseTimer);
+
+    workInput.value.addEventListener('change', displayTimeLeft(document.getElementById("work-period").value));
 });

@@ -42,10 +42,6 @@
             margin: 2px 4px 2px 2px;
         }
 
-        #tasks{
-            max-height: 80%;
-        }
-
         .new-todo {
             /*border: none;*/
             border: transparent
@@ -67,7 +63,6 @@
             content: "\2713";
             font-size: 1.1em;
             color: white;
-            position: absolute;
         }
 
         input {
@@ -160,7 +155,7 @@
         .setters {
             position: absolute;
             text-align: center;
-            left: 132.5px; /* possibly change to 137.5px for centering */
+            left: 137.5px; /* possibly change to 132.5px for centering */
             top: 175px;
         }
 
@@ -175,7 +170,7 @@
 
         .controls {
             position: absolute;
-            left: 122.5px; /* possibly change to 127.5px for centering */
+            left: 127.5px; /* possibly change to 122.5px for centering */
             top: 205px;
             text-align: center;
         }
@@ -292,7 +287,7 @@
     <!-- Pomodoro Page -->
     <div id="pomodoro" style="display: none; text-align: center;">
         <div style="color: #fc5130;">
-            <h1 class="featurette-heading">Pomodoro</h1>
+            <h1 class="featurette-heading">Pomodoro Timer</h1>
         </div>
 
         <hr> <!-- Title Row -->
@@ -349,7 +344,7 @@
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="inputGroupSelect01">Work Duration:</label>
                     </div>
-                    <input type="number" name="work-period" id="work-period" label="Text input with dropdown button" />
+                    <input type="number" name="work-period" id="work-period" value="25"/>
                 </div>
             </div>
 
@@ -358,7 +353,7 @@
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="inputGroupSelect01">Break Duration:</label>
                     </div>
-                    <input type="number" name="break-period" id="break-period" label="Text input with dropdown button" />
+                    <input type="number" name="break-period" id="break-period" value="5"/>
                 </div>
             </div>
 

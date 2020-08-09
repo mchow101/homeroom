@@ -153,9 +153,8 @@
         .setters {
             position: absolute;
             text-align: center;
-            left: 132.5px;
-            /* possibly change to 137.5px for centering */
-            top: 155px;
+            left: 132.5px; /* possibly change to 137.5px for centering */
+            top: 175px;
         }
 
         .minutes-set {
@@ -169,9 +168,8 @@
 
         .controls {
             position: absolute;
-            left: 122.5px;
-            /* possibly change to 127.5px for centering */
-            top: 185px;
+            left: 122.5px;/* possibly change to 127.5px for centering */
+            top: 205px;
             text-align: center;
         }
 
@@ -246,7 +244,7 @@
     </style>
 </head>
 
-<body style="margin: 5px; min-width: 300px; background-color: #FED7AC;">
+<body style="margin: 5px; background-color: #FED7AC;">
     <input type="range" min="1" max="3" value="1" class="slider" id="choose-tab">
     <div id="tasks" style="display: none">
         <div style="padding-left: 20%; color: #fc5130;">
@@ -264,12 +262,15 @@
             </dl>
         </label>
     </div>
+
     <div id="classes" style="display: none;">
         <div style="padding-left: 20%; color: #fc5130;">
             <h1 class="featurette-heading">My Classes</h1>
         </div>
         <hr>
     </div>
+
+    <!-- Pomodoro Page -->
     <div id="pomodoro" style="display: none; text-align: center;">
         <div style="color: #fc5130;">
             <h1 class="featurette-heading">Pomodoro</h1>

@@ -48,6 +48,7 @@ $(document).ready(function () {
             }
         });
     }
+    
     $('.plus').click(function () {
         var content = $(this).next().val()
         if (content != "") {
@@ -56,6 +57,7 @@ $(document).ready(function () {
         }
     });
 
+    // Pomodoro Timer Code is Below
     let progressBar = document.querySelector('.e-c-progress');
     let indicator = document.getElementById('e-indicator');
     let pointer = document.getElementById('e-pointer');

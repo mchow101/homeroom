@@ -61,7 +61,7 @@ $(document).ready(function () {
     });
     */
 
-    $('.new-todo').click(function () {
+    $('.new-todo').focus(function () {
         $(this).keypress(function (event) {
             if (event.which == 13) {
                 var content = $(this).val();

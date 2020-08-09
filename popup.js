@@ -68,7 +68,7 @@ $(document).ready(function () {
                 if (content != "") {
                     console.log(this.id)
                     $(this).before('<label><input type="checkbox" class="task"></input><span>' + content + '</span></label><br>');
-
+                    $('.new-todo').val("");
                 }
 
             }

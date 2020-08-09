@@ -22,11 +22,16 @@
             margin-bottom: -3px;
         }
 
+        input[type="text"] {
+            border-radius: 10px;
+        }
+
         #plus {
             background-color: #fcaf58;
             color: white;
             padding: 3px;
-
+            border-radius: 10px;
+            margin: 2px 4px 2px 2px;
         }
 
         .new-todo {
@@ -50,7 +55,7 @@
             color: white;
         }
 
-        .tasks input {
+        input {
             color: #4e598c;
         }
 
@@ -74,38 +79,90 @@
         dd text {
             margin-top: -4px;
         }
+
+
+        .slidecontainer {
+            width: 100%;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 25px;
+            background: #414A73;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+            border-radius: 10px;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 35%;
+            height: 25px;
+            background: #A7ACC6;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 35%;
+            height: 25px;
+            background: #A7ACC6;
+            cursor: pointer;
+            border-radius: 10px;
+        }
     </style>
 </head>
 
-<body style="margin: 5px; min-width: 300px; background-color: #f9c784;">
-    <div style="padding-left: 20%; color: #fc5130;">
-        <h1 class="featurette-heading">My Tasks</h1>
+<body style="margin: 5px; min-width: 300px; background-color: #FED7AC;">
+    <input type="range" min="1" max="3" value="1" class="slider" id="choose-tab">
+    <div id="tasks" style="display: none">
+        <div style="padding-left: 20%; color: #fc5130;">
+            <h1 class="featurette-heading">My Tasks</h1>
+        </div>
+        <label class="task-list" style="width: 100%">
+            <dl>
+                <h5 class="section-header featurette-heading"><span class="featurette-heading">+</span>
+                    Programming</h5>
+                <div class="task-section lead" id='general'>
+                    <label>
+                        <input type="checkbox" class="task" />
+                        <span>Fix Hadoop Code</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" class="task" />
+                        <span>White Paper</span>
+                    </label>
+                    <dd><button id="plus">add</button><input type="text" id="task-to-add" class='new-todo'></input></dd>
+                </div>
+                <h5 class="section-header featurette-heading"><span class="featurette-heading">+</span>
+                    For Fun</h5>
+                <div class="task-section lead">
+                    <label>
+                        <input type="checkbox" class="task" />
+                        <span>Bake a pie</span>
+                    </label>
+                </div>
+            </dl>
+        </label>
     </div>
-    <label class="task-list" style="width: 100%">
-        <dl>
-            <h5 class="section-header featurette-heading"><span class="featurette-heading">+</span>
-                Programming</h5>
-            <div class="task-section lead" id = 'general'>
-                <label class="checkcontainer">
-                    <input type="checkbox" class="task" />
-                    <span>Fix Hadoop Code</span>
-                </label>
-                <label>
-                    <input type="checkbox" class="task"/>
-                    <span >White Paper</span>
-                </label>
-                <dd><button id = "plus">add</button><input type="text" id = "task-to-add" class = 'new-todo'></input></dd>
-            </div>
-            <h5 class="section-header featurette-heading"><span class="featurette-heading">+</span>
-                For Fun</h5>
-            <div class="task-section lead">
-                <label>
-                    <input type="checkbox" class="task" />
-                    <span>Bake a pie</span>
-                </label>
-            </div>
-        </dl>
-    </label>
+    <div id="classes" style="display: none;">
+        <div style="padding-left: 20%; color: #fc5130;">
+            <h1 class="featurette-heading">My Classes</h1>
+        </div>
+    </div>
+    <div id="pomodoro" style="display: none;">
+        <div style="padding-left: 20%; color: #fc5130;">
+            <h1 class="featurette-heading">Pomodoro</h1>
+        </div>
+    </div>
     <script src="popup.js"></script>
 </body>
 

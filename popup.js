@@ -34,10 +34,29 @@ $(document).ready(function () {
     let tasks = document.getElementsByClassName('task');
     let sections = document.getElementsByClassName('section-header');
 
+    let classes = document.getElementsByClassName('classes');
+    let classSections = document.getElementsByClassName('class-section-header');
+
     for (var i = 0; i < sections.length; i++) {
         sections[i].nextElementSibling.innerHTML = sections[i].nextElementSibling.innerHTML + '<dd><input type="text" id="' + sections[i].textContent.substring(1) + '" class="new-todo"></input></dd>';
         sections[i].id = sections[i].textContent.substring(1);
         sections[i].addEventListener("click", function () {
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+                this.textContent = this.textContent.replace('-', '+');
+            } else {
+                content.style.display = "block";
+                this.textContent = this.textContent.replace('+', '-');
+            }
+        });
+    }
+
+    // copied above and tried to tweak for classes
+    for (var i = 0; i < classSections.length; i++) {
+        classSections[i].nextElementSibling.innerHTML = classSections[i].nextElementSibling.innerHTML + '<dd><input type="text" id="' + classSections[i].textContent.substring(1) + '" class="new-class"></input></dd>';
+        classSections[i].id = classSections[i].textContent.substring(1);
+        classSections[i].addEventListener("click", function () {
             var content = this.nextElementSibling;
             if (content.style.display === "block") {
                 content.style.display = "none";

@@ -31,10 +31,22 @@ function changetab() {
 $(document).ready(function () {
     changetab();
 
+    $('.plus').click(function () {
+        console.log('button clicked')
+        var content = $(this).next().val()
+        if (content != ""){
+        $('#general').append("<label><input type='checkbox'" + 
+        "class='task'/><span>" + content + "</span></label>");
+        }
+
+
     });
+
+});
 
 let tasks = document.getElementsByClassName('task');
 let sections = document.getElementsByClassName('section-header');
+
 for (var i = 0; i < sections.length; i++) {
     sections[i].addEventListener("click", function () {
         var content = this.nextElementSibling;
@@ -46,4 +58,6 @@ for (var i = 0; i < sections.length; i++) {
             this.textContent = this.textContent.replace('+', '-');
         }
     });
+
+
 }

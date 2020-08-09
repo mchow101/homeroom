@@ -42,6 +42,10 @@
             margin: 2px 4px 2px 2px;
         }
 
+        #tasks{
+            max-height: 80%;
+        }
+
         .new-todo {
             /*border: none;*/
             border: transparent
@@ -51,16 +55,18 @@
         input:checked {
             background-color: #4e598c;
             color: white;
+            position: absolute;
         }
 
 
         input:checked:after {
-            position: fixed;
+            
             margin-top: -0.95em;
             left: 0.4em;
             content: "\2713";
             font-size: 1.1em;
             color: white;
+            position: absolute;
         }
 
         input {

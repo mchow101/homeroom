@@ -4,6 +4,7 @@
 <head>
     <link rel="stylesheet" href="bootstrap.css" type="text/css" />
     <script src='jquery-3.5.1.js'></script>
+    <script src="popup.js"></script>
     <style>
         body {
             min-width: 400px;
@@ -174,7 +175,7 @@
 
         .controls {
             position: absolute;
-            left: 122.5px;/* possibly change to 127.5px for centering */
+            left: 122.5px; /* possibly change to 127.5px for centering */
             top: 205px;
             text-align: center;
         }
@@ -285,7 +286,7 @@
         <hr> <!-- Title Row -->
 
         <!-- Pomodoro Circle Timer Buttons -->
-        <div class="setters">
+        <!-- <div class="setters">
             <div class="minutes-set">
                 <button data-setter="minutes-plus">+</button>
                 <button data-setter="minutes-minus">-</button>
@@ -294,7 +295,7 @@
                 <button data-setter="seconds-plus">+</button>
                 <button data-setter="seconds-minus">-</button>
             </div>
-        </div>
+        </div> -->
 
         <!-- Pomodoro Circle Timer SVG Display -->
         <div class="circle">
@@ -332,29 +333,28 @@
             </div>
         </div>
 
-        <div id="pomodoro-clock-actions">
+        <div>
 
-            <div class="pomodoro-time-select">
+            <div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="inputGroupSelect01">Work Duration:</label>
                     </div>
-                    <input type="number" name="work-period" label="Text input with dropdown button" />
+                    <input type="number" name="work-period" id="work-period" label="Text input with dropdown button" />
                 </div>
             </div>
 
-            <div class="pomodoro-time-select">
+            <div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="inputGroupSelect01">Break Duration:</label>
                     </div>
-                    <input type="number" name="break-period" label="Text input with dropdown button" />
+                    <input type="number" name="break-period" id="break-period" label="Text input with dropdown button" />
                 </div>
             </div>
 
         </div>
     </div>
-    <script src="popup.js"></script>
 </body>
 
 </html>

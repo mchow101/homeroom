@@ -119,18 +119,22 @@ $(document).ready(function () {
 
     let intervalTimer;
     let timeLeft;
-    let wholeTime = 0.5 * 60; // manage this to set the whole time 
+    //let wholeTime = 25; // manage this to set the whole time 
+
+    let workTime = document.getElementById('work-period').value;
+    let breakTime = document.getElementById('break-period').value;
+
     let isPaused = false;
     let isStarted = false;
 
 
-    update(wholeTime, wholeTime); //refreshes progress bar
-    displayTimeLeft(wholeTime);
+    update(workTime, workTime); //refreshes progress bar
+    displayTimeLeft(workTime);
 
     function changeWholeTime(seconds) {
-        if ((wholeTime + seconds) > 0) {
-            wholeTime += seconds;
-            update(wholeTime, wholeTime);
+        if ((workTime + seconds) > 0) {
+          workTime += seconds;
+            update(workTime, workTime);
         }
     }
 
@@ -179,7 +183,7 @@ $(document).ready(function () {
 
     function pauseTimer(event) {
         if (isStarted === false) {
-            timer(wholeTime);
+            timer(workTime);
             isStarted = true;
             this.classList.remove('play');
             this.classList.add('pause');
@@ -207,7 +211,7 @@ $(document).ready(function () {
         let seconds = timeLeft % 60;
         let displayString = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         displayOutput.textContent = displayString;
-        update(timeLeft, wholeTime);
+        update(timeLeft, workTime);
     }
 
     pauseBtn.addEventListener('click', pauseTimer);

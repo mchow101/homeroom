@@ -9,7 +9,7 @@
             list-style-type: square;
         }
 
-        input[type="checkbox"i] {
+        input[type="checkbox"] {
             appearance: none;
             background-color: #FC5130;
             border: 1px solid #cacece;
@@ -45,7 +45,13 @@
             color: white;
         }
 
+
         input:checked:after {
+            position: fixed;
+            margin-top: -0.95em;
+            left: 0.4em;
+            content: "\2713"; 
+            font-size: 1.1em;
             color: white;
         }
 
@@ -83,7 +89,7 @@
             -webkit-appearance: none;
             width: 100%;
             height: 25px;
-            background: #fc5130;
+            background: #414A73;
             outline: none;
             opacity: 0.7;
             -webkit-transition: .2s;
@@ -100,7 +106,7 @@
             appearance: none;
             width: 35%;
             height: 25px;
-            background: #4e5986;
+            background: #A7ACC6;
             cursor: pointer;
             border-radius: 10px;
         }
@@ -108,14 +114,14 @@
         .slider::-moz-range-thumb {
             width: 35%;
             height: 25px;
-            background: #4e5986;
+            background: #A7ACC6;
             cursor: pointer;
             border-radius: 10px;
         }
     </style>
 </head>
 
-<body style="margin: 5px; min-width: 300px; background-color: #f9c784;">
+<body style="margin: 5px; min-width: 300px; background-color: #FED7AC;">
     <input type="range" min="1" max="3" value="1" class="slider" id="choose-tab">
     <div id="tasks" style="display: none">
         <div style="padding-left: 20%; color: #fc5130;">

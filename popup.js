@@ -31,33 +31,28 @@ function changetab() {
 $(document).ready(function () {
     changetab();
 
+    let tasks = document.getElementsByClassName('task');
+    let sections = document.getElementsByClassName('section-header');
+
+    for (var i = 0; i < sections.length; i++) {
+        sections[i].nextElementSibling.innerHTML = sections[i].nextElementSibling.innerHTML + '<dd><button class="plus">add</button><input type="text" id="' + sections[i].textContent.substring(1) + '" class="new-todo"></input></dd>';
+        sections[i].id = sections[i].textContent.substring(1);
+        sections[i].addEventListener("click", function () {
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+                this.textContent = this.textContent.replace('-', '+');
+            } else {
+                content.style.display = "block";
+                this.textContent = this.textContent.replace('+', '-');
+            }
+        });
+    }
     $('.plus').click(function () {
-        console.log('button clicked')
         var content = $(this).next().val()
-        if (content != ""){
-        $('#general').append("<label><input type='checkbox'" + 
-        "class='task'/><span>" + content + "</span></label>");
+        if (content != "") {
+            console.log(this.id);
+            $(this).before('<label><input type="checkbox" class="task"></input><span>' + content + '</span></label><br>');
         }
-
-
     });
-
 });
-
-let tasks = document.getElementsByClassName('task');
-let sections = document.getElementsByClassName('section-header');
-
-for (var i = 0; i < sections.length; i++) {
-    sections[i].addEventListener("click", function () {
-        var content = this.nextElementSibling;
-        if (content.style.display === "block") {
-            content.style.display = "none";
-            this.textContent = this.textContent.replace('-', '+');
-        } else {
-            content.style.display = "block";
-            this.textContent = this.textContent.replace('+', '-');
-        }
-    });
-
-
-}

@@ -25,6 +25,49 @@ function changetab() {
         document.getElementById("tasks").style.display = "none";
         document.getElementById("classes").style.display = "none";
         document.getElementById("pomodoro").style.display = "block";
+        set_task_list();
+    }
+}
+
+function section_setup(section) {
+    console.log(section.nextElementSibling);
+    section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML + '<dd><input type="text" id="' + section.textContent.substring(1) + '" class="new-todo"></input></dd>';
+    section.id = section.textContent.substring(2);
+    section.addEventListener("click", function () {
+        var content = this.nextElementSibling;
+        console.log(content);
+        if (content.style.display === "block") {
+            content.style.display = "none";
+            this.textContent = this.textContent.replace('-', '+');
+        } else {
+            content.style.display = "block";
+            this.textContent = this.textContent.replace('+', '-');
+        }
+    });
+}
+
+function add_todo_input() {
+    $('.new-todo').focus(function () {
+        $(this).keypress(function (event) {
+            if (event.which == 13) {
+                var content = $(this).val();
+                if (content != "") {
+                    console.log(this.id)
+                    $(this).before('<label><input type="checkbox" class="task"></input><span>' + content + '</span></label><br>');
+                    $(this).val("");
+                }
+            }
+        });
+    });
+}
+
+function set_task_list() {
+    $('option').remove();
+    var all_tasks = document.getElementsByClassName("task");
+    for (var i = 0; i < all_tasks.length; i++) {
+        if (!all_tasks[i].checked) {
+            $('#inputGroupSelect01').append('<option>' + all_tasks[i].nextElementSibling.textContent + '</option>');
+        }
     }
 }
 
@@ -35,37 +78,15 @@ $(document).ready(function () {
     let sections = document.getElementsByClassName('section-header');
 
     let classes = document.getElementsByClassName('classes');
-    let classSections = document.getElementsByClassName('class-section-header');
+    let classSections = document.getElementsByClassName('class-header');
 
     for (var i = 0; i < sections.length; i++) {
-        sections[i].nextElementSibling.innerHTML = sections[i].nextElementSibling.innerHTML + '<dd><input type="text" id="' + sections[i].textContent.substring(1) + '" class="new-todo"></input></dd>';
-        sections[i].id = sections[i].textContent.substring(1);
-        sections[i].addEventListener("click", function () {
-            var content = this.nextElementSibling;
-            if (content.style.display === "block") {
-                content.style.display = "none";
-                this.textContent = this.textContent.replace('-', '+');
-            } else {
-                content.style.display = "block";
-                this.textContent = this.textContent.replace('+', '-');
-            }
-        });
+        section_setup(sections[i]);
     }
 
     // copied above and tried to tweak for classes
     for (var i = 0; i < classSections.length; i++) {
-        classSections[i].nextElementSibling.innerHTML = classSections[i].nextElementSibling.innerHTML + '<dd><input type="text" id="' + classSections[i].textContent.substring(1) + '" class="new-class"></input></dd>';
-        classSections[i].id = classSections[i].textContent.substring(1);
-        classSections[i].addEventListener("click", function () {
-            var content = this.nextElementSibling;
-            if (content.style.display === "block") {
-                content.style.display = "none";
-                this.textContent = this.textContent.replace('-', '+');
-            } else {
-                content.style.display = "block";
-                this.textContent = this.textContent.replace('+', '-');
-            }
-        });
+        section_setup(classSections[i]);
     }
 
     // this triggered when the add button existed
@@ -80,23 +101,40 @@ $(document).ready(function () {
     });
     */
 
-    $('.new-todo').focus(function () {
+    $('.new-section').focus(function () {
         $(this).keypress(function (event) {
             if (event.which == 13) {
                 var content = $(this).val();
                 if (content != "") {
-                    console.log(this.id)
-                    $(this).before('<label><input type="checkbox" class="task"></input><span>' + content + '</span></label><br>');
+                    console.log(document.getElementById('task-list').innerHTML);
+                    $('#task-list').prepend('<h5 class="section-header featurette-heading"><span class="featurette-heading">+ </span>' + content + '</h5><div class="task-section lead"></div>');
                     $(this).val("");
+                    section_setup(document.getElementsByClassName("section-header")[0]);
+                    add_todo_input();
                 }
-
             }
-
         });
-
-
-
     });
+
+    $('.new-class').focus(function () {
+        $(this).keypress(function (event) {
+            if (event.which == 13) {
+                var content = $(this).val();
+                if (content != "") {
+                    console.log(document.getElementById('class-list').innerHTML);
+                    $('#class-list').prepend('<h5 class="class-header featurette-heading"><span class="featurette-heading">+ </span>' + content + '</h5><div class="task-section lead"></div>');
+                    $('#task-list').prepend('<h5 class="section-header featurette-heading"><span class="featurette-heading">+ </span>' + content + '</h5><div class="task-section lead"></div>');
+                    $(this).val("");
+                    section_setup(document.getElementsByClassName("class-header")[0]);
+                    add_todo_input();
+                    section_setup(document.getElementsByClassName("section-header")[0]);
+                    add_todo_input();
+                }
+            }
+        });
+    });
+
+    add_todo_input();
 
     // Pomodoro Timer Code is Below
     let progressBar = document.querySelector('.e-c-progress');
@@ -116,25 +154,29 @@ $(document).ready(function () {
     const displayOutput = document.querySelector('.display-remain-time')
     const pauseBtn = document.getElementById('pause');
     const setterBtns = document.querySelectorAll('button[data-setter]');
+    const workInput = document.getElementById('work-period');
 
     let intervalTimer;
     let timeLeft;
-    let wholeTime = 0.5 * 60; // manage this to set the whole time 
+    //let wholeTime = 25;
+
+    let workTime = document.getElementById('work-period').value * 60; // manage this to set the whole time 
+    //let breakTime = document.getElementById('break-period').value * 60;
+
     let isPaused = false;
     let isStarted = false;
 
-
-    update(wholeTime, wholeTime); //refreshes progress bar
-    displayTimeLeft(wholeTime);
+    update(workTime, workTime); //refreshes progress bar
+    displayTimeLeft(workTime);
 
     function changeWholeTime(seconds) {
-        if ((wholeTime + seconds) > 0) {
-            wholeTime += seconds;
-            update(wholeTime, wholeTime);
+        if ((workTime + seconds) > 0) {
+            workTime += seconds;
+            update(workTime, workTime);
         }
     }
 
-    for (var i = 0; i < setterBtns.length; i++) {
+    /*for (var i = 0; i < setterBtns.length; i++) {
         setterBtns[i].addEventListener("click", function (event) {
             var param = this.dataset.setter;
             switch (param) {
@@ -153,7 +195,7 @@ $(document).ready(function () {
             }
             displayTimeLeft(wholeTime);
         });
-    }
+    }*/
 
     function timer(seconds) { //counts time, takes seconds
         let remainTime = Date.now() + (seconds * 1000);
@@ -168,7 +210,7 @@ $(document).ready(function () {
                     btn.disabled = false;
                     btn.style.opacity = 1;
                 });
-                displayTimeLeft(wholeTime);
+                displayTimeLeft(workTime);
                 pauseBtn.classList.remove('pause');
                 pauseBtn.classList.add('play');
                 return;
@@ -179,7 +221,7 @@ $(document).ready(function () {
 
     function pauseTimer(event) {
         if (isStarted === false) {
-            timer(wholeTime);
+            timer(workTime);
             isStarted = true;
             this.classList.remove('play');
             this.classList.add('pause');
@@ -203,12 +245,21 @@ $(document).ready(function () {
     }
 
     function displayTimeLeft(timeLeft) { //displays time on the input
+        console.log(timeLeft);
         let minutes = Math.floor(timeLeft / 60);
         let seconds = timeLeft % 60;
         let displayString = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         displayOutput.textContent = displayString;
-        update(timeLeft, wholeTime);
+        update(timeLeft, workTime);
     }
 
     pauseBtn.addEventListener('click', pauseTimer);
+
+    workInput.addEventListener('change', function timerReset() {
+        workTime =  document.getElementById("work-period").value * 60;
+        //pauseTimer();
+        timeLeft = workTime;
+        displayTimeLeft(workTime);
+        update(workTime, workTime);
+    });
 });

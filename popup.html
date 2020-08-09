@@ -70,10 +70,6 @@
             margin: 2px 4px 2px 2px;
         }
 
-        #tasks{
-            max-height: 80%;
-        }
-
         .new-todo {
             /*border: none;*/
             border: transparent
@@ -95,14 +91,13 @@
             content: "\2713";
             font-size: 1.1em;
             color: white;
-            position: absolute;
         }
 
         input {
             color: #4e598c;
         }
 
-        .section-header {
+        .section-header, .class-header {
             border-style: none;
             /* border-color: #F2F2F2; */
             border-radius: 10px;
@@ -194,7 +189,7 @@
         .setters {
             position: absolute;
             text-align: center;
-            left: 132.5px; /* possibly change to 137.5px for centering */
+            left: 137.5px; /* possibly change to 132.5px for centering */
             top: 175px;
         }
 
@@ -209,7 +204,7 @@
 
         .controls {
             position: absolute;
-            left: 122.5px; /* possibly change to 127.5px for centering */
+            left: 127.5px; /* possibly change to 122.5px for centering */
             top: 205px;
             text-align: center;
         }
@@ -291,10 +286,11 @@
         <div>
             <h1 class="featurette-heading">My Tasks</h1>
         </div>
-        <!-- <hr> -->
+        <hr>
+        <dd><input type="text" id="new-section" class="new-section"></input></dd>
         <label class="task-list" style="width: 100%">
-            <dl>
-                <h5 class="section-header featurette-heading"><span class="featurette-heading" style="color: #FC674A">+ </span>Programming</h5>
+            <dl id="task-list">
+                <h5 class="section-header featurette-heading"><span class="featurette-heading">+ </span>Programming</h5>
                 <div class="task-section lead">
                 </div>
                 <h5 class="section-header featurette-heading"><span class="featurette-heading">+ </span>For Fun</h5>
@@ -308,13 +304,14 @@
         <div>
             <h1 class="featurette-heading">My Classes</h1>
         </div>
-        <!-- <hr> -->
+        <hr>
+        <dd><input type="text" id="new-class" class="new-class"></input></dd>
         <label class="class-list" style="width: 100%">
-            <dl>
-                <h5 class="class section-header featurette-heading"><span class="featurette-heading">+ </span>Comp Sci</h5>
+            <dl id="class-list">
+                <h5 class="class-header featurette-heading"><span class="featurette-heading">+ </span>Comp Sci</h5>
                 <div class="task-section lead">
                 </div>
-                <h5 class="section-header featurette-heading"><span class="featurette-heading">+ </span>American Lit</h5>
+                <h5 class="class-header featurette-heading"><span class="featurette-heading">+ </span>American Lit</h5>
                 <div class="task-section lead">
                 </div>
             </dl>
@@ -322,9 +319,9 @@
     </div>
 
     <!-- Pomodoro Page -->
-    <div id="pomodoro">
-        <div>
-            <h1 class="featurette-heading">Pomodoro</h1>
+    <div id="pomodoro" style="display: none; text-align: center;">
+        <div style="color: #fc5130;">
+            <h1 class="featurette-heading">Pomodoro Timer</h1>
         </div>
 
         <!--<hr>--> <!-- Title Row -->
@@ -371,10 +368,10 @@
                     <label class="input-group-text" for="inputGroupSelect01">Task:</label>
                 </div>
                 <select class="custom-select" id="inputGroupSelect01">
-                    <option selected>Select Task</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                    <option selected>Task 1</option>
+                    <option selected>Task 2</option>
+                    <option selected>Task 3</option>
+                    <option selected>Task 4</option>
                 </select>
             </div>
         </div>
@@ -386,7 +383,7 @@
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="inputGroupSelect01">Work Duration:</label>
                     </div>
-                    <input type="number" name="work-period" id="work-period" label="Text input with dropdown button" />
+                    <input type="number" name="work-period" id="work-period" value="25"/>
                 </div>
             </div>
 
@@ -395,7 +392,7 @@
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="inputGroupSelect01">Break Duration:</label>
                     </div>
-                    <input type="number" name="break-period" id="break-period" label="Text input with dropdown button" />
+                    <input type="number" name="break-period" id="break-period" value="5"/>
                 </div>
             </div>
 

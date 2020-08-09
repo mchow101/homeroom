@@ -5,6 +5,14 @@
     <link rel="stylesheet" href="bootstrap.css" type="text/css" />
     <script src='jquery-3.5.1.js'></script>
     <style>
+        body {
+            min-width: 400px;
+            max-width: 100%;
+            position: relative;
+            vertical-align: middle;
+            margin: 5px;
+        }
+
         li {
             list-style-type: square;
         }
@@ -118,6 +126,123 @@
             cursor: pointer;
             border-radius: 10px;
         }
+
+        hr {
+            border-color: #F9C784;
+            border-style: solid none;
+            border-width: 2px 0;
+        }
+
+        button[data-setter] {
+            outline: none;
+            background: transparent;
+            border: none;
+            font-family: 'Roboto';
+            font-weight: 300;
+            font-size: 18px;
+            width: 25px;
+            height: 30px;
+            color: #4E598C;
+            cursor: pointer;
+        }
+
+        button[data-setter]:hover {
+            opacity: 0.5;
+        }
+
+        .setters {
+            position: absolute;
+            text-align: center;
+            left: 132.5px;
+            /* possibly change to 137.5px for centering */
+            top: 155px;
+        }
+
+        .minutes-set {
+            float: left;
+            margin-right: 28px;
+        }
+
+        .seconds-set {
+            float: right;
+        }
+
+        .controls {
+            position: absolute;
+            left: 122.5px;
+            /* possibly change to 127.5px for centering */
+            top: 185px;
+            text-align: center;
+        }
+
+        .display-remain-time {
+            font-family: 'Roboto';
+            font-weight: 100;
+            font-size: 65px;
+            color: #4E598C;
+        }
+
+        #pause {
+            outline: none;
+            background: transparent;
+            border: none;
+            margin-top: 10px;
+            width: 50px;
+            height: 50px;
+            position: relative;
+        }
+
+        .play::before {
+            display: block;
+            content: "";
+            position: absolute;
+            top: 8px;
+            left: 16px;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-left: 22px solid #4E598C;
+        }
+
+        .pause::after {
+            content: "";
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            width: 15px;
+            height: 30px;
+            background-color: transparent;
+            border-radius: 1px;
+            border: 5px solid #4E598C;
+            border-top: none;
+            border-bottom: none;
+        }
+
+        #pause:hover {
+            opacity: 0.8;
+        }
+
+        .e-c-base {
+            fill: none;
+            stroke: #B6B6B6;
+            stroke-width: 4px
+        }
+
+        .e-c-progress {
+            fill: none;
+            stroke: #4E598C;
+            stroke-width: 4px;
+            transition: stroke-dashoffset 0.7s;
+        }
+
+        .e-c-pointer {
+            fill: #FFFFFF;
+            stroke: #4E598C;
+            stroke-width: 2px;
+        }
+
+        #e-pointer {
+            transition: transform 0.7s;
+        }
     </style>
 </head>
 
@@ -127,6 +252,7 @@
         <div style="padding-left: 20%; color: #fc5130;">
             <h1 class="featurette-heading">My Tasks</h1>
         </div>
+        <hr>
         <label class="task-list" style="width: 100%">
             <dl>
                 <h5 class="section-header featurette-heading"><span class="featurette-heading">+ </span>Programming</h5>
@@ -142,10 +268,83 @@
         <div style="padding-left: 20%; color: #fc5130;">
             <h1 class="featurette-heading">My Classes</h1>
         </div>
+        <hr>
     </div>
-    <div id="pomodoro" style="display: none;">
-        <div style="padding-left: 20%; color: #fc5130;">
+    <div id="pomodoro" style="display: none; text-align: center;">
+        <div style="color: #fc5130;">
             <h1 class="featurette-heading">Pomodoro</h1>
+        </div>
+
+        <hr> <!-- Title Row -->
+
+        <!-- Pomodoro Circle Timer Buttons -->
+        <div class="setters">
+            <div class="minutes-set">
+                <button data-setter="minutes-plus">+</button>
+                <button data-setter="minutes-minus">-</button>
+            </div>
+            <div class="seconds-set">
+                <button data-setter="seconds-plus">+</button>
+                <button data-setter="seconds-minus">-</button>
+            </div>
+        </div>
+
+        <!-- Pomodoro Circle Timer SVG Display -->
+        <div class="circle">
+            <svg width="300" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+                <g transform="translate(110,110)">
+                    <circle r="100" class="e-c-base" />
+                    <g transform="rotate(-90)">
+                        <circle r="100" class="e-c-progress" />
+                        <g id="e-pointer">
+                            <circle cx="100" cy="0" r="8" class="e-c-pointer" />
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </div>
+
+        <!-- Pomodoro Circle Timer Numerical Display -->
+        <div class="controls">
+            <div class="display-remain-time">00:30</div>
+            <button class="play" id="pause"></button>
+        </div>
+
+        <!-- Dropdown for To-Do list items to attach the pomodoro timer to -->
+        <div class="pomodoro-task-select">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">Task:</label>
+                </div>
+                <select class="custom-select" id="inputGroupSelect01">
+                    <option selected>Select Task</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="pomodoro-clock-actions">
+
+            <div class="pomodoro-time-select">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Work Duration:</label>
+                    </div>
+                    <input type="number" name="work-period" label="Text input with dropdown button" />
+                </div>
+            </div>
+
+            <div class="pomodoro-time-select">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Break Duration:</label>
+                    </div>
+                    <input type="number" name="break-period" label="Text input with dropdown button" />
+                </div>
+            </div>
+
         </div>
     </div>
     <script src="popup.js"></script>

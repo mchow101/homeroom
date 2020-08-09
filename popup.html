@@ -10,17 +10,45 @@
             max-width: 100%;
             position: relative;
             vertical-align: middle;
-            margin: 5px;
+            padding: 3%;
+            background-color: #F2F2F2;
         }
 
         li {
             list-style-type: square;
         }
 
+        h1{
+            padding: 5% 20% 5% 3%; 
+            color: #404040; 
+            background-color:  #F2F2F2;
+
+        }
+
+        /*formatting the pomodoro clock*/
+        .circle{
+            /* border: solid; */
+            border-radius: 10px;
+            /* border-color: #9E9E9E; */
+            background-color: #ffffff;
+            padding: 5% 5% 5% 10%;
+            margin-bottom: 5%;
+        }
+
+        /*formatting the pomodoro customization section*/
+        .pomodoro-customization{
+            border-radius: 10px;
+            /* border-color: #9E9E9E; */
+            background-color: #ffffff;
+            padding: 5%;
+            margin-bottom: 5%;
+        }
+
         input[type="checkbox"] {
             appearance: none;
-            background-color: #FC5130;
-            border: 1px solid #cacece;
+            /* background-color: #cacece; */
+            border: 1px solid #FC5130;
+            stroke: 2px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
             padding: 9px;
             border-radius: 3px;
@@ -76,11 +104,14 @@
 
         .section-header {
             border-style: none;
+            /* border-color: #F2F2F2; */
             border-radius: 10px;
-            background-color: #fcaf58;
-            color: #fc5130;
+            /* color:	#9E9E9E;  */
+            background-color: #ffffff;
+            color:	#404040;
             cursor: pointer;
-            padding: 1px 1px 3px 10px;
+            padding: 3% 3% 3% 3%;
+            /* margin: 2px 5% 1% 3%; */
             width: 100%;
             text-align: left;
             outline: none;
@@ -102,6 +133,9 @@
 
         .slider {
             -webkit-appearance: none;
+            align-items: center;
+            /* padding-left: 25%;
+            padding-right: 25%; */
             width: 100%;
             height: 25px;
             background: #414A73;
@@ -135,7 +169,7 @@
         }
 
         hr {
-            border-color: #F9C784;
+            border-color: #ffffff;
             border-style: solid none;
             border-width: 2px 0;
         }
@@ -251,16 +285,16 @@
     </style>
 </head>
 
-<body style="margin: 5px; background-color: #FED7AC;">
+<body style="margin: 5px; background-color: #F2F2F2;">
     <input type="range" min="1" max="3" value="1" class="slider" id="choose-tab">
     <div id="tasks" style="display: none">
-        <div style="padding-left: 20%; color: #fc5130;">
+        <div>
             <h1 class="featurette-heading">My Tasks</h1>
         </div>
-        <hr>
+        <!-- <hr> -->
         <label class="task-list" style="width: 100%">
             <dl>
-                <h5 class="section-header featurette-heading"><span class="featurette-heading">+ </span>Programming</h5>
+                <h5 class="section-header featurette-heading"><span class="featurette-heading" style="color: #FC674A">+ </span>Programming</h5>
                 <div class="task-section lead">
                 </div>
                 <h5 class="section-header featurette-heading"><span class="featurette-heading">+ </span>For Fun</h5>
@@ -271,10 +305,10 @@
     </div>
 
     <div id="classes" style="display: none;">
-        <div style="padding-left: 20%; color: #fc5130;">
+        <div>
             <h1 class="featurette-heading">My Classes</h1>
         </div>
-        <hr>
+        <!-- <hr> -->
         <label class="class-list" style="width: 100%">
             <dl>
                 <h5 class="class section-header featurette-heading"><span class="featurette-heading">+ </span>Comp Sci</h5>
@@ -288,12 +322,12 @@
     </div>
 
     <!-- Pomodoro Page -->
-    <div id="pomodoro" style="display: none; text-align: center;">
-        <div style="color: #fc5130;">
+    <div id="pomodoro">
+        <div>
             <h1 class="featurette-heading">Pomodoro</h1>
         </div>
 
-        <hr> <!-- Title Row -->
+        <!--<hr>--> <!-- Title Row -->
 
         <!-- Pomodoro Circle Timer Buttons -->
         <!-- <div class="setters">
@@ -327,6 +361,8 @@
             <div class="display-remain-time">00:30</div>
             <button class="play" id="pause"></button>
         </div>
+
+    <div class="pomodoro-customization">
 
         <!-- Dropdown for To-Do list items to attach the pomodoro timer to -->
         <div class="pomodoro-task-select">
@@ -364,6 +400,7 @@
             </div>
 
         </div>
+    </div>
     </div>
     <script src="popup.js"></script>
 </body>

@@ -171,7 +171,7 @@ $(document).ready(function () {
 
     function changeWholeTime(seconds) {
         if ((workTime + seconds) > 0) {
-          workTime += seconds;
+            workTime += seconds;
             update(workTime, workTime);
         }
     }
@@ -245,6 +245,7 @@ $(document).ready(function () {
     }
 
     function displayTimeLeft(timeLeft) { //displays time on the input
+        console.log(timeLeft);
         let minutes = Math.floor(timeLeft / 60);
         let seconds = timeLeft % 60;
         let displayString = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
@@ -253,6 +254,9 @@ $(document).ready(function () {
     }
 
     pauseBtn.addEventListener('click', pauseTimer);
-
-    workInput.value.addEventListener('change', displayTimeLeft(document.getElementById("work-period").value));
+    workInput.addEventListener('change', function () {
+        workTime =  document.getElementById("work-period").value * 60;
+        displayTimeLeft(workTime);
+        update(workTime, workTime);
+    });
 });

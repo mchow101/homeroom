@@ -74,7 +74,7 @@
             color: #4e598c;
         }
 
-        .section-header {
+        .section-header, .class-header {
             border-style: none;
             border-radius: 10px;
             background-color: #fcaf58;
@@ -258,8 +258,9 @@
             <h1 class="featurette-heading">My Tasks</h1>
         </div>
         <hr>
+        <dd><input type="text" id="new-section" class="new-section"></input></dd>
         <label class="task-list" style="width: 100%">
-            <dl>
+            <dl id="task-list">
                 <h5 class="section-header featurette-heading"><span class="featurette-heading">+ </span>Programming</h5>
                 <div class="task-section lead">
                 </div>
@@ -275,12 +276,13 @@
             <h1 class="featurette-heading">My Classes</h1>
         </div>
         <hr>
+        <dd><input type="text" id="new-class" class="new-class"></input></dd>
         <label class="class-list" style="width: 100%">
-            <dl>
-                <h5 class="class section-header featurette-heading"><span class="featurette-heading">+ </span>Comp Sci</h5>
+            <dl id="class-list">
+                <h5 class="class-header featurette-heading"><span class="featurette-heading">+ </span>Comp Sci</h5>
                 <div class="task-section lead">
                 </div>
-                <h5 class="section-header featurette-heading"><span class="featurette-heading">+ </span>American Lit</h5>
+                <h5 class="class-header featurette-heading"><span class="featurette-heading">+ </span>American Lit</h5>
                 <div class="task-section lead">
                 </div>
             </dl>
@@ -336,9 +338,6 @@
                 </div>
                 <select class="custom-select" id="inputGroupSelect01">
                     <option selected>Select Task</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
                 </select>
             </div>
         </div>

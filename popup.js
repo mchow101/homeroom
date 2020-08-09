@@ -254,8 +254,11 @@ $(document).ready(function () {
     }
 
     pauseBtn.addEventListener('click', pauseTimer);
-    workInput.addEventListener('change', function () {
+
+    workInput.addEventListener('change', function timerReset() {
         workTime =  document.getElementById("work-period").value * 60;
+        //pauseTimer();
+        timeLeft = workTime;
         displayTimeLeft(workTime);
         update(workTime, workTime);
     });

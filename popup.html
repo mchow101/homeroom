@@ -25,7 +25,7 @@
 
         }
 
-        .featurette-heading { font-size: 35px; }
+        .featurette-heading { font-size: 35px; } /* override bootstrap's featurette */
 
         /*formatting the pomodoro clock*/
         .circle{
@@ -191,7 +191,7 @@
         .setters {
             position: absolute;
             text-align: center;
-            left: 137.5px; /* possibly change to 132.5px for centering */
+            left: 130px; /* possibly change to 132.5px for centering */
             top: 205px;
         }
 
@@ -206,13 +206,12 @@
 
         .controls {
             position: absolute;
-            left: 127.5px; /* possibly change to 122.5px for centering */
+            left: 120px; /* possibly change to 122.5px for centering */
             top: 235px;
             text-align: center;
         }
 
         .display-remain-time {
-            font-family: 'Roboto';
             font-weight: 100;
             font-size: 65px;
             color: #4E598C;
@@ -357,7 +356,7 @@
 
         <!-- Pomodoro Circle Timer Numerical Display -->
         <div class="controls">
-            <div class="display-remain-time">00:30</div>
+            <div class="display-remain-time featurette-heading">00:30</div>
             <button class="play" id="pause"></button>
         </div>
 

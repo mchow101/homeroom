@@ -31,7 +31,7 @@ function changetab() {
 
 function section_setup(section) {
     console.log(section.nextElementSibling);
-    section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML + '<dd><input type="text" id="' + section.textContent.substring(1) + '" class="new-todo"></input></dd>';
+    section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML + '<dd><input type="text" id="' + section.textContent.substring(1) + '" class="new-todo"  placeholder=" New todo item"></input></dd>';
     section.id = section.textContent.substring(2);
     section.addEventListener("click", function () {
         var content = this.nextElementSibling;

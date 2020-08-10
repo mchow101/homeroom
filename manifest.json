@@ -1,8 +1,9 @@
 {
+    "key": "dmjanhblfidbiiopdhpoacnnmjengicm",
     "name": "EDificiency", 
     "version": "0.0.0.3",
     "description": "Productivity Extension for HackThis2020 @ HackIllinois",
-    "permissions": ["activeTab", "declarativeContent", "storage"],
+    "permissions": ["activeTab", "declarativeContent", "storage", "identity", "identity.email", "<all_urls>"],
     "background": {
         "scripts": ["jquery-3.5.1.js", "background.js"],
         "persistent": false
@@ -11,5 +12,9 @@
     "page_action": {
         "default_popup": "popup.html"
     },
-    "manifest_version": 2
+    "manifest_version": 2,
+    "oauth2": {
+        "client_id": "410341402238-us5vtvjajhqp6ppn5itqij04qisn06om.apps.googleusercontent.com",
+        "scopes": ["https://www.googleapis.com/auth/drive"]
+      }
 }

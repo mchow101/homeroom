@@ -31,7 +31,7 @@ function changetab() {
 
 function section_setup(section) {
     console.log(section.nextElementSibling);
-    section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML + '<dd><input type="text" id="' + section.textContent.substring(1) + '" class="new-todo"></input></dd>';
+    section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML + '<dd><input type="text" id="' + section.textContent.substring(1) + '" class="new-todo"  placeholder=" New todo item"></input></dd>';
     section.id = section.textContent.substring(2);
     section.addEventListener("click", function () {
         var content = this.nextElementSibling;
@@ -88,18 +88,6 @@ $(document).ready(function () {
     for (var i = 0; i < classSections.length; i++) {
         section_setup(classSections[i]);
     }
-
-    // this triggered when the add button existed
-    // we can probably delete soon haha
-    /*
-    $('.plus').click(function () {
-        var content = $(this).next().val()
-        if (content != "") {
-            console.log(this.id);
-            $(this).before('<label><input type="checkbox" class="task"></input><span>' + content + '</span></label><br>');
-        }
-    });
-    */
 
     $('.new-section').focus(function () {
         $(this).keypress(function (event) {

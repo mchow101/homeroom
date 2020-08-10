@@ -72,7 +72,7 @@
             margin: 2px 4px 2px 2px;
         }
 
-        .new-todo {
+        .new-todo, .new-class, .new-section {
             /*border: none;*/
             border: transparent
         }
@@ -114,6 +114,11 @@
             width: 100%;
             text-align: left;
             outline: none;
+            font-size: 1em;
+        }
+        /* prevent the glitch where the add/plus sign is huge */
+        span.featurette-heading {
+            font-size: 1em;
         }
 
         .task-section {
@@ -289,8 +294,7 @@
         <div>
             <h1 class="featurette-heading">My Tasks</h1>
         </div>
-        <hr>
-        <dd><input type="text" id="new-section" class="new-section"></input></dd>
+        <dd><input type="text" id="new-section" class="new-section" placeholder=" Add a new to-do list!"></input></dd>
         <label class="task-list" style="width: 100%">
             <dl id="task-list">
                 <h5 class="section-header"><span>+ </span>Programming</h5>
@@ -307,8 +311,7 @@
         <div>
             <h1 class="featurette-heading">My Classes</h1>
         </div>
-        <hr>
-        <dd><input type="text" id="new-class" class="new-class"></input></dd>
+        <dd><input type="text" id="new-class" class="new-class" placeholder=" Add a new class!"></input></dd>
         <label class="class-list" style="width: 100%">
             <dl id="class-list">
                 <h5 class="class-header"><span>+ </span>Comp Sci</h5>
@@ -326,8 +329,8 @@
         <div style="color: #fc5130;">
             <h1 class="featurette-heading">Pomodoro Timer</h1>
         </div>
-
-        <!--<hr>--> <!-- Title Row -->
+        
+        <!-- Title Row -->
 
         <!-- Pomodoro Circle Timer Buttons -->
         <!-- <div class="setters">

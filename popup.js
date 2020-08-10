@@ -89,18 +89,6 @@ $(document).ready(function () {
         section_setup(classSections[i]);
     }
 
-    // this triggered when the add button existed
-    // we can probably delete soon haha
-    /*
-    $('.plus').click(function () {
-        var content = $(this).next().val()
-        if (content != "") {
-            console.log(this.id);
-            $(this).before('<label><input type="checkbox" class="task"></input><span>' + content + '</span></label><br>');
-        }
-    });
-    */
-
     $('.new-section').focus(function () {
         $(this).keypress(function (event) {
             if (event.which == 13) {

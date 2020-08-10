@@ -25,6 +25,8 @@
 
         }
 
+        .featurette-heading { font-size: 35px; } /* override bootstrap's featurette */
+
         /*formatting the pomodoro clock*/
         .circle{
             /* border: solid; */
@@ -51,7 +53,7 @@
             stroke: 2px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
             padding: 9px;
-            border-radius: 3px;
+            border-radius: 50%;
             display: inline-block;
             position: relative;
             margin-right: 4px;
@@ -75,23 +77,25 @@
             border: transparent
         }
 
-
+        
         input:checked {
             background-color: #4e598c;
+            border-color: #4e598c;
             color: white;
             position: relative;
             margin-right: 4px;
             margin-bottom: -3px;
         }
 
-
+        /*
         input:checked:after {
-            margin-top: -0.95em;
-            left: 0.2em;
+           
+            /*left: 0.2em;
             content: "\2713";
-            font-size: 1.1em;
+            font-size: 0.5em;
             color: white;
-        }
+            
+        }*/
 
         input {
             color: #4e598c;
@@ -189,8 +193,8 @@
         .setters {
             position: absolute;
             text-align: center;
-            left: 137.5px; /* possibly change to 132.5px for centering */
-            top: 175px;
+            left: 130px; /* possibly change to 132.5px for centering */
+            top: 205px;
         }
 
         .minutes-set {
@@ -204,13 +208,12 @@
 
         .controls {
             position: absolute;
-            left: 127.5px; /* possibly change to 122.5px for centering */
-            top: 205px;
+            left: 120px; /* possibly change to 122.5px for centering */
+            top: 235px;
             text-align: center;
         }
 
         .display-remain-time {
-            font-family: 'Roboto';
             font-weight: 100;
             font-size: 65px;
             color: #4E598C;
@@ -290,10 +293,10 @@
         <dd><input type="text" id="new-section" class="new-section" placeholder=" Add a new to-do list!"></input></dd>
         <label class="task-list" style="width: 100%">
             <dl id="task-list">
-                <h5 class="section-header featurette-heading"><span class="featurette-heading">+ </span>Programming</h5>
+                <h5 class="section-header"><span>+ </span>Programming</h5>
                 <div class="task-section lead">
                 </div>
-                <h5 class="section-header featurette-heading"><span class="featurette-heading">+ </span>For Fun</h5>
+                <h5 class="section-header"><span>+ </span>For Fun</h5>
                 <div class="task-section lead">
                 </div>
             </dl>
@@ -308,10 +311,10 @@
         <dd><input type="text" id="new-class" class="new-class" placeholder=" Add a new class!"></input></dd>
         <label class="class-list" style="width: 100%">
             <dl id="class-list">
-                <h5 class="class-header featurette-heading"><span class="featurette-heading">+ </span>Comp Sci</h5>
+                <h5 class="class-header"><span>+ </span>Comp Sci</h5>
                 <div class="task-section lead">
                 </div>
-                <h5 class="class-header featurette-heading"><span class="featurette-heading">+ </span>American Lit</h5>
+                <h5 class="class-header"><span>+ </span>American Lit</h5>
                 <div class="task-section lead">
                 </div>
             </dl>
@@ -319,7 +322,7 @@
     </div>
 
     <!-- Pomodoro Page -->
-    <div id="pomodoro" style="display: none; text-align: center;">
+    <div id="pomodoro" style="display: none;">
         <div style="color: #fc5130;">
             <h1 class="featurette-heading">Pomodoro Timer</h1>
         </div>
@@ -355,7 +358,7 @@
 
         <!-- Pomodoro Circle Timer Numerical Display -->
         <div class="controls">
-            <div class="display-remain-time">00:30</div>
+            <div class="display-remain-time featurette-heading">00:30</div>
             <button class="play" id="pause"></button>
         </div>
 

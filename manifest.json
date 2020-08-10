@@ -1,7 +1,7 @@
 {
-    "name": "Practice", 
-    "version": "1.0",
-    "description": "Fun Times",
+    "name": "EDificiency", 
+    "version": "0.0.0.3",
+    "description": "Productivity Extension for HackThis2020 @ HackIllinois",
     "permissions": ["activeTab", "declarativeContent", "storage"],
     "background": {
         "scripts": ["jquery-3.5.1.js", "background.js"],

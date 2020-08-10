@@ -110,8 +110,8 @@ $(document).ready(function () {
                 var content = $(this).val();
                 if (content != "") {
                     console.log(document.getElementById('class-list').innerHTML);
-                    $('#class-list').prepend('<h5 class="class-header featurette-heading"><span class="featurette-heading">+ </span>' + content + '</h5><div class="task-section lead"></div>');
-                    $('#task-list').prepend('<h5 class="section-header featurette-heading"><span class="featurette-heading">+ </span>' + content + '</h5><div class="task-section lead"></div>');
+                    $('#class-list').prepend('<h5 class="class-header"><span>+ </span>' + content + '</h5><div class="task-section lead"></div>');
+                    $('#task-list').prepend('<h5 class="section-header"><span>+ </span>' + content + '</h5><div class="task-section lead"></div>');
                     $(this).val("");
                     section_setup(document.getElementsByClassName("class-header")[0]);
                     add_todo_input();

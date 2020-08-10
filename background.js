@@ -40,8 +40,9 @@ chrome.runtime.onInstalled.addListener(function (request) {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*"
     },
-    data: JSON.stringify({"uid": "1"}),
-    dataType: 'json'
+    data: {"uid": "1"},
+    dataType: 'json',
+    contentType: "application/json"
   };
 
   $.ajax(settings);

@@ -64,10 +64,10 @@ function App() {
             To Do List
           </CardTitle>
           <CardText>
-            Keep track of your task list at the tip of your finger tips.{" "}
+            Keep what you need to do at your finger tips! Whether you need to remember homework, remind yourself to grade tests, or simply make a note to pick up milk at the grocery store, we got you. Plus, you can share your tasks with others in case you want to lighten the load. {" "}
           </CardText>
           <CardActions border>
-            <Button colored>Get Started</Button>
+            <Button colored>To Do</Button>
           </CardActions>
           <CardMenu style={{ color: "#fff" }}>
             <IconButton name="share" />
@@ -88,11 +88,10 @@ function App() {
             Welcome
           </CardTitle>
           <CardText>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris
-            sagittis pellentesque lacus eleifend lacinia...
+            Have a confusing class schedule? Keep track of meeting days and the zoom link(s) to the class. Plus, create specific tasks for that class in a special to-do category!
           </CardText>
           <CardActions border>
-            <Button colored>Get Started</Button>
+            <Button colored>Classes</Button>
           </CardActions>
           <CardMenu style={{ color: "#fff" }}>
             <IconButton name="share" />

@@ -1,3 +1,4 @@
+var pomodoro_work = false;
 var slider = document.getElementById("choose-tab");
 var current = '1';
 slider.addEventListener("change", function () {
@@ -89,6 +90,28 @@ function set_task_list() {
     }
 }
 
+function get_message(work) {
+    back_messages = ["Did you enjoy your break?", "Hope you had a restful break!", "Did you have a good break?", "Some time off is always nice, but...", "How was your break?"];
+    work_messages = ["Time to get back to work!", "Let's get cracking again!", "Are you ready to get some more work done?", "Your work is waiting for you!", "Get ready to focus again!", "Let's get back to work now!", "Ready... Set... Work!"];
+    break_messages = ["Let's take a break now!", "Good work! You deserve some rest now!", "Now seems like a good time for a quick walk!", "Nice work! Have you had some water lately?", "Great job! Maybe you should hydrate now!", "Awesome work! Take a quick break now!", "You've been focusing so well! You should take a break now.", "You've been working so hard! Do you want to stretch?"];
+    if (work) {
+        return back_messages[Math.floor(Math.random() * back_messages.length)] + " " + work_messages[Math.floor(Math.random() * work_messages.length)];
+    } else {
+        return break_messages[Math.floor(Math.random() * break_messages.length)] + " :)";
+    }
+}
+
+function get_days(submit) {
+    submit.addEventListener("click", function () {
+        console.log(this.values);
+    });
+}
+
+subs = document.getElementsByClassName("submit");
+for (var i = 0; i < subs.length; i++) {
+    get_days(subs[i]);
+}
+
 $(document).ready(function () {
     changetab();
 
@@ -161,24 +184,32 @@ $(document).ready(function () {
     const pauseBtn = document.getElementById('pause');
     const setterBtns = document.querySelectorAll('button[data-setter]');
     const workInput = document.getElementById('work-period');
+    const breakInput = document.getElementById('break-period');
 
     let intervalTimer;
     let timeLeft;
     //let wholeTime = 25;
 
     let workTime = document.getElementById('work-period').value * 60; // manage this to set the whole time 
-    //let breakTime = document.getElementById('break-period').value * 60;
+    let breakTime = document.getElementById('break-period').value * 60;
 
     let isPaused = false;
     let isStarted = false;
 
-    update(workTime, workTime); //refreshes progress bar
-    displayTimeLeft(workTime);
+    update(pomodoro_work ? workTime : breakTime, pomodoro_work ? workTime : breakTime); //refreshes progress bar
+    displayTimeLeft(pomodoro_work ? workTime : breakTime);
 
     function changeWholeTime(seconds) {
-        if ((workTime + seconds) > 0) {
-            workTime += seconds;
-            update(workTime, workTime);
+        if (pomodoro_work) {
+            if ((workTime + seconds) > 0) {
+                workTime += seconds;
+                update(workTime, workTime);
+            }
+        } else {
+            if ((breakTime + seconds) > 0) {
+                breakTime += seconds;
+                update(breakTime, breakTime);
+            }
         }
     }
 
@@ -211,14 +242,12 @@ $(document).ready(function () {
             timeLeft = Math.round((remainTime - Date.now()) / 1000);
             if (timeLeft < 0) {
                 clearInterval(intervalTimer);
-                isStarted = false;
-                setterBtns.forEach(function (btn) {
-                    btn.disabled = false;
-                    btn.style.opacity = 1;
-                });
-                displayTimeLeft(workTime);
-                pauseBtn.classList.remove('pause');
-                pauseBtn.classList.add('play');
+                pomodoro_work = !pomodoro_work;
+                displayTimeLeft(pomodoro_work ? workTime : breakTime);
+                timer(pomodoro_work ? workTime : breakTime);
+                alert(get_message(pomodoro_work));
+                // pauseBtn.classList.remove('pause');
+                // pauseBtn.classList.add('play');
                 return;
             }
             displayTimeLeft(timeLeft);
@@ -227,15 +256,15 @@ $(document).ready(function () {
 
     function pauseTimer(event) {
         if (isStarted === false) {
-            timer(workTime);
+            timer(pomodoro_work ? workTime : breakTime);
             isStarted = true;
             this.classList.remove('play');
             this.classList.add('pause');
-
-            setterBtns.forEach(function (btn) {
-                btn.disabled = true;
-                btn.style.opacity = 0.5;
-            });
+            console.log(pomodoro_work ? "Work" : "Break");
+            // setterBtns.forEach(function (btn) {
+            //     btn.disabled = true;
+            //     btn.style.opacity = 0.5;
+            // });
 
         } else if (isPaused) {
             this.classList.remove('play');
@@ -251,12 +280,11 @@ $(document).ready(function () {
     }
 
     function displayTimeLeft(timeLeft) { //displays time on the input
-        console.log(timeLeft);
         let minutes = Math.floor(timeLeft / 60);
         let seconds = timeLeft % 60;
         let displayString = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         displayOutput.textContent = displayString;
-        update(timeLeft, workTime);
+        update(timeLeft, pomodoro_work ? workTime : breakTime);
     }
 
     pauseBtn.addEventListener('click', pauseTimer);
@@ -272,8 +300,28 @@ $(document).ready(function () {
             workTime = document.getElementById("work-period").value * 60;
             document.getElementById("work-period").value = workTime / 60;
         }
-        timeLeft = workTime;
-        displayTimeLeft(workTime);
-        update(workTime, workTime);
+        if (pomodoro_work) {
+            timeLeft = workTime;
+            displayTimeLeft(workTime);
+            update(workTime, workTime);
+        }
+    });
+
+    breakInput.addEventListener('change', function timerReset() {
+        //pauseTimer();
+        if (document.getElementById("break-period").value < 0) {
+            alert('Timer value must be greater than or equal to zero!');
+            breakTime = 0;
+            document.getElementById("break-period").value = 0;
+        }
+        else {
+            breakTime = document.getElementById("break-period").value * 60;
+            document.getElementById("break-period").value = breakTime / 60;
+        }
+        if (!pomodoro_work) {
+            timeLeft = breakTime;
+            displayTimeLeft(breakTime);
+            update(breakTime, breakTime);
+        }
     });
 });

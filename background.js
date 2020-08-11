@@ -45,11 +45,4 @@ chrome.runtime.onInstalled.addListener(function (request) {
   };
 
   $.ajax(settings);
-  /*$.ajax({
-    url: 'https://en.wikipedia.org/w/api.php?' +
-         'action=opensearch&format=json&maxlag=5&search=' + encodeURIComponent("cuba"),
-    success(data) {
-        console.log(data);
-    },
-  });*/
 });

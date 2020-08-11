@@ -244,8 +244,16 @@ $(document).ready(function () {
     pauseBtn.addEventListener('click', pauseTimer);
 
     workInput.addEventListener('change', function timerReset() {
-        workTime =  document.getElementById("work-period").value * 60;
         //pauseTimer();
+        if (document.getElementById("work-period").value < 0) {
+            alert('Timer value must be greater than or equal to zero!');
+            workTime = 0;
+            document.getElementById("work-period").value = 0;
+        }
+        else {
+            workTime = document.getElementById("work-period").value * 60;
+            document.getElementById("work-period").value = workTime / 60;
+        }
         timeLeft = workTime;
         displayTimeLeft(workTime);
         update(workTime, workTime);

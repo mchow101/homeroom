@@ -1,6 +1,6 @@
 {
     "key": "dmjanhblfidbiiopdhpoacnnmjengicm",
-    "name": "EDificiency", 
+    "name": "HomeRoom", 
     "version": "0.0.0.3",
     "description": "Productivity Extension for HackThis2020 @ HackIllinois",
     "permissions": ["activeTab", "declarativeContent", "storage", "identity", "identity.email", "<all_urls>"],
@@ -10,7 +10,19 @@
     },
     "options_page": "options.html",
     "page_action": {
-        "default_popup": "popup.html"
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "images/homeroom.png",
+            "32": "images/homeroom.png",
+            "48": "images/homeroom.png",
+            "128": "images/homeroom.png"
+          }
+    },
+    "icons": { 
+        "16": "images/homeroom.png",
+        "32": "images/homeroom.png",
+        "48": "images/homeroom.png",
+       "128": "images/homeroom.png" 
     },
     "manifest_version": 2,
     "oauth2": {

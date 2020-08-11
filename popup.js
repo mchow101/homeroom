@@ -257,11 +257,11 @@ $(document).ready(function () {
                 clearInterval(intervalTimer);
                 pomodoro_work = !pomodoro_work;
                 displayTimeLeft(pomodoro_work ? workTime : breakTime);
-                timer(pomodoro_work ? workTime : breakTime);
                 alert(get_message(pomodoro_work));
+                timer(pomodoro_work ? workTime : breakTime);
+                return;
                 // pauseBtn.classList.remove('pause');
                 // pauseBtn.classList.add('play');
-                return;
             }
             displayTimeLeft(timeLeft);
         }, 1000);
@@ -293,6 +293,7 @@ $(document).ready(function () {
     }
 
     function displayTimeLeft(timeLeft) { //displays time on the input
+        console.log("Changing time...");
         let minutes = Math.floor(timeLeft / 60);
         let seconds = timeLeft % 60;
         let displayString = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;

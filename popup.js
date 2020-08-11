@@ -1,5 +1,5 @@
 var pomodoro_work = true;
-var port = chrome.runtime.connect({ name: "conn"});
+var port = chrome.runtime.connect({ name: "conn" });
 var pom_port = chrome.runtime.connect({ name: "pomodoro" });
 
 // top slider to change tabs
@@ -60,14 +60,42 @@ function add_todo_input() {
                 var content = $(this).val();
                 if (content != "") {
 
-                    console.log();
+                    //console.log(content);
                     // if time: add more ors
 
                     // if it's a valid link
                     if (content.includes("http") || content.includes("https") || content.includes("www")) {
-                        console.log(this.id)
-                        $(this).before('<a href=">' + content + '">' + content + '</a></br>');
-                        $(this).val("");
+
+                        var has_spaces = $.trim(content).split(" ");
+                        if (has_spaces.length == 1) {
+                            console.log(this.id)
+                            $(this).before('<a href=">' + content + '">' + content + '</a></br>');
+                            $(this).val("");
+
+                        }
+                        else {
+                            console.log(this.id);
+                            to_add_to_list = '<label><input type="checkbox" class="task"></input><span>';
+                            add_to_end = '</span></label><br>';
+
+                            for (var i = 0; i < has_spaces.length; i++) {
+                                if (has_spaces[i].includes("http") || has_spaces[i].includes("https") || has_spaces[i].includes("www")) {
+                                    to_add_to_list += '<a href="' + has_spaces[i]+ '">' + has_spaces[i] + ' ' + '</a>'; //space in the back
+                                }
+                                else {
+                                    to_add_to_list += has_spaces[i] + " ";
+                                }
+                                
+                            }
+                            to_add_to_list = to_add_to_list + add_to_end;
+                            $(this).before(to_add_to_list);
+                            $(this).val("");
+
+                        }
+
+
+
+
 
                     }
                     //if it's not a link

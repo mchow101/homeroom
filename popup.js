@@ -73,13 +73,13 @@ function set_task_list() {
 }
 
 function get_message(work) {
-    back_messages = ["Did you enjoy your break?", "Hope you had a restful break!", "Did you have a good break?", "Some time off is always nice... but now!", "How was your break?"];
+    back_messages = ["Did you enjoy your break?", "Hope you had a restful break!", "Did you have a good break?", "Some time off is always nice, but...", "How was your break?"];
     work_messages = ["Time to get back to work!", "Let's get cracking again!", "Are you ready to get some more work done?", "Your work is waiting for you!", "Get ready to focus again!", "Let's get back to work now!", "Ready... Set... Work!"];
-    break_messages = ["Let's take a break now!", "Good work! You deserve some rest now!", "Now seems like a good time for a quick walk!", "Nice work! Have you had some water lately?", "Great job! Maybe you should hydrate now!", "Awesome work! Take a quick break now!", "You've been focusing so well! You should take a break now."];
+    break_messages = ["Let's take a break now!", "Good work! You deserve some rest now!", "Now seems like a good time for a quick walk!", "Nice work! Have you had some water lately?", "Great job! Maybe you should hydrate now!", "Awesome work! Take a quick break now!", "You've been focusing so well! You should take a break now.", "You've been working so hard! Do you want to stretch?"];
     if (work) {
         return back_messages[Math.floor(Math.random() * back_messages.length)] + " " + work_messages[Math.floor(Math.random() * work_messages.length)];
     } else {
-        return break_messages[Math.floor(Math.random() * break_messages.length)];
+        return break_messages[Math.floor(Math.random() * break_messages.length)] + " :)";
     }
 }
 

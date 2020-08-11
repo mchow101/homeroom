@@ -31,6 +31,7 @@ function changetab() {
 
 function section_setup(section) {
     console.log(section.nextElementSibling);
+    // possibly at some point add way to change placeholder to add a link/class meeting time/whatever if it's in class
     section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML + '<dd><input type="text" id="' + section.textContent.substring(1) + '" class="new-todo"  placeholder=" New todo item"></input></dd>';
     section.id = section.textContent.substring(2);
     section.addEventListener("click", function () {
@@ -46,16 +47,33 @@ function section_setup(section) {
     });
 }
 
+
 function add_todo_input() {
     $('.new-todo').focus(function () {
         $(this).keypress(function (event) {
             if (event.which == 13) {
                 var content = $(this).val();
                 if (content != "") {
-                    console.log(this.id)
-                    $(this).before('<label><input type="checkbox" class="task"></input><span>' + content + '</span></label><br>');
-                    $(this).val("");
+                    
+                    console.log();
+                    // if time: add more ors
+
+                    // if it's a valid link
+                    if (content.includes("http") || content.includes("https") || content.includes("www")) {
+                        console.log(this.id)
+                        $(this).before('<a href=">' + content + '">' + content + '</a></br>');
+                        $(this).val("");
+
+                    }
+                    //if it's not a link
+                    else{
+                        console.log(this.id)
+                        $(this).before('<label><input type="checkbox" class="task"></input><span>' + content + '</span></label><br>');
+                        $(this).val("");
+                        
+                    }
                 }
+                
             }
         });
     });

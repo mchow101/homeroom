@@ -1,4 +1,8 @@
-var pomodoro_work = false;
+var pomodoro_work = true;
+var port = chrome.runtime.connect({ name: "conn"});
+var pom_port = chrome.runtime.connect({ name: "pomodoro" });
+
+// top slider to change tabs
 var slider = document.getElementById("choose-tab");
 var current = '1';
 slider.addEventListener("change", function () {
@@ -6,6 +10,7 @@ slider.addEventListener("change", function () {
     changetab();
 });
 
+// change tabs
 function changetab() {
     if (current.charAt(0) === '1') {
         console.log("Tasks tab");
@@ -30,14 +35,13 @@ function changetab() {
     }
 }
 
+// adds a subsection with input box and collapsible header
 function section_setup(section) {
-    console.log(section.nextElementSibling);
     // possibly at some point add way to change placeholder to add a link/class meeting time/whatever if it's in class
     section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML + '<dd><input type="text" id="' + section.textContent.substring(1) + '" class="new-todo"  placeholder=" New todo item"></input></dd>';
     section.id = section.textContent.substring(2);
     section.addEventListener("click", function () {
         var content = this.nextElementSibling;
-        console.log(content);
         if (content.style.display === "block") {
             content.style.display = "none";
             this.textContent = this.textContent.replace('-', '+');
@@ -48,14 +52,14 @@ function section_setup(section) {
     });
 }
 
-
+// adds an input box which can add text to the section (new task, link, etc.)
 function add_todo_input() {
     $('.new-todo').focus(function () {
         $(this).keypress(function (event) {
             if (event.which == 13) {
                 var content = $(this).val();
                 if (content != "") {
-                    
+
                     console.log();
                     // if time: add more ors
 
@@ -67,29 +71,37 @@ function add_todo_input() {
 
                     }
                     //if it's not a link
-                    else{
+                    else {
                         console.log(this.id)
                         $(this).before('<label><input type="checkbox" class="task"></input><span>' + content + '</span></label><br>');
                         $(this).val("");
-                        
+
                     }
                 }
-                
+
             }
         });
     });
 }
 
+// finds all unchecked items and adds them to task list
 function set_task_list() {
     $('option').remove();
     var all_tasks = document.getElementsByClassName("task");
+    var task_list = [];
     for (var i = 0; i < all_tasks.length; i++) {
         if (!all_tasks[i].checked) {
-            $('#inputGroupSelect01').append('<option>' + all_tasks[i].nextElementSibling.textContent + '</option>');
+            task_list[i] = all_tasks[i].nextElementSibling.textContent;
+            $('#inputGroupSelect01').append('<option>' + task_list[i] + '</option>');
         }
     }
+    port.postMessage({ action: "Update tasks", tasks: task_list });
+    // port.onMessage.addListener(function (msg) {
+    //     console.log(msg.time);
+    // });
 }
 
+// chooses a message to display for pomodoro
 function get_message(work) {
     back_messages = ["Did you enjoy your break?", "Hope you had a restful break!", "Did you have a good break?", "Some time off is always nice, but...", "How was your break?"];
     work_messages = ["Time to get back to work!", "Let's get cracking again!", "Are you ready to get some more work done?", "Your work is waiting for you!", "Get ready to focus again!", "Let's get back to work now!", "Ready... Set... Work!"];
@@ -125,11 +137,11 @@ $(document).ready(function () {
         section_setup(sections[i]);
     }
 
-    // copied above and tried to tweak for classes
     for (var i = 0; i < classSections.length; i++) {
         section_setup(classSections[i]);
     }
 
+    // tasks
     $('.new-section').focus(function () {
         $(this).keypress(function (event) {
             if (event.which == 13) {
@@ -145,6 +157,7 @@ $(document).ready(function () {
         });
     });
 
+    // classes
     $('.new-class').focus(function () {
         $(this).keypress(function (event) {
             if (event.which == 13) {
@@ -287,6 +300,11 @@ $(document).ready(function () {
         update(timeLeft, pomodoro_work ? workTime : breakTime);
     }
 
+    // port.postMessage({ joke: "Knock knock" });
+    // port.onMessage.addListener(function (msg) {
+    //     console.log(msg.time);
+    // });
+
     pauseBtn.addEventListener('click', pauseTimer);
 
     workInput.addEventListener('change', function timerReset() {
@@ -324,4 +342,8 @@ $(document).ready(function () {
             update(breakTime, breakTime);
         }
     });
+});
+
+chrome.runtime.sendMessage({ greeting: "hello" }, function (response) {
+    console.log(response.farewell);
 });

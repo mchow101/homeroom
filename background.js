@@ -46,3 +46,22 @@ chrome.runtime.onInstalled.addListener(function (request) {
 
   $.ajax(settings);
 });
+
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    console.log(sender.tab ?
+                "from a content script:" + sender.tab.url :
+                "from the extension");
+    if (request.greeting == "hello")
+      sendResponse({farewell: "goodbye"});
+  });
+
+  chrome.runtime.onConnect.addListener(function(port) {
+    port.onMessage.addListener(function(msg) {
+      if (msg.joke == "Knock knock")
+        port.postMessage({time: Date.now()});
+      else if (msg.action == "Update tasks") {
+        console.log(msg.task_list);
+      }
+    });
+  });

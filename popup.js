@@ -120,10 +120,25 @@ function add_todo_input() {
                         checked: false,
                         section: section_id,
                     });
+
                     // listener for check
                     $("#checkbox" + task_counter).click(function () {
                         port.postMessage({ action: "Update tasks", task: content, checked: this.checked, section: section_id });
                     });
+
+                    // listener for removing items
+                    to_remove = document.getElementsByClassName('remove');
+                    for (var i = 0; i < to_remove.length; i++) {
+                        to_remove[i].addEventListener("click", function () {
+                            var to_be_removed = $(this).parentsUntil('div');
+                            port.postMessage({ action: "Remove task", task: content, section: section_id });
+                            $(to_be_removed[0]).prev().remove();
+                            for (var i = 0; i < to_be_removed.length; i++) {
+                                to_be_removed[i].remove();
+                            }
+                        });
+                    }
+
                     task_counter++;
                 }
             }
@@ -235,11 +250,11 @@ function pop_init() {
 
             // listener for removing items
             to_remove = document.getElementsByClassName('remove');
-            console.log(to_remove.length + "^^^^^^   ");
             for (var i = 0; i < to_remove.length; i++) {
-                console.log(i);
                 to_remove[i].addEventListener("click", function () {
                     var to_be_removed = $(this).parentsUntil('div');
+                    console.log(to_be_removed[0].parentElement.previousElementSibling.id);
+                    port.postMessage({ action: "Remove task", task: to_be_removed[0].textContent, section: to_be_removed[0].parentElement.previousElementSibling.id });
                     $(to_be_removed[0]).prev().remove();
                     for (var i = 0; i < to_be_removed.length; i++) {
                         to_be_removed[i].remove();

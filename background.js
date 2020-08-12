@@ -74,7 +74,11 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           tasks = tasks.concat([[msg.task, msg.checked, msg.section]]);
       } else if (msg.action == "Get tasks") {
         port.postMessage({tasks: tasks, signature: msg.signature });
-      } else if (msg.action == "Check task") {
+      } else if (msg.action == "Remove task") {
+        for (var i = 0; i < tasks.length; i++) {
+          if (tasks[i].includes(msg.task) && tasks[i].includes(msg.section)) 
+            tasks.pop(i);
+        }
       }
     });
   });

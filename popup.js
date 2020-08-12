@@ -1,7 +1,7 @@
 var pomodoro_work = true;
 var port = chrome.runtime.connect({ name: "conn" });
 var pom_port = chrome.runtime.connect({ name: "pomodoro" });
-var num = 1;
+var task_counter = 0;
 
 // top slider to change tabs
 var slider = document.getElementById("choose-tab");
@@ -73,15 +73,12 @@ function add_todo_input() {
                     ) {
                         var has_spaces = $.trim(content).split(" ");
                         if (has_spaces.length == 1) {
-                            console.log(this.id);
-                            $(this).before('<br><a href=">' + content + '">' + content + "</a>");
+                            $(this).after('<br><a href=">' + content + '">' + content + "</a>");
                             $(this).val("");
                         } else {
-                            console.log(this.id);
                             to_add_to_list =
-                                '<br><label><input type="checkbox" class="task"></input><span>';
+                                '<br><label id="task' + task_counter + '"><input type="checkbox" class="task"></input><span>';
                             add_to_end = "</span></label>";
-
                             for (var i = 0; i < has_spaces.length; i++) {
                                 if (
                                     has_spaces[i].includes("http") ||
@@ -106,20 +103,28 @@ function add_todo_input() {
                     }
                     //if it's not a link
                     else {
-                        console.log(this.id);
-                        $(this).before(
-                            '<br><label><input type="checkbox" class="task"></input><span>' +
-                            content +
+                        $(this).after(
+                            '<br><label id="task' + task_counter 
+                            + '"><input type="checkbox" class="task" id="checkbox' 
+                            + task_counter + '"></input><span>'
+                            + content +
                             '</span><input type = "button" class="remove" value ="x"></input></label>'
                         );
                         $(this).val("");
-                        port.postMessage({
-                            action: "Update tasks",
-                            task: content,
-                            checked: false,
-                            section: this.id,
-                        });
                     }
+                    // add to background list
+                    var section_id = this.id;
+                    port.postMessage({
+                        action: "Update tasks",
+                        task: content,
+                        checked: false,
+                        section: section_id,
+                    });
+                    // listener for check
+                    $("#checkbox" + task_counter).click(function () {
+                        port.postMessage({ action: "Update tasks", task: content, checked: this.checked, section: section_id });
+                    });
+                    task_counter++;
                 }
             }
         });
@@ -197,7 +202,6 @@ for (var i = 0; i < subs.length; i++) {
 
 // initialize the popup with saved data
 function pop_init() {
-    console.log("INIT");
     changetab();
     port.postMessage({ action: "Get tasks", signature: "pop_init" });
     port.onMessage.addListener(function (msg) {
@@ -205,10 +209,7 @@ function pop_init() {
             var task_list = msg.tasks;
             console.log(task_list);
             // task section headers
-            sections_html = document.getElementsByClassName('section-header');
             sections = [];
-            for (var s = sections.length - 1; s >= 0; s--)
-                sections = sections.concat(sections_html[s].id);
             for (var i = task_list.length - 1; i >= 0; i--) {
                 if (!sections.includes(task_list[i][2])) {
                     $('#task-list').prepend('<h5 class="section-header"><span>+ </span>' + task_list[i][2] + '</h5><div class="task-section lead"></div>');
@@ -217,8 +218,18 @@ function pop_init() {
                 }
 
                 // add tasks
-                document.getElementById(task_list[i][2]).nextElementSibling.innerHTML += ('<br><label><input type="checkbox" class="task"></input><span>' + task_list[i][0] + '</span></label>');
+                document.getElementById(task_list[i][2]).nextElementSibling.innerHTML += ('<br><label id="task' + task_counter + '"><input type="checkbox" class="task" id="checkbox' + task_counter + '"></input><span>' + task_list[i][0] + '</span></label>');
+                // check task
+                if (task_list[i][1]) {
+                    $("#checkbox" + task_counter).attr("checked", true);
+                }
+                task_counter++;
             }
+            // add listener for click
+            $(".task").click(function () {
+                port.postMessage({ action: "Update tasks", task: this.nextElementSibling.textContent, checked: this.checked, section: this.parentElement.parentElement.previousElementSibling.id });
+            })
+            // add input boxes
             for (var i = sections.length - 1; i >= 0; i--)
                 add_todo_input();
         }
@@ -241,34 +252,6 @@ function remove_item(event){
 var remove_class = document.getElementsByClassName('remove');
 remove_class.addEventListener("click", remove_item);
 */
-
-// initialize the popup with saved data
-// function pop_init() {
-//     changetab();
-//     port.postMessage({ action: "Get tasks" });
-//     port.onMessage.addListener(function (msg) {
-//         task_list = msg.tasks;
-//         // task section headers
-//         sections_html = document.getElementsByClassName("section-header");
-//         sections = [];
-//         for (var s = 0; s < sections_html.length; s++)
-//             sections = sections.concat(sections_html[s].id);
-//         for (var i = 0; i < task_list.length; i++) {
-//             if (!sections.includes(task_list[i][2])) {
-//                 $("#task-list").prepend(
-//                     '<h5 class="section-header"><span>+ </span>' +
-//                     task_list[i][2] +
-//                     '</h5><div class="task-section lead"></div>'
-//                 );
-//                 section_setup(document.getElementsByClassName("section-header")[0]);
-//                 add_todo_input();
-//                 sections = sections.concat(
-//                     document.getElementsByClassName("section-header")[0].id
-//                 );
-//             }
-//         }
-//     });
-// }
 
 $(document).ready(function () {
     pop_init();
@@ -333,7 +316,7 @@ $(document).ready(function () {
     });
     add_todo_input();
 
-    // Pomodoro Timer Code is Below
+    // pomodoro timer
     let progressBar = document.querySelector(".e-c-progress");
     let indicator = document.getElementById("e-indicator");
     let pointer = document.getElementById("e-pointer");
@@ -462,11 +445,6 @@ $(document).ready(function () {
         update(timeLeft, pomodoro_work ? workTime : breakTime);
     }
 
-    // port.postMessage({ joke: "Knock knock" });
-    // port.onMessage.addListener(function (msg) {
-    //     console.log(msg.time);
-    // });
-
     pauseBtn.addEventListener("click", pauseTimer);
 
     workInput.addEventListener("change", function timerReset() {
@@ -502,8 +480,4 @@ $(document).ready(function () {
             update(breakTime, breakTime);
         }
     });
-});
-
-chrome.runtime.sendMessage({ greeting: "hello" }, function (response) {
-    console.log(response.farewell);
 });

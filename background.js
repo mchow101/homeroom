@@ -63,9 +63,18 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       if (msg.joke == "Knock knock")
         port.postMessage({time: Date.now()});
       else if (msg.action == "Update tasks") {
-        tasks = tasks.concat([[msg.task, msg.checked, msg.section]]);
+        var in_list = false;
+        for (var i = 0; i < tasks.length; i++) {
+          if (tasks[i].includes(msg.task) && tasks[i].includes(msg.section)) {
+            tasks[i] = [msg.task, msg.checked, msg.section];
+            in_list = true;
+          }
+        }
+        if (!in_list)
+          tasks = tasks.concat([[msg.task, msg.checked, msg.section]]);
       } else if (msg.action == "Get tasks") {
         port.postMessage({tasks: tasks, signature: msg.signature });
+      } else if (msg.action == "Check task") {
       }
     });
   });

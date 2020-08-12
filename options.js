@@ -1,15 +1,21 @@
-let page = document.getElementById('buttonDiv');
-const kButtonColors = ['#3aa757', '#e8453c', '#f9bb2d', '#4688f1'];
-function constructOptions(kButtonColors) {
-    for (let item of kButtonColors) {
-        let button = document.createElement('button');
-        button.style.backgroundColor = item;
-        button.addEventListener('click', function () {
-            chrome.storage.sync.set({ color: item }, function () {
-                console.log('color is ' + item);
-            })
-        });
-        page.appendChild(button);
+
+let changeToLight = document.getElementById('btn-changeToLight');
+changeToLight.addEventListener('click', setTheme('Light'));
+
+
+let changeToDark = document.getElementById('btn-changeToDark');
+changeToDark.addEventListener('click', setTheme('Dark'));
+
+function setTheme(theme) {
+    if (theme == 'Light') {
+        // document.documentElement.style.setProperty('--main-bg-color', '#F2F2F2');
+        console.log('Let there be light!');
+        $(':root').css('--main-bg-color', '#F2F2F2');
+    }
+    if (theme == 'Dark') {
+        // document.documentElement.style.setProperty('--main-bg-color', '#121212');
+        $(':root').css('--main-bg-color', '#121212');
+        console.log('Let there be...dark? Darkness?');
     }
 }
-constructOptions(kButtonColors);
+

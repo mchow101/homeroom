@@ -1,32 +1,39 @@
 {
-    "key": "dmjanhblfidbiiopdhpoacnnmjengicm",
-    "name": "HomeRoom", 
-    "version": "0.0.0.3",
-    "description": "Productivity Extension for HackThis2020 @ HackIllinois",
-    "permissions": ["activeTab", "declarativeContent", "storage", "identity", "identity.email", "<all_urls>"],
-    "background": {
-        "scripts": ["jquery-3.5.1.js", "background.js"],
-        "persistent": false
-    },
-    "options_page": "options.html",
-    "page_action": {
-        "default_popup": "popup.html",
-        "default_icon": {
-            "16": "images/homeroom.png",
-            "32": "images/homeroom.png",
-            "48": "images/homeroom.png",
-            "128": "images/homeroom.png"
-          }
-    },
-    "icons": { 
-        "16": "images/homeroom.png",
-        "32": "images/homeroom.png",
-        "48": "images/homeroom.png",
-       "128": "images/homeroom.png" 
-    },
-    "manifest_version": 2,
-    "oauth2": {
-        "client_id": "410341402238-us5vtvjajhqp6ppn5itqij04qisn06om.apps.googleusercontent.com",
-        "scopes": ["https://www.googleapis.com/auth/drive"]
-      }
+  "key": "dmjanhblfidbiiopdhpoacnnmjengicm",
+  "name": "HomeRoom",
+  "version": "0.0.0.3",
+  "description": "Productivity Extension for HackThis2020 @ HackIllinois",
+  "permissions": [
+    "activeTab",
+    "declarativeContent",
+    "storage",
+    "identity",
+    "identity.email",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": ["jquery-3.5.1.js", "background.js"],
+    "persistent": false
+  },
+  "options_page": "options.html",
+  "page_action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/homeroom.png",
+      "32": "images/homeroom.png",
+      "48": "images/homeroom.png",
+      "128": "images/homeroom.png"
+    }
+  },
+  "icons": {
+    "16": "images/homeroom.png",
+    "32": "images/homeroom.png",
+    "48": "images/homeroom.png",
+    "128": "images/homeroom.png"
+  },
+  "manifest_version": 2,
+  "oauth2": {
+    "client_id": "410341402238-us5vtvjajhqp6ppn5itqij04qisn06om.apps.googleusercontent.com",
+    "scopes": ["https://www.googleapis.com/auth/drive"]
+  }
 }

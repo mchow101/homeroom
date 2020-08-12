@@ -1,10 +1,11 @@
 var pomodoro_work = true;
 var port = chrome.runtime.connect({ name: "conn" });
 var pom_port = chrome.runtime.connect({ name: "pomodoro" });
+var num = 1;
 
 // top slider to change tabs
 var slider = document.getElementById("choose-tab");
-var current = '1';
+var current = "1";
 slider.addEventListener("change", function () {
     current = slider.value;
     changetab();
@@ -36,7 +37,9 @@ function changetab() {
 function section_setup(section) {
     console.log("IN SECTION SETPU");
     // possibly at some point add way to change placeholder to add a link/class meeting time/whatever if it's in class
-    section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML + '<input type="text" id="' + section.textContent.substring(2) + '" class="new-todo"  placeholder=" New todo item"></input>';
+    section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML +
+        '<input type="text" id="' + section.textContent.substring(2) +
+        '" class="new-todo"  placeholder=" New todo item"></input>';
     section.id = section.textContent.substring(2);
     section.addEventListener("click", function () {
         var content = this.nextElementSibling;
@@ -50,52 +53,72 @@ function section_setup(section) {
     });
 }
 
+
+
 // adds an input box which can add text to the section (new task, link, etc.)
 function add_todo_input() {
-    $('.new-todo').focus(function () {
+    $(".new-todo").focus(function () {
         $(this).keypress(function (event) {
             if (event.which == 13) {
                 var content = $(this).val();
                 if (content != "") {
-
                     //console.log(content);
                     // if time: add more ors
 
                     // if it's a valid link
-                    if (content.includes("http") || content.includes("https") || content.includes("www")) {
-
+                    if (
+                        content.includes("http") ||
+                        content.includes("https") ||
+                        content.includes("www")
+                    ) {
                         var has_spaces = $.trim(content).split(" ");
                         if (has_spaces.length == 1) {
-                            console.log(this.id)
-                            $(this).after('<br><a href=">' + content + '">' + content + '</a>');
-                            $(this).val("");
-
-                        }
-                        else {
                             console.log(this.id);
-                            to_add_to_list = '<br><label><input type="checkbox" class="task"></input><span>';
-                            add_to_end = '</span></label>';
+                            $(this).before('<br><a href=">' + content + '">' + content + "</a>");
+                            $(this).val("");
+                        } else {
+                            console.log(this.id);
+                            to_add_to_list =
+                                '<br><label><input type="checkbox" class="task"></input><span>';
+                            add_to_end = "</span></label>";
 
                             for (var i = 0; i < has_spaces.length; i++) {
-                                if (has_spaces[i].includes("http") || has_spaces[i].includes("https") || has_spaces[i].includes("www")) {
-                                    to_add_to_list += '<a href="' + has_spaces[i] + '">' + has_spaces[i] + ' ' + '</a>'; //space in the back
-                                }
-                                else {
+                                if (
+                                    has_spaces[i].includes("http") ||
+                                    has_spaces[i].includes("https") ||
+                                    has_spaces[i].includes("www")
+                                ) {
+                                    to_add_to_list +=
+                                        '<a href="' +
+                                        has_spaces[i] +
+                                        '">' +
+                                        has_spaces[i] +
+                                        " " +
+                                        "</a>"; //space in the back
+                                } else {
                                     to_add_to_list += has_spaces[i] + " ";
                                 }
                             }
                             to_add_to_list = to_add_to_list + add_to_end;
-                            $(this).after(to_add_to_list);
+                            $(this).before(to_add_to_list);
                             $(this).val("");
-                            port.postMessage({ action: "Update tasks", task: to_add_to_list, checked: false, section: this.id });
                         }
                     }
                     //if it's not a link
                     else {
-                        console.log(this.id)
-                        $(this).after('<br><label><input type="checkbox" class="task"></input><span>' + content + '</span></label>');
+                        console.log(this.id);
+                        $(this).before(
+                            '<br><label><input type="checkbox" class="task"></input><span>' +
+                            content +
+                            '</span><input type = "button" class="remove" value ="x"></input></label>'
+                        );
                         $(this).val("");
-                        port.postMessage({ action: "Update tasks", task: content, checked: false, section: this.id });
+                        port.postMessage({
+                            action: "Update tasks",
+                            task: content,
+                            checked: false,
+                            section: this.id,
+                        });
                     }
                 }
             }
@@ -122,13 +145,42 @@ function set_task_list() {
 
 // chooses a message to display for pomodoro
 function get_message(work) {
-    back_messages = ["Did you enjoy your break?", "Hope you had a restful break!", "Did you have a good break?", "Some time off is always nice, but...", "How was your break?"];
-    work_messages = ["Time to get back to work!", "Let's get cracking again!", "Are you ready to get some more work done?", "Your work is waiting for you!", "Get ready to focus again!", "Let's get back to work now!", "Ready... Set... Work!"];
-    break_messages = ["Let's take a break now!", "Good work! You deserve some rest now!", "Now seems like a good time for a quick walk!", "Nice work! Have you had some water lately?", "Great job! Maybe you should hydrate now!", "Awesome work! Take a quick break now!", "You've been focusing so well! You should take a break now.", "You've been working so hard! Do you want to stretch?"];
+    back_messages = [
+        "Did you enjoy your break?",
+        "Hope you had a restful break!",
+        "Did you have a good break?",
+        "Some time off is always nice, but...",
+        "How was your break?",
+    ];
+    work_messages = [
+        "Time to get back to work!",
+        "Let's get cracking again!",
+        "Are you ready to get some more work done?",
+        "Your work is waiting for you!",
+        "Get ready to focus again!",
+        "Let's get back to work now!",
+        "Ready... Set... Work!",
+    ];
+    break_messages = [
+        "Let's take a break now!",
+        "Good work! You deserve some rest now!",
+        "Now seems like a good time for a quick walk!",
+        "Nice work! Have you had some water lately?",
+        "Great job! Maybe you should hydrate now!",
+        "Awesome work! Take a quick break now!",
+        "You've been focusing so well! You should take a break now.",
+        "You've been working so hard! Do you want to stretch?",
+    ];
     if (work) {
-        return back_messages[Math.floor(Math.random() * back_messages.length)] + " " + work_messages[Math.floor(Math.random() * work_messages.length)];
+        return (
+            back_messages[Math.floor(Math.random() * back_messages.length)] +
+            " " +
+            work_messages[Math.floor(Math.random() * work_messages.length)]
+        );
     } else {
-        return break_messages[Math.floor(Math.random() * break_messages.length)] + " :)";
+        return (
+            break_messages[Math.floor(Math.random() * break_messages.length)] + " :)"
+        );
     }
 }
 
@@ -173,14 +225,59 @@ function pop_init() {
     });
 }
 
+//playing around with remove feature 
+/*
+function remove_item(event){
+  console.log('x');
+  var to_be_removed = $(this).parentsUntil('div');
+  console.log(to_be_removed);
+  for (var i = 0; i < to_be_removed.length; i++) {
+    console.log(to_be_removed[i]);
+    to_be_removed[i].remove();
+ 
+  }
+}
+ 
+var remove_class = document.getElementsByClassName('remove');
+remove_class.addEventListener("click", remove_item);
+*/
+
+// initialize the popup with saved data
+// function pop_init() {
+//     changetab();
+//     port.postMessage({ action: "Get tasks" });
+//     port.onMessage.addListener(function (msg) {
+//         task_list = msg.tasks;
+//         // task section headers
+//         sections_html = document.getElementsByClassName("section-header");
+//         sections = [];
+//         for (var s = 0; s < sections_html.length; s++)
+//             sections = sections.concat(sections_html[s].id);
+//         for (var i = 0; i < task_list.length; i++) {
+//             if (!sections.includes(task_list[i][2])) {
+//                 $("#task-list").prepend(
+//                     '<h5 class="section-header"><span>+ </span>' +
+//                     task_list[i][2] +
+//                     '</h5><div class="task-section lead"></div>'
+//                 );
+//                 section_setup(document.getElementsByClassName("section-header")[0]);
+//                 add_todo_input();
+//                 sections = sections.concat(
+//                     document.getElementsByClassName("section-header")[0].id
+//                 );
+//             }
+//         }
+//     });
+// }
+
 $(document).ready(function () {
     pop_init();
 
-    let tasks = document.getElementsByClassName('task');
-    let sections = document.getElementsByClassName('section-header');
+    let tasks = document.getElementsByClassName("task");
+    let sections = document.getElementsByClassName("section-header");
 
-    let classes = document.getElementsByClassName('classes');
-    let classSections = document.getElementsByClassName('class-header');
+    let classes = document.getElementsByClassName("classes");
+    let classSections = document.getElementsByClassName("class-header");
 
     for (var i = 0; i < sections.length; i++) {
         section_setup(sections[i]);
@@ -191,12 +288,16 @@ $(document).ready(function () {
     }
 
     // tasks
-    $('.new-section').focus(function () {
+    $(".new-section").focus(function () {
         $(this).keypress(function (event) {
             if (event.which == 13) {
                 var content = $(this).val();
                 if (content != "") {
-                    $('#task-list').prepend('<h5 class="section-header"><span>+ </span>' + content + '</h5><div class="task-section lead"></div>');
+                    $("#task-list").prepend(
+                        '<h5 class="section-header"><span>+ </span>' +
+                        content +
+                        '</h5><div class="task-section lead"></div>'
+                    );
                     $(this).val("");
                     section_setup(document.getElementsByClassName("section-header")[0]);
                     add_todo_input();
@@ -206,14 +307,21 @@ $(document).ready(function () {
     });
 
     // classes
-    $('.new-class').focus(function () {
+    $(".new-class").focus(function () {
         $(this).keypress(function (event) {
-            console.log("In new class");
             if (event.which == 13) {
                 var content = $(this).val();
                 if (content != "") {
-                    $('#class-list').prepend('<h5 class="class-header"><span>+ </span>' + content + '</h5><div class="task-section lead"></div>');
-                    $('#task-list').prepend('<h5 class="section-header"><span>+ </span>' + content + '</h5><div class="task-section lead"></div>');
+                    $("#class-list").prepend(
+                        '<h5 class="class-header"><span>+ </span>' +
+                        content +
+                        '</h5><div class="task-section lead"></div>'
+                    );
+                    $("#task-list").prepend(
+                        '<h5 class="section-header"><span>+ </span>' +
+                        content +
+                        '</h5><div class="task-section lead"></div>'
+                    );
                     $(this).val("");
                     section_setup(document.getElementsByClassName("class-header")[0]);
                     add_todo_input();
@@ -223,51 +331,53 @@ $(document).ready(function () {
             }
         });
     });
-
     add_todo_input();
 
     // Pomodoro Timer Code is Below
-    let progressBar = document.querySelector('.e-c-progress');
-    let indicator = document.getElementById('e-indicator');
-    let pointer = document.getElementById('e-pointer');
+    let progressBar = document.querySelector(".e-c-progress");
+    let indicator = document.getElementById("e-indicator");
+    let pointer = document.getElementById("e-pointer");
     let length = Math.PI * 2 * 100;
 
     progressBar.style.strokeDasharray = length;
 
     function update(value, timePercent) {
-        var offset = - length - length * value / (timePercent);
+        var offset = -length - (length * value) / timePercent;
         progressBar.style.strokeDashoffset = offset;
-        pointer.style.transform = `rotate(${360 * value / (timePercent)}deg)`;
-    };
+        pointer.style.transform = `rotate(${(360 * value) / timePercent}deg)`;
+    }
 
     //circle ends
-    const displayOutput = document.querySelector('.display-remain-time')
-    const pauseBtn = document.getElementById('pause');
-    const setterBtns = document.querySelectorAll('button[data-setter]');
-    const workInput = document.getElementById('work-period');
-    const breakInput = document.getElementById('break-period');
+    const displayOutput = document.querySelector(".display-remain-time");
+    const pauseBtn = document.getElementById("pause");
+    const setterBtns = document.querySelectorAll("button[data-setter]");
+    const workInput = document.getElementById("work-period");
+    const breakInput = document.getElementById("break-period");
 
     let intervalTimer;
     let timeLeft;
     //let wholeTime = 25;
 
-    let workTime = document.getElementById('work-period').value * 60; // manage this to set the whole time 
-    let breakTime = document.getElementById('break-period').value * 60;
+    let workTime = document.getElementById("work-period").value * 60; // manage this to set the whole time
+    let breakTime = document.getElementById("break-period").value * 60;
 
     let isPaused = false;
     let isStarted = false;
 
-    update(pomodoro_work ? workTime : breakTime, pomodoro_work ? workTime : breakTime); //refreshes progress bar
+    update(
+        pomodoro_work ? workTime : breakTime,
+        pomodoro_work ? workTime : breakTime
+    ); //refreshes progress bar
     displayTimeLeft(pomodoro_work ? workTime : breakTime);
 
     function changeWholeTime(seconds) {
         if (pomodoro_work) {
-            if ((workTime + seconds) > 0) {
+            if (workTime + seconds > 0) {
                 workTime += seconds;
                 update(workTime, workTime);
             }
         } else {
-            if ((breakTime + seconds) > 0) {
+            if (breakTime + seconds > 0) {
                 breakTime += seconds;
                 update(breakTime, breakTime);
             }
@@ -275,28 +385,29 @@ $(document).ready(function () {
     }
 
     /*for (var i = 0; i < setterBtns.length; i++) {
-        setterBtns[i].addEventListener("click", function (event) {
-            var param = this.dataset.setter;
-            switch (param) {
-                case 'minutes-plus':
-                    changeWholeTime(1 * 60);
-                    break;
-                case 'minutes-minus':
-                    changeWholeTime(-1 * 60);
-                    break;
-                case 'seconds-plus':
-                    changeWholeTime(1);
-                    break;
-                case 'seconds-minus':
-                    changeWholeTime(-1);
-                    break;
-            }
-            displayTimeLeft(wholeTime);
-        });
-    }*/
+          setterBtns[i].addEventListener("click", function (event) {
+              var param = this.dataset.setter;
+              switch (param) {
+                  case 'minutes-plus':
+                      changeWholeTime(1 * 60);
+                      break;
+                  case 'minutes-minus':
+                      changeWholeTime(-1 * 60);
+                      break;
+                  case 'seconds-plus':
+                      changeWholeTime(1);
+                      break;
+                  case 'seconds-minus':
+                      changeWholeTime(-1);
+                      break;
+              }
+              displayTimeLeft(wholeTime);
+          });
+      }*/
 
-    function timer(seconds) { //counts time, takes seconds
-        let remainTime = Date.now() + (seconds * 1000);
+    function timer(seconds) {
+        //counts time, takes seconds
+        let remainTime = Date.now() + seconds * 1000;
         displayTimeLeft(seconds);
 
         intervalTimer = setInterval(function () {
@@ -319,32 +430,34 @@ $(document).ready(function () {
         if (isStarted === false) {
             timer(pomodoro_work ? workTime : breakTime);
             isStarted = true;
-            this.classList.remove('play');
-            this.classList.add('pause');
+            this.classList.remove("play");
+            this.classList.add("pause");
             console.log(pomodoro_work ? "Work" : "Break");
             // setterBtns.forEach(function (btn) {
             //     btn.disabled = true;
             //     btn.style.opacity = 0.5;
             // });
-
         } else if (isPaused) {
-            this.classList.remove('play');
-            this.classList.add('pause');
+            this.classList.remove("play");
+            this.classList.add("pause");
             timer(timeLeft);
-            isPaused = isPaused ? false : true
+            isPaused = isPaused ? false : true;
         } else {
-            this.classList.remove('pause');
-            this.classList.add('play');
+            this.classList.remove("pause");
+            this.classList.add("play");
             clearInterval(intervalTimer);
             isPaused = isPaused ? false : true;
         }
     }
 
-    function displayTimeLeft(timeLeft) { //displays time on the input
+    function displayTimeLeft(timeLeft) {
+        //displays time on the input
         console.log("Changing time...");
         let minutes = Math.floor(timeLeft / 60);
         let seconds = timeLeft % 60;
-        let displayString = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        let displayString = `${minutes < 10 ? "0" : ""}${minutes}:${
+            seconds < 10 ? "0" : ""
+            }${seconds}`;
         displayOutput.textContent = displayString;
         update(timeLeft, pomodoro_work ? workTime : breakTime);
     }
@@ -354,16 +467,15 @@ $(document).ready(function () {
     //     console.log(msg.time);
     // });
 
-    pauseBtn.addEventListener('click', pauseTimer);
+    pauseBtn.addEventListener("click", pauseTimer);
 
-    workInput.addEventListener('change', function timerReset() {
+    workInput.addEventListener("change", function timerReset() {
         //pauseTimer();
         if (document.getElementById("work-period").value < 0) {
-            alert('Timer value must be greater than or equal to zero!');
+            alert("Timer value must be greater than or equal to zero!");
             workTime = 0;
             document.getElementById("work-period").value = 0;
-        }
-        else {
+        } else {
             workTime = document.getElementById("work-period").value * 60;
             document.getElementById("work-period").value = workTime / 60;
         }
@@ -374,14 +486,13 @@ $(document).ready(function () {
         }
     });
 
-    breakInput.addEventListener('change', function timerReset() {
+    breakInput.addEventListener("change", function timerReset() {
         //pauseTimer();
         if (document.getElementById("break-period").value < 0) {
-            alert('Timer value must be greater than or equal to zero!');
+            alert("Timer value must be greater than or equal to zero!");
             breakTime = 0;
             document.getElementById("break-period").value = 0;
-        }
-        else {
+        } else {
             breakTime = document.getElementById("break-period").value * 60;
             document.getElementById("break-period").value = breakTime / 60;
         }

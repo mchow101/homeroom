@@ -45,7 +45,7 @@
         } /* override bootstrap's featurette */
 
         /*formatting the pomodoro clock*/
-        .circle{
+        .circle {
             /* border: solid; */
             border-radius: 10px;
             /* border-color: #9E9E9E; */
@@ -55,7 +55,7 @@
         }
 
         /*formatting the pomodoro customization section*/
-        .pomodoro-customization{
+        .pomodoro-customization {
             border-radius: 10px;
             /* border-color: #9E9E9E; */
             background-color: var(--element-color);
@@ -65,7 +65,6 @@
 
         input[type="checkbox"] {
             appearance: none;
-            /* background-color: #cacece; */
             border: 1px solid var(--orange);
             stroke: 2px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
@@ -77,13 +76,16 @@
             margin-bottom: -3px;
         }
 
-        input[type="text"], input[type="number"], .input-group-text {
+        input[type="text"],
+        input[type="number"],
+        .input-group-text {
             border-radius: 10px;
             border: transparent;
             padding: 5px 10px;
             background-color: var(--pomodoro-input);
             color: var(--text-color);
         }
+
 
         .plus {
             background-color: #fcaf58;
@@ -93,12 +95,15 @@
             margin: 2px 4px 2px 2px;
         }
 
-        .new-todo, .new-class, .new-section {
+        .new-todo,
+        .new-class,
+        .new-section {
             /*border: none;*/
             border: transparent;
+            font-size: 1em;
         }
 
-        
+
         input:checked {
             background-color: var(--radio-fill);
             border-color: var(--orange);
@@ -123,7 +128,8 @@
             /* background-color: var(--element-color); */
         }
 
-        .section-header, .class-header {
+        .section-header,
+        .class-header {
             border-style: none;
             /* border-color: #F2F2F2; */
             border-radius: 10px;
@@ -136,11 +142,6 @@
             width: 100%;
             text-align: left;
             outline: none;
-            font-size: 1em;
-        }
-        
-        /* prevent the glitch where the add/plus sign is huge */
-        span.featurette-heading {
             font-size: 1em;
         }
 
@@ -221,7 +222,8 @@
         .setters {
             position: absolute;
             text-align: center;
-            left: 130px; /* possibly change to 132.5px for centering */
+            left: 130px;
+            /* possibly change to 132.5px for centering */
             top: 205px;
         }
 
@@ -236,7 +238,8 @@
 
         .controls {
             position: absolute;
-            left: 120px; /* possibly change to 122.5px for centering */
+            left: 120px;
+            /* possibly change to 122.5px for centering */
             top: 235px;
             text-align: center;
         }
@@ -293,6 +296,10 @@
             stroke-width: 4px
         }
 
+        .work-base {
+            stroke: #edde9e;
+        }
+
         .e-c-progress {
             fill: none;
             stroke: var(--timer-main);
@@ -306,8 +313,18 @@
             stroke-width: 2px;
         }
 
+        .e-c-work {
+            stroke: #fcaf58;
+        }
+
         #e-pointer {
             transition: transform 0.7s;
+        }
+
+        .timer-input:focus {
+            outline: none;
+            border-color: #9ecaed;
+            box-shadow: 0 0 10px #9ecaed;
         }
     </style>
 </head>
@@ -339,7 +356,20 @@
         <label class="class-list" style="width: 100%">
             <dl id="class-list">
                 <h5 class="class-header"><span>+ </span>Comp Sci</h5>
-                <div class="task-section lead">
+                <div class="task-section lead" style="margin: auto">
+                    <label for="days">Choose class days: (Ctrl or Command to select multiple)</label>
+                    <br>
+                    <select name="days" id="days" multiple>
+                        <option value="M">Monday</option>
+                        <option value="T">Tuesday</option>
+                        <option value="W">Wednesday</option>
+                        <option value="R">Thursday</option>
+                        <option value="F">Friday</option>
+                        <option value="S">Saturday</option>
+                        <option value="U">Sunday</option>
+                    </select>
+                    <br><br>
+                    <input type="submit" value="Submit" class="submit">
                 </div>
                 <h5 class="class-header"><span>+ </span>American Lit</h5>
                 <div class="task-section lead">
@@ -353,7 +383,7 @@
         <div>
             <h1 class="featurette-heading">Pomodoro Timer</h1>
         </div>
-        
+
         <!-- Title Row -->
 
         <!-- Pomodoro Circle Timer Buttons -->
@@ -389,40 +419,42 @@
             <button class="play" id="pause"></button>
         </div>
 
-    <div class="pomodoro-customization">
+        <div class="pomodoro-customization">
 
-        <!-- Dropdown for To-Do list items to attach the pomodoro timer to -->
-        <div class="pomodoro-task-select">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <label class="input-group-text" for="inputGroupSelect01">Task:</label>
-                </div>
-                <select class="custom-select" id="inputGroupSelect01" style="color: var(--text-color); background-color: var(--element-color);">
-                </select>
-            </div>
-        </div>
-
-        <div>
-            <div>
+            <!-- Dropdown for To-Do list items to attach the pomodoro timer to -->
+            <div class="pomodoro-task-select">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <label class="input-group-text" for="inputGroupSelect01">Work Duration:</label>
+                        <label class="input-group-text" for="inputGroupSelect01">Task:</label>
                     </div>
-                    <input type="number" name="work-period" id="work-period" value="25"/>
+                    <select class="custom-select timer-input" id="inputGroupSelect01">
+                    </select>
                 </div>
             </div>
 
             <div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <label class="input-group-text" for="inputGroupSelect01">Break Duration:</label>
+                <div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Work Duration:</label>
+                        </div>
+                        <input type="number" class="timer-input" name="work-period" id="work-period" value="25"
+                            min="0" />
                     </div>
-                    <input type="number" name="break-period" id="break-period" value="5"/>
                 </div>
-            </div>
 
+                <div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Break Duration:</label>
+                        </div>
+                        <input class="timer-input" type="number" name="break-period" id="break-period" value="5"
+                            min="0" />
+                    </div>
+                </div>
+
+            </div>
         </div>
-    </div>
     </div>
     <script src="popup.js"></script>
 </body>

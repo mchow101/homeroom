@@ -53,12 +53,7 @@ function section_setup(section) {
   });
 }
 
-function delete_task() {
-  $(".remove").click(function () {
-    var to_be_removed = $(this).parent();
-    to_be_removed.remove();
-  });
-}
+
 
 // adds an input box which can add text to the section (new task, link, etc.)
 function add_todo_input() {
@@ -114,8 +109,8 @@ function add_todo_input() {
             console.log(this.id);
             $(this).before(
               '<label><input type="checkbox" class="task"></input><span>' +
-                content +
-                '</span><button class="remove">x</button></label><br>'
+              content +
+              '</span><input type = "button" class="remove" value ="x"></input></label><br>'
             );
             $(this).val("");
             port.postMessage({
@@ -201,6 +196,23 @@ for (var i = 0; i < subs.length; i++) {
   get_days(subs[i]);
 }
 
+//playing around with remove feature 
+/*
+function remove_item(event){
+  console.log('x');
+  var to_be_removed = $(this).parentsUntil('div');
+  console.log(to_be_removed);
+  for (var i = 0; i < to_be_removed.length; i++) {
+    console.log(to_be_removed[i]);
+    to_be_removed[i].remove();
+
+  }
+}
+
+var remove_class = document.getElementsByClassName('remove');
+remove_class.addEventListener("click", remove_item);
+*/
+
 // initialize the popup with saved data
 function pop_init() {
   changetab();
@@ -216,8 +228,8 @@ function pop_init() {
       if (!sections.includes(task_list[i][2])) {
         $("#task-list").prepend(
           '<h5 class="section-header"><span>+ </span>' +
-            task_list[i][2] +
-            '</h5><div class="task-section lead"></div>'
+          task_list[i][2] +
+          '</h5><div class="task-section lead"></div>'
         );
         section_setup(document.getElementsByClassName("section-header")[0]);
         add_todo_input();
@@ -246,6 +258,7 @@ $(document).ready(function () {
     section_setup(classSections[i]);
   }
 
+
   // tasks
   $(".new-section").focus(function () {
     $(this).keypress(function (event) {
@@ -254,8 +267,8 @@ $(document).ready(function () {
         if (content != "") {
           $("#task-list").prepend(
             '<h5 class="section-header"><span>+ </span>' +
-              content +
-              '</h5><div class="task-section lead"></div>'
+            content +
+            '</h5><div class="task-section lead"></div>'
           );
           $(this).val("");
           section_setup(document.getElementsByClassName("section-header")[0]);
@@ -265,6 +278,8 @@ $(document).ready(function () {
     });
   });
 
+
+
   // classes
   $(".new-class").focus(function () {
     $(this).keypress(function (event) {
@@ -273,13 +288,13 @@ $(document).ready(function () {
         if (content != "") {
           $("#class-list").prepend(
             '<h5 class="class-header"><span>+ </span>' +
-              content +
-              '</h5><div class="task-section lead"></div>'
+            content +
+            '</h5><div class="task-section lead"></div>'
           );
           $("#task-list").prepend(
             '<h5 class="section-header"><span>+ </span>' +
-              content +
-              '</h5><div class="task-section lead"></div>'
+            content +
+            '</h5><div class="task-section lead"></div>'
           );
           $(this).val("");
           section_setup(document.getElementsByClassName("class-header")[0]);
@@ -290,6 +305,7 @@ $(document).ready(function () {
       }
     });
   });
+
 
   add_todo_input();
 
@@ -417,7 +433,7 @@ $(document).ready(function () {
     let seconds = timeLeft % 60;
     let displayString = `${minutes < 10 ? "0" : ""}${minutes}:${
       seconds < 10 ? "0" : ""
-    }${seconds}`;
+      }${seconds}`;
     displayOutput.textContent = displayString;
     update(timeLeft, pomodoro_work ? workTime : breakTime);
   }

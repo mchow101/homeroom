@@ -104,8 +104,8 @@ function add_todo_input() {
                     //if it's not a link
                     else {
                         $(this).after(
-                            '<br><label id="task' + task_counter 
-                            + '"><input type="checkbox" class="task" id="checkbox' 
+                            '<br><label id="task' + task_counter
+                            + '"><input type="checkbox" class="task" id="checkbox'
                             + task_counter + '"></input><span>'
                             + content +
                             '</span><input type = "button" class="remove" value ="x"></input></label>'
@@ -218,7 +218,7 @@ function pop_init() {
                 }
 
                 // add tasks
-                document.getElementById(task_list[i][2]).nextElementSibling.innerHTML += ('<br><label id="task' + task_counter + '"><input type="checkbox" class="task" id="checkbox' + task_counter + '"></input><span>' + task_list[i][0] + '</span></label>');
+                document.getElementById(task_list[i][2]).nextElementSibling.innerHTML += ('<br><label id="task' + task_counter + '"><input type="checkbox" class="task" id="checkbox' + task_counter + '"></input><span>' + task_list[i][0] + '</span><input type = "button" class="remove" value ="x"></label>');
                 // check task
                 if (task_list[i][1]) {
                     $("#checkbox" + task_counter).attr("checked", true);
@@ -232,27 +232,29 @@ function pop_init() {
             // add input boxes
             for (var i = sections.length - 1; i >= 0; i--)
                 add_todo_input();
+
+            // listener for removing items
+            to_remove = document.getElementsByClassName('remove');
+            console.log(to_remove.length + "^^^^^^   ");
+            for (var i = 0; i < to_remove.length; i++) {
+                console.log(i);
+                to_remove[i].addEventListener("click", function () {
+                    var to_be_removed = $(this).parentsUntil('div');
+                    $(to_be_removed[0]).prev().remove();
+                    for (var i = 0; i < to_be_removed.length; i++) {
+                        to_be_removed[i].remove();
+                    }
+                });
+            }
         }
     });
 }
 
 //playing around with remove feature 
 /*
-function remove_item(event){
-  console.log('x');
-  var to_be_removed = $(this).parentsUntil('div');
-  console.log(to_be_removed);
-  for (var i = 0; i < to_be_removed.length; i++) {
-    console.log(to_be_removed[i]);
-    to_be_removed[i].remove();
- 
-  }
-}
- 
-var remove_class = document.getElementsByClassName('remove');
-remove_class.addEventListener("click", remove_item);
-*/
 
+*/
+var remove_class
 $(document).ready(function () {
     pop_init();
 
@@ -288,6 +290,16 @@ $(document).ready(function () {
             }
         });
     });
+    // function remove_item(event) {
+    //     console.log('x');
+    //     var to_be_removed = $(this).parentsUntil('div');
+    //     console.log(to_be_removed);
+    //     for (var i = 0; i < to_be_removed.length; i++) {
+    //         console.log(to_be_removed[i]);
+    //         to_be_removed[i].remove();
+
+    //     }
+    // }
 
     // classes
     $(".new-class").focus(function () {

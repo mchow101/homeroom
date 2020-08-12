@@ -1,3 +1,5 @@
+var tasks = [];
+
 chrome.runtime.onInstalled.addListener(function () {
 
     chrome.storage.sync.set({ color: '#3aa757' }, function () {
@@ -61,7 +63,9 @@ chrome.runtime.onMessage.addListener(
       if (msg.joke == "Knock knock")
         port.postMessage({time: Date.now()});
       else if (msg.action == "Update tasks") {
-        console.log(msg.task_list);
+        tasks = tasks.concat([[msg.task, msg.checked, msg.section]]);
+      } else if (msg.action == "Get tasks") {
+        port.postMessage({tasks: tasks});
       }
     });
   });

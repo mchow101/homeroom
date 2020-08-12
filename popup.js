@@ -1,5 +1,5 @@
 var pomodoro_work = true;
-var port = chrome.runtime.connect({ name: "conn"});
+var port = chrome.runtime.connect({ name: "conn" });
 var pom_port = chrome.runtime.connect({ name: "pomodoro" });
 
 // top slider to change tabs
@@ -38,7 +38,7 @@ function changetab() {
 // adds a subsection with input box and collapsible header
 function section_setup(section) {
     // possibly at some point add way to change placeholder to add a link/class meeting time/whatever if it's in class
-    section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML + '<dd><input type="text" id="' + section.textContent.substring(1) + '" class="new-todo"  placeholder=" New todo item"></input></dd>';
+    section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML + '<dd><input type="text" id="' + section.textContent.substring(2) + '" class="new-todo"  placeholder=" New todo item"></input></dd>';
     section.id = section.textContent.substring(2);
     section.addEventListener("click", function () {
         var content = this.nextElementSibling;
@@ -75,7 +75,7 @@ function add_todo_input() {
                         console.log(this.id)
                         $(this).before('<label><input type="checkbox" class="task"></input><span>' + content + '</span></label><br>');
                         $(this).val("");
-
+                        port.postMessage({ action: "Update tasks", task: content, checked: false, section: this.id });
                     }
                 }
 
@@ -84,21 +84,20 @@ function add_todo_input() {
     });
 }
 
-// finds all unchecked items and adds them to task list
+// finds all unchecked items and adds them to pomodoro task list
 function set_task_list() {
-    $('option').remove();
-    var all_tasks = document.getElementsByClassName("task");
     var task_list = [];
-    for (var i = 0; i < all_tasks.length; i++) {
-        if (!all_tasks[i].checked) {
-            task_list[i] = all_tasks[i].nextElementSibling.textContent;
-            $('#inputGroupSelect01').append('<option>' + task_list[i] + '</option>');
+    port.postMessage({ action: "Get tasks" });
+    port.onMessage.addListener(function (msg) {
+        task_list = msg.tasks;
+        $('option').remove();
+        for (var i = 0; i < task_list.length; i++) {
+            console.log(task_list[i][1]);
+            if (!task_list[i][1]) {
+                $('#inputGroupSelect01').append('<option>' + task_list[i][0] + '</option>');
+            }
         }
-    }
-    port.postMessage({ action: "Update tasks", tasks: task_list });
-    // port.onMessage.addListener(function (msg) {
-    //     console.log(msg.time);
-    // });
+    });
 }
 
 // chooses a message to display for pomodoro
@@ -124,8 +123,30 @@ for (var i = 0; i < subs.length; i++) {
     get_days(subs[i]);
 }
 
-$(document).ready(function () {
+// initialize the popup with saved data
+function pop_init() {
     changetab();
+    port.postMessage({ action: "Get tasks" });
+    port.onMessage.addListener(function (msg) {
+        task_list = msg.tasks;
+        // task section headers
+        sections_html = document.getElementsByClassName('section-header');
+        sections = [];
+        for (var s = 0; s < sections_html.length; s++)
+            sections = sections.concat(sections_html[s].id);
+        for (var i = 0; i < task_list.length; i++) {
+            if (!sections.includes(task_list[i][2])) {
+                $('#task-list').prepend('<h5 class="section-header"><span>+ </span>' + task_list[i][2] + '</h5><div class="task-section lead"></div>');
+                section_setup(document.getElementsByClassName("section-header")[0]);
+                add_todo_input();
+                sections = sections.concat(document.getElementsByClassName("section-header")[0].id);
+            }
+        }
+    });
+}
+
+$(document).ready(function () {
+    pop_init();
 
     let tasks = document.getElementsByClassName('task');
     let sections = document.getElementsByClassName('section-header');
@@ -147,7 +168,6 @@ $(document).ready(function () {
             if (event.which == 13) {
                 var content = $(this).val();
                 if (content != "") {
-                    console.log(document.getElementById('task-list').innerHTML);
                     $('#task-list').prepend('<h5 class="section-header"><span>+ </span>' + content + '</h5><div class="task-section lead"></div>');
                     $(this).val("");
                     section_setup(document.getElementsByClassName("section-header")[0]);
@@ -163,7 +183,6 @@ $(document).ready(function () {
             if (event.which == 13) {
                 var content = $(this).val();
                 if (content != "") {
-                    console.log(document.getElementById('class-list').innerHTML);
                     $('#class-list').prepend('<h5 class="class-header"><span>+ </span>' + content + '</h5><div class="task-section lead"></div>');
                     $('#task-list').prepend('<h5 class="section-header"><span>+ </span>' + content + '</h5><div class="task-section lead"></div>');
                     $(this).val("");

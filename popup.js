@@ -13,21 +13,18 @@ slider.addEventListener("change", function () {
 // change tabs
 function changetab() {
     if (current.charAt(0) === '1') {
-        console.log("Tasks tab");
         document.getElementById("tasks").style.display = "block";
         document.getElementById("classes").style.display = "none";
         document.getElementById("pomodoro").style.display = "none";
     }
 
     else if (current.charAt(0) === '2') {
-        console.log("Classes");
         document.getElementById("tasks").style.display = "none";
         document.getElementById("classes").style.display = "block";
         document.getElementById("pomodoro").style.display = "none";
     }
 
     else {
-        console.log("Pomodoro");
         document.getElementById("tasks").style.display = "none";
         document.getElementById("classes").style.display = "none";
         document.getElementById("pomodoro").style.display = "block";
@@ -37,8 +34,9 @@ function changetab() {
 
 // adds a subsection with input box and collapsible header
 function section_setup(section) {
+    console.log("IN SECTION SETPU");
     // possibly at some point add way to change placeholder to add a link/class meeting time/whatever if it's in class
-    section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML + '<dd><input type="text" id="' + section.textContent.substring(2) + '" class="new-todo"  placeholder=" New todo item"></input></dd>';
+    section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML + '<input type="text" id="' + section.textContent.substring(2) + '" class="new-todo"  placeholder=" New todo item"></input>';
     section.id = section.textContent.substring(2);
     section.addEventListener("click", function () {
         var content = this.nextElementSibling;
@@ -69,44 +67,37 @@ function add_todo_input() {
                         var has_spaces = $.trim(content).split(" ");
                         if (has_spaces.length == 1) {
                             console.log(this.id)
-                            $(this).before('<a href=">' + content + '">' + content + '</a></br>');
+                            $(this).after('<br><a href=">' + content + '">' + content + '</a>');
                             $(this).val("");
 
                         }
                         else {
                             console.log(this.id);
-                            to_add_to_list = '<label><input type="checkbox" class="task"></input><span>';
-                            add_to_end = '</span></label><br>';
+                            to_add_to_list = '<br><label><input type="checkbox" class="task"></input><span>';
+                            add_to_end = '</span></label>';
 
                             for (var i = 0; i < has_spaces.length; i++) {
                                 if (has_spaces[i].includes("http") || has_spaces[i].includes("https") || has_spaces[i].includes("www")) {
-                                    to_add_to_list += '<a href="' + has_spaces[i]+ '">' + has_spaces[i] + ' ' + '</a>'; //space in the back
+                                    to_add_to_list += '<a href="' + has_spaces[i] + '">' + has_spaces[i] + ' ' + '</a>'; //space in the back
                                 }
                                 else {
                                     to_add_to_list += has_spaces[i] + " ";
                                 }
-                                
                             }
                             to_add_to_list = to_add_to_list + add_to_end;
-                            $(this).before(to_add_to_list);
+                            $(this).after(to_add_to_list);
                             $(this).val("");
-
+                            port.postMessage({ action: "Update tasks", task: to_add_to_list, checked: false, section: this.id });
                         }
-
-
-
-
-
                     }
                     //if it's not a link
                     else {
                         console.log(this.id)
-                        $(this).before('<label><input type="checkbox" class="task"></input><span>' + content + '</span></label><br>');
+                        $(this).after('<br><label><input type="checkbox" class="task"></input><span>' + content + '</span></label>');
                         $(this).val("");
                         port.postMessage({ action: "Update tasks", task: content, checked: false, section: this.id });
                     }
                 }
-
             }
         });
     });
@@ -115,14 +106,15 @@ function add_todo_input() {
 // finds all unchecked items and adds them to pomodoro task list
 function set_task_list() {
     var task_list = [];
-    port.postMessage({ action: "Get tasks" });
+    port.postMessage({ action: "Get tasks", signature: "set_task_list" });
     port.onMessage.addListener(function (msg) {
-        task_list = msg.tasks;
-        $('option').remove();
-        for (var i = 0; i < task_list.length; i++) {
-            console.log(task_list[i][1]);
-            if (!task_list[i][1]) {
-                $('#inputGroupSelect01').append('<option>' + task_list[i][0] + '</option>');
+        if (msg.signature === "set_task_list") {
+            task_list = msg.tasks;
+            $('option').remove();
+            for (var i = 0; i < task_list.length; i++) {
+                if (!task_list[i][1]) {
+                    $('#inputGroupSelect01').append('<option>' + task_list[i][0] + '</option>');
+                }
             }
         }
     });
@@ -153,22 +145,30 @@ for (var i = 0; i < subs.length; i++) {
 
 // initialize the popup with saved data
 function pop_init() {
+    console.log("INIT");
     changetab();
-    port.postMessage({ action: "Get tasks" });
+    port.postMessage({ action: "Get tasks", signature: "pop_init" });
     port.onMessage.addListener(function (msg) {
-        task_list = msg.tasks;
-        // task section headers
-        sections_html = document.getElementsByClassName('section-header');
-        sections = [];
-        for (var s = 0; s < sections_html.length; s++)
-            sections = sections.concat(sections_html[s].id);
-        for (var i = 0; i < task_list.length; i++) {
-            if (!sections.includes(task_list[i][2])) {
-                $('#task-list').prepend('<h5 class="section-header"><span>+ </span>' + task_list[i][2] + '</h5><div class="task-section lead"></div>');
-                section_setup(document.getElementsByClassName("section-header")[0]);
-                add_todo_input();
-                sections = sections.concat(document.getElementsByClassName("section-header")[0].id);
+        if (msg.signature === "pop_init") {
+            var task_list = msg.tasks;
+            console.log(task_list);
+            // task section headers
+            sections_html = document.getElementsByClassName('section-header');
+            sections = [];
+            for (var s = sections.length - 1; s >= 0; s--)
+                sections = sections.concat(sections_html[s].id);
+            for (var i = task_list.length - 1; i >= 0; i--) {
+                if (!sections.includes(task_list[i][2])) {
+                    $('#task-list').prepend('<h5 class="section-header"><span>+ </span>' + task_list[i][2] + '</h5><div class="task-section lead"></div>');
+                    section_setup(document.getElementsByClassName("section-header")[0]);
+                    sections = sections.concat(document.getElementsByClassName("section-header")[0].id);
+                }
+
+                // add tasks
+                document.getElementById(task_list[i][2]).nextElementSibling.innerHTML += ('<br><label><input type="checkbox" class="task"></input><span>' + task_list[i][0] + '</span></label>');
             }
+            for (var i = sections.length - 1; i >= 0; i--)
+                add_todo_input();
         }
     });
 }
@@ -208,6 +208,7 @@ $(document).ready(function () {
     // classes
     $('.new-class').focus(function () {
         $(this).keypress(function (event) {
+            console.log("In new class");
             if (event.which == 13) {
                 var content = $(this).val();
                 if (content != "") {

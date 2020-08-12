@@ -65,7 +65,7 @@ chrome.runtime.onMessage.addListener(
       else if (msg.action == "Update tasks") {
         tasks = tasks.concat([[msg.task, msg.checked, msg.section]]);
       } else if (msg.action == "Get tasks") {
-        port.postMessage({tasks: tasks});
+        port.postMessage({tasks: tasks, signature: msg.signature });
       }
     });
   });

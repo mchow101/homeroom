@@ -73,7 +73,7 @@ function add_todo_input() {
                     ) {
                         var has_spaces = $.trim(content).split(" ");
                         if (has_spaces.length == 1) {
-                            $(this).after('<br><a href=">' + content + '">' + content + "</a>");
+                            $(this).after('<br><a href=">' + content + '" target = "_blank">' + content + "</a>");
                             $(this).val("");
                         } else {
                             to_add_to_list =
@@ -88,7 +88,7 @@ function add_todo_input() {
                                     to_add_to_list +=
                                         '<a href="' +
                                         has_spaces[i] +
-                                        '">' +
+                                        '" target = "_blank">' +
                                         has_spaces[i] +
                                         " " +
                                         "</a>"; //space in the back
@@ -261,9 +261,34 @@ function pop_init() {
                     }
                 });
             }
+
+            //listener for clicking a
+            /*
+            $('a').click(function(){
+                chrome.tabs.create({url: $(this).attr('href')});
+                return false;
+            });
+            */
+
+            links = document.getElementsByTagName('a');
+            console.log(links.length + "@32423");
+            for (var i = 0; i< links.length; i++){
+                links[i].addEventListener("click", function (){
+                    
+                    var link_address = $(this).attr('href');
+                    console.log(link_address);
+                    port.postMessage({action: "link", signature: "open_a_link", url: link_address});
+                    console.log(link_address);
+                    
+
+                });
+            }
+
         }
     });
 }
+
+
 
 //playing around with remove feature 
 /*
@@ -272,6 +297,7 @@ function pop_init() {
 var remove_class
 $(document).ready(function () {
     pop_init();
+    
 
     let tasks = document.getElementsByClassName("task");
     let sections = document.getElementsByClassName("section-header");

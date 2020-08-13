@@ -249,6 +249,7 @@ function pop_init() {
                 add_todo_input();
 
             // listener for removing items
+            
             to_remove = document.getElementsByClassName('remove');
             for (var i = 0; i < to_remove.length; i++) {
                 to_remove[i].addEventListener("click", function () {

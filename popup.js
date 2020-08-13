@@ -94,7 +94,7 @@ function add_todo_input() {
                     ) {
                         var has_spaces = $.trim(content).split(" ");
                         if (has_spaces.length == 1) {
-                            if (!content.includes("http") || content.includes("https")) 
+                            if (!content.includes("http") || content.includes("https"))
                                 content = "http://" + content;
                             $(this).after('<br><a href="' + content + '" target = "_blank">' + content + "</a>");
                             $(this).val("");
@@ -108,7 +108,7 @@ function add_todo_input() {
                                     has_spaces[i].includes("https") ||
                                     has_spaces[i].includes("www")
                                 ) {
-                                    if (!has_spaces[i].includes("http") || has_spaces[i].includes("https")) 
+                                    if (!has_spaces[i].includes("http") || has_spaces[i].includes("https"))
                                         has_spaces[i] = "http://" + has_spaces[i];
                                     to_add_to_list +=
                                         '<a href="' +
@@ -122,7 +122,7 @@ function add_todo_input() {
                                 }
                             }
                             to_add_to_list = to_add_to_list + add_to_end;
-                            $(this).before(to_add_to_list);
+                            $(this).after(to_add_to_list);
                             $(this).val("");
                         }
                     }
@@ -333,7 +333,38 @@ function pop_init() {
                 }
 
                 // add tasks
-                document.getElementById(task_list[i][2]).nextElementSibling.innerHTML += ('<br><label id="task' + task_counter + '"><input type="checkbox" class="task" id="checkbox' + task_counter + '"></input><span>' + task_list[i][0] + '</span><input type = "button" class="remove" value ="x"></label>');
+                var label_content = "";
+                // if it's a valid link
+                if (task_list[i][0].includes("http") || task_list[i][0].includes("https") || task_list[i][0].includes("www")) {
+                    var has_spaces = $.trim(task_list[i][0]).split(" ");
+                    if (has_spaces.length == 1) {
+                        label_content = ('<br><a href="' + task_list[i][0] + '" target = "_blank">' + task_list[i][0] + "</a>");
+                    } else {
+                        to_add_to_list =
+                            '<br><label id="task' + task_counter + '"><input type="checkbox" class="task"></input><span>';
+                        add_to_end = "</span></label>";
+                        for (var j = 0; j < has_spaces.length; j++) {
+                            if (has_spaces[j].includes("http") || has_spaces[j].includes("https") || has_spaces[j].includes("www")) {
+                                to_add_to_list += '<a href="' + has_spaces[j] + '" target = "_blank">' +
+                                    has_spaces[j] + " " + "</a>"; //space in the back
+                            } else {
+                                to_add_to_list += has_spaces[j] + " ";
+                            }
+                        }
+                        label_content = to_add_to_list + add_to_end;
+                    }
+                }
+                //if it's not a link
+                else {
+                    label_content = 
+                        '<br><label id="task' + task_counter
+                        + '"><input type="checkbox" class="task" id="checkbox'
+                        + task_counter + '"></input><span>'
+                        + task_list[i][0] +
+                        '</span><input type = "button" class="remove" value ="x"></input></label>';
+                }
+                document.getElementById(task_list[i][2]).nextElementSibling.innerHTML += label_content;
+
                 // check task
                 if (task_list[i][1]) {
                     $("#checkbox" + task_counter).attr("checked", true);

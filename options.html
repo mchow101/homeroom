@@ -2,28 +2,125 @@
 <html>
 
 <head>
-    <style>
+    <link rel="stylesheet" href="bootstrap.css" type="text/css" />
+    <style type="text/css">
         :root{
             --main-bg-color: #F2F2F2;
         }
 
         body {
-            background-color: #ffffff;
+            background-color: var(--main-bg-color);
         }
 
+        .tg  {
+            border-collapse:collapse;
+            border-spacing:0;
+        }
+
+        .tg td {
+            border-color:black;
+            border-style:solid;
+            border-width:1px;
+            font-family:Roboto, sans-serif;
+            padding: 5px;
+            font-size:18px;
+            overflow:hidden;padding:15px 5px;word-break:normal;
+        }
+
+        .tg th {
+            border-color:black;
+            border-style:solid;
+            border-width:1px;
+            font-family:Roboto, sans-serif;
+            font-size:18px;
+            font-weight:normal;
+            overflow:hidden;
+            padding:20px 5px;
+            word-break:normal;
+        }
+        
+        .tg .tg-0lax {
+            text-align:left;
+            vertical-align:top
+        }
+
+        #t01 th {
+            background-color: black;
+            color: white;
+        }
+        
+        #t01 tr:nth-child(even) {
+            background-color: #eee;
+        }
+
+        #t01 tr:nth-child(odd) {
+            background-color: #fff;
+        }
+
+        button {
+            color: #494949 !important;
+            text-decoration: none;
+            background: #ffffff;
+            font-size:18px;
+            padding: 5px;
+            border: 2px solid #494949 !important;
+            display: inline-block;
+            transition: all 0.2s ease 0s;
+        }
+
+        .lightbutton:hover {
+            color: #000000 !important;
+            background-color: #A7ACC6;
+            border-color: #A7ACC6 !important;
+            transition: all 0.2s ease 0s;
+            cursor: pointer;
+        }
+
+        .darkbutton:hover {
+            color: #ffffff !important;
+            background-color: #000000;
+            border-color: #000000 !important;
+            transition: all 0.2s ease 0s;
+            cursor: pointer;
+        }
+        
+        table.center {
+            margin-left:auto; 
+            margin-right:auto;
+        }
     </style>
 </head>
 
 <body>
     <div>
-        <button id="lightbtn">Change to light theme</button>
+        <h1 class="featurette-heading" style="text-align:center;">Settings</h1>
     </div>
-    <div>
-        <button id="darkbtn">Change to dark theme</button>
-    </div>
-    <div>
-        <p>Choose a different background color!</p>
-    </div>
+    <hr>
+    <table class="tg center" id="t01">
+        <thead>
+          <tr>
+            <th class="tg-0lax" colspan="2" style="text-align:center;">Themes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Light Mode</td>
+            <td>
+                <div>
+                    <button id="lightbtn" class="lightbutton">Change to light theme</button>
+                </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Dark Mode</td>
+            <td>
+                <div>
+                    <button id="darkbtn" class="darkbutton">Change to dark theme</button>
+                </div>
+            </td>
+          </tr>
+        </tbody>
+        </table>
 </body>
 <script src="options.js"></script>
 

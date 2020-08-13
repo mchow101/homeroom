@@ -18,14 +18,14 @@ chrome.runtime.onInstalled.addListener(function () {
 });
 
 chrome.identity.getAuthToken({ interactive: true }, function (token) {
-  console.log(token);
+  //console.log(token);
 });
 
 chrome.identity.getProfileUserInfo(function (info) {
   email = info.email;
   id = info.id;
-  console.log(email);
-  console.log(id);
+  // console.log(email);
+  // console.log(id);
 });
 
 chrome.runtime.onInstalled.addListener(function (request) {

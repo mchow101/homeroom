@@ -1,8 +1,9 @@
 var tasks = [];
 
 chrome.runtime.onInstalled.addListener(function () {
-  chrome.storage.sync.set({ color: "#3aa757" }, function () {
-    console.log("The color is green.");
+  
+  chrome.storage.sync.set({mainbgcolor: '#F2F2F2', elementcolor:'#ffffff', textcolor: '#404040', sliderlight: '#A7ACC6', sliderdark: '#4E598C', radiofill: '#f7a191', timermain: '#4E598C'}, function() {
+    console.log('Value is set for light mode');
   });
 
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
@@ -14,6 +15,8 @@ chrome.runtime.onInstalled.addListener(function () {
     ]);
   });
 });
+
+
 
 chrome.identity.getAuthToken({ interactive: true }, function (token) {
   console.log(token);

@@ -11,6 +11,20 @@ slider.addEventListener("change", function () {
     changetab();
 });
 
+function getTheme(){
+    chrome.storage.sync.get(['mainbgcolor', 'elementcolor', 'textcolor', 'sliderlight', 'sliderdark', 'radiofill', 'timermain'], function(data) {
+        document.documentElement.style.setProperty('--main-bg-color', data.mainbgcolor);
+        document.documentElement.style.setProperty('--element-color', data.elementcolor);
+        document.documentElement.style.setProperty('--text-color', data.textcolor);
+        document.documentElement.style.setProperty('--slider-light', data.sliderlight);
+        document.documentElement.style.setProperty('--slider-dark', data.sliderdark);
+        document.documentElement.style.setProperty('--radio-fill', data.radiofill);
+        document.documentElement.style.setProperty('--timer-main', data.timermain);
+        console.log("SADNESS" + data.mainbgcolor);
+    });
+}
+
+
 // change tabs
 function changetab() {
     if (current.charAt(0) === '1') {
@@ -108,7 +122,7 @@ function add_todo_input() {
                             + '"><input type="checkbox" class="task" id="checkbox'
                             + task_counter + '"></input><span>'
                             + content +
-                            '</span><input type = "button" class="remove" value ="x"></input></label>'
+                            '</span><input type = "button" class="remove" value ="&times" style="color:--main-bg-color"></input></label>'
                         );
                         $(this).val("");
                     }
@@ -233,7 +247,7 @@ function pop_init() {
                 }
 
                 // add tasks
-                document.getElementById(task_list[i][2]).nextElementSibling.innerHTML += ('<br><label id="task' + task_counter + '"><input type="checkbox" class="task" id="checkbox' + task_counter + '"></input><span>' + task_list[i][0] + '</span><input type = "button" class="remove" value ="x"></label>');
+                document.getElementById(task_list[i][2]).nextElementSibling.innerHTML += ('<br><label id="task' + task_counter + '"><input type="checkbox" class="task" id="checkbox' + task_counter + '"></input><span>' + task_list[i][0] + '</span><input type = "button" class="remove" value ="&times" style="color:--main-bg-color"></label>');
                 // check task
                 if (task_list[i][1]) {
                     $("#checkbox" + task_counter).attr("checked", true);
@@ -263,6 +277,8 @@ function pop_init() {
             }
         }
     });
+
+    getTheme();
 }
 
 //playing around with remove feature 
@@ -272,6 +288,7 @@ function pop_init() {
 var remove_class
 $(document).ready(function () {
     pop_init();
+
 
     let tasks = document.getElementsByClassName("task");
     let sections = document.getElementsByClassName("section-header");

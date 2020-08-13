@@ -17,29 +17,52 @@ function changetab() {
         document.getElementById("tasks").style.display = "block";
         document.getElementById("classes").style.display = "none";
         document.getElementById("pomodoro").style.display = "none";
+        document.getElementById("blocker").style.display = "none";
     }
 
     else if (current.charAt(0) === '2') {
         document.getElementById("tasks").style.display = "none";
         document.getElementById("classes").style.display = "block";
         document.getElementById("pomodoro").style.display = "none";
+        document.getElementById("blocker").style.display = "none";
+    }
+
+    else if (current.charAt(0) === '3') {
+        document.getElementById("tasks").style.display = "none";
+        document.getElementById("classes").style.display = "none";
+        document.getElementById("pomodoro").style.display = "block";
+        document.getElementById("blocker").style.display = "none";
+        set_task_list();
     }
 
     else {
         document.getElementById("tasks").style.display = "none";
         document.getElementById("classes").style.display = "none";
-        document.getElementById("pomodoro").style.display = "block";
-        set_task_list();
+        document.getElementById("pomodoro").style.display = "none";
+        document.getElementById("blocker").style.display = "block";
     }
 }
 
 // adds a subsection with input box and collapsible header
 function section_setup(section) {
-    console.log("IN SECTION SETPU");
     // possibly at some point add way to change placeholder to add a link/class meeting time/whatever if it's in class
-    section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML +
-        '<input type="text" id="' + section.textContent.substring(2) +
-        '" class="new-todo"  placeholder=" New todo item"></input>';
+    if (section.parentElement.id === "class-list") {
+        section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML +
+            '<label for="days">Choose class days:</label><br>' +
+            '<select name="days" class="days"><option value="Monday">Monday</option>' +
+            '<option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option>' +
+            '<option value="Thursday">Thursday</option><option value="Friday">Friday</option>' +
+            '<option value="Saturday">Saturday</option><option value="Sunday">Sunday</option></select>' +
+            '<select name="time" class="time"><option value="9">9:00</option>' +
+            '<option value="10">10:00</option><option value="11">11:00</option>' +
+            '<option value="12">12:00</option><option value="1">1:00</option>' +
+            '<option value="2">2:00</option><option value="3">3:00</option></select>' +
+            '<br><input type="submit" value="Submit" class="submit"><br><br>';
+    } else {
+        section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML +
+            '<input type="text" id="' + section.textContent.substring(2) +
+            '" class="new-todo"  placeholder=" New todo item"></input>';
+    }
     section.id = section.textContent.substring(2);
     section.addEventListener("click", function () {
         var content = this.nextElementSibling;
@@ -52,8 +75,6 @@ function section_setup(section) {
         }
     });
 }
-
-
 
 // adds an input box which can add text to the section (new task, link, etc.)
 function add_todo_input() {
@@ -73,7 +94,9 @@ function add_todo_input() {
                     ) {
                         var has_spaces = $.trim(content).split(" ");
                         if (has_spaces.length == 1) {
-                            $(this).after('<br><a href=">' + content + '" target = "_blank">' + content + "</a>");
+                            if (!content.includes("http") || content.includes("https")) 
+                                content = "http://" + content;
+                            $(this).after('<br><a href="' + content + '" target = "_blank">' + content + "</a>");
                             $(this).val("");
                         } else {
                             to_add_to_list =
@@ -85,6 +108,8 @@ function add_todo_input() {
                                     has_spaces[i].includes("https") ||
                                     has_spaces[i].includes("www")
                                 ) {
+                                    if (!has_spaces[i].includes("http") || has_spaces[i].includes("https")) 
+                                        has_spaces[i] = "http://" + has_spaces[i];
                                     to_add_to_list +=
                                         '<a href="' +
                                         has_spaces[i] +
@@ -127,17 +152,15 @@ function add_todo_input() {
                     });
 
                     // listener for removing items
-                    to_remove = document.getElementsByClassName('remove');
-                    for (var i = 0; i < to_remove.length; i++) {
-                        to_remove[i].addEventListener("click", function () {
-                            var to_be_removed = $(this).parentsUntil('div');
-                            port.postMessage({ action: "Remove task", task: content, section: section_id });
-                            $(to_be_removed[0]).prev().remove();
-                            for (var i = 0; i < to_be_removed.length; i++) {
-                                to_be_removed[i].remove();
-                            }
-                        });
-                    }
+                    $(".remove").off("click");
+                    $(".remove").click(function () {
+                        var to_be_removed = $(this).parentsUntil('div');
+                        port.postMessage({ action: "Remove task", task: content, section: section_id });
+                        $(to_be_removed[0]).prev().remove();
+                        for (var i = 0; i < to_be_removed.length; i++) {
+                            to_be_removed[i].remove();
+                        }
+                    });
 
                     task_counter++;
                 }
@@ -145,6 +168,53 @@ function add_todo_input() {
         });
     });
 }
+
+$("#add-blocked").focus(function () {
+    $(this).keypress(function (event) {
+        if (event.which == 13) {
+            var content = $(this).val();
+            if (content != "") {
+                // if it's a valid link
+                if (
+                    content.includes("http") ||
+                    content.includes("https") ||
+                    content.includes("www")
+                ) {
+                    var has_spaces = $.trim(content).split(" ");
+                    if (has_spaces.length == 1) {
+                        $(this).after('<br><a href=">' + content + '" target = "_blank">' + content + "</a>");
+                        $(this).val("");
+                    } else {
+                        alert("Please enter only the link of the website you would like to block.");
+                    }
+                }
+                //if it's not a link
+                else {
+                    alert("Please enter a valid link.");
+                }
+                // add to background list
+                // var section_id = this.id;
+                // port.postMessage({
+                //     action: "Update tasks",
+                //     task: content,
+                //     checked: false,
+                //     section: section_id,
+                // });
+
+                // listener for removing items
+                // $(".remove").off("click");
+                // $(".remove").click(function () {
+                //     var to_be_removed = $(this).parentsUntil('div');
+                //     port.postMessage({ action: "Remove task", task: content, section: section_id });
+                //     $(to_be_removed[0]).prev().remove();
+                //     for (var i = 0; i < to_be_removed.length; i++) {
+                //         to_be_removed[i].remove();
+                //     }
+                // });
+            }
+        }
+    });
+});
 
 // finds all unchecked items and adds them to pomodoro task list
 function set_task_list() {
@@ -204,6 +274,36 @@ function get_message(work) {
     }
 }
 
+function meet_setup() {
+    $('.submit').off('click');
+    $('.submit').click(function () {
+        console.log('submitted days');
+        sibs = $(this).siblings();
+        console.log(sibs);
+
+        var content = "Meets on ";
+        select_list = [];
+
+        for (var i = 0; i < sibs.length; i++) {
+            if ($(sibs[i]).hasClass('days') || $(sibs[i]).hasClass('time')) {
+                select_list = select_list.concat(sibs[i]);
+                console.log(select_list);
+            }
+        }
+
+        // for (var i = 0; i < select_list.length; i++) {
+        // if ($(select_list[i]).is("option:selected") && (i != select_list.length - 1))
+        content += String($(select_list[0][select_list[0].selectedIndex]).attr('value')) + "s ";
+        // else if ($(select_list[i]).is("option:selected"))
+        content += "at " + String($(select_list[1][select_list[1].selectedIndex]).attr('value'));
+        // }
+
+        console.log(content);
+        $(this).after('<br><label id="task"><input type="checkbox" class="task" id="checkbox"></input><span>'
+            + content + '</span><input type = "button" class="remove" value ="x"></input></label>');
+    });
+}
+
 function get_days(submit) {
     submit.addEventListener("click", function () {
         console.log(this.values);
@@ -245,22 +345,20 @@ function pop_init() {
                 port.postMessage({ action: "Update tasks", task: this.nextElementSibling.textContent, checked: this.checked, section: this.parentElement.parentElement.previousElementSibling.id });
             })
             // add input boxes
-            for (var i = sections.length - 1; i >= 0; i--)
-                add_todo_input();
+            add_todo_input();
+            //allow the calendar to return a to-do of the days the class meets
+            meet_setup();
 
             // listener for removing items
-            to_remove = document.getElementsByClassName('remove');
-            for (var i = 0; i < to_remove.length; i++) {
-                to_remove[i].addEventListener("click", function () {
-                    var to_be_removed = $(this).parentsUntil('div');
-                    console.log(to_be_removed[0].parentElement.previousElementSibling.id);
-                    port.postMessage({ action: "Remove task", task: to_be_removed[0].textContent, section: to_be_removed[0].parentElement.previousElementSibling.id });
-                    $(to_be_removed[0]).prev().remove();
-                    for (var i = 0; i < to_be_removed.length; i++) {
-                        to_be_removed[i].remove();
-                    }
-                });
-            }
+            $(".remove").click(function () {
+                var to_be_removed = $(this).parentsUntil('div');
+                console.log(to_be_removed[0].parentElement.previousElementSibling.id);
+                port.postMessage({ action: "Remove task", task: to_be_removed[0].textContent, section: to_be_removed[0].parentElement.previousElementSibling.id });
+                $(to_be_removed[0]).prev().remove();
+                for (var i = 0; i < to_be_removed.length; i++) {
+                    to_be_removed[i].remove();
+                }
+            });
 
             //listener for clicking a
             /*
@@ -326,16 +424,6 @@ $(document).ready(function () {
             }
         });
     });
-    // function remove_item(event) {
-    //     console.log('x');
-    //     var to_be_removed = $(this).parentsUntil('div');
-    //     console.log(to_be_removed);
-    //     for (var i = 0; i < to_be_removed.length; i++) {
-    //         console.log(to_be_removed[i]);
-    //         to_be_removed[i].remove();
-
-    //     }
-    // }
 
     // classes
     $(".new-class").focus(function () {
@@ -355,7 +443,7 @@ $(document).ready(function () {
                     );
                     $(this).val("");
                     section_setup(document.getElementsByClassName("class-header")[0]);
-                    add_todo_input();
+                    meet_setup();
                     section_setup(document.getElementsByClassName("section-header")[0]);
                     add_todo_input();
                 }
@@ -364,34 +452,6 @@ $(document).ready(function () {
     });
     add_todo_input();
 
-    //allow the calendar to return a to-do of the days the class meets
-    $('.submit').click(function () {
-        console.log('submitted days');
-        sibs = $(this).siblings();
-        console.log(sibs);
-        
-        var content = "Meets on: ";
-
-        for (var i = 0; i < sibs.length; i++){
-            if ($(sibs[i]).hasClass('days')) {
-                select_list = sibs[i];
-                console.log(select_list);
-
-            }
-        }
-
-        for (var i = 0 ; i < select_list.length; i++){
-            if ($(select_list[i]).is("option:selected")  && (i != select_list.length - 1)){
-                content += String($(select_list[i]).attr('value')) + " "
-            }
-            
-        }
-        
-        console.log(content);
-        $(this).after('<br><label id="task"><input type="checkbox" class="task" id="checkbox"></input><span>'
-            + content + '</span><input type = "button" class="remove" value ="x"></input></label>');
-
-    });
 
     // pomodoro timer
     let progressBar = document.querySelector(".e-c-progress");

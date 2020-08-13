@@ -1,8 +1,10 @@
 var tasks = [];
+var intervalTimer;
 
 chrome.runtime.onInstalled.addListener(function () {
-  chrome.storage.sync.set({ color: "#3aa757" }, function () {
-    console.log("The color is green.");
+  
+  chrome.storage.sync.set({mainbgcolor: '#F2F2F2', elementcolor:'#ffffff', textcolor: '#404040', sliderlight: '#A7ACC6', sliderdark: '#4E598C', radiofill: '#f7a191', timermain: '#4E598C'}, function() {
+    console.log('Value is set for light mode');
   });
 
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
@@ -16,14 +18,14 @@ chrome.runtime.onInstalled.addListener(function () {
 });
 
 chrome.identity.getAuthToken({ interactive: true }, function (token) {
-  console.log(token);
+  //console.log(token);
 });
 
 chrome.identity.getProfileUserInfo(function (info) {
   email = info.email;
   id = info.id;
-  console.log(email);
-  console.log(id);
+  // console.log(email);
+  // console.log(id);
 });
 
 
@@ -63,9 +65,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 chrome.runtime.onConnect.addListener(function (port) {
   port.onMessage.addListener(function (msg) {
-    if (msg.joke == "Knock knock")
-      port.postMessage({ time: Date.now() });
-    else if (msg.action == "Update tasks") {
+    if (msg.action == "Update tasks") {
       var in_list = false;
       for (var i = 0; i < tasks.length; i++) {
         if (tasks[i].includes(msg.task) && tasks[i].includes(msg.section)) {
@@ -75,15 +75,31 @@ chrome.runtime.onConnect.addListener(function (port) {
       }
       if (!in_list)
         tasks = tasks.concat([[msg.task, msg.checked, msg.section]]);
-    } else if (msg.action == "Get tasks") {
+    }
+
+    else if (msg.action == "Get tasks") {
       port.postMessage({ tasks: tasks, signature: msg.signature });
-    } else if (msg.action == "Remove task") {
+    }
+
+    else if (msg.action == "Remove task") {
       for (var i = 0; i < tasks.length; i++) {
         if (tasks[i].includes(msg.task) && tasks[i].includes(msg.section))
           tasks.pop(i);
       }
-    } /*else if (msg.action == "link") {
-      chrome.tabs.create({ url: 'https://chrome.google.com/' });
-  } */
-  
+    }
+
+    else if (msg.action == "Timer" || msg.action == "Stop Timer") {
+      if (msg.seconds == null || msg.timeLeft < 0 || msg.action == "Stop Timer") {
+        clearInterval(intervalTimer);
+        port.postMessage({ signature: "End Timer", timeLeft: timeLeft });
+      } else {
+        let remainTime = Date.now() + msg.seconds * 1000;
+
+        intervalTimer = setInterval(function () {
+          timeLeft = Math.round((remainTime - Date.now()) / 1000);
+          port.postMessage({ signature: "Timer", timeLeft: timeLeft, finished: timeLeft < 0 });
+        }, 1000);
+      }
+    }
+  });
 });

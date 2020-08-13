@@ -11,21 +11,31 @@ slider.addEventListener("change", function () {
     changetab();
 });
 
+function getTheme() {
+    chrome.storage.sync.get(['mainbgcolor', 'elementcolor', 'textcolor', 'sliderlight', 'sliderdark', 'radiofill', 'timermain'], function (data) {
+        document.documentElement.style.setProperty('--main-bg-color', data.mainbgcolor);
+        document.documentElement.style.setProperty('--element-color', data.elementcolor);
+        document.documentElement.style.setProperty('--text-color', data.textcolor);
+        document.documentElement.style.setProperty('--slider-light', data.sliderlight);
+        document.documentElement.style.setProperty('--slider-dark', data.sliderdark);
+        document.documentElement.style.setProperty('--radio-fill', data.radiofill);
+        document.documentElement.style.setProperty('--timer-main', data.timermain);
+        console.log("SADNESS" + data.mainbgcolor);
+    });
+}
+
+
 // change tabs
 function changetab() {
-    if (current.charAt(0) === '1') {
+    if (current.charAt(0) === "1") {
         document.getElementById("tasks").style.display = "block";
         document.getElementById("classes").style.display = "none";
         document.getElementById("pomodoro").style.display = "none";
-    }
-
-    else if (current.charAt(0) === '2') {
+    } else if (current.charAt(0) === "2") {
         document.getElementById("tasks").style.display = "none";
         document.getElementById("classes").style.display = "block";
         document.getElementById("pomodoro").style.display = "none";
-    }
-
-    else {
+    } else {
         document.getElementById("tasks").style.display = "none";
         document.getElementById("classes").style.display = "none";
         document.getElementById("pomodoro").style.display = "block";
@@ -37,23 +47,23 @@ function changetab() {
 function section_setup(section) {
     console.log("IN SECTION SETPU");
     // possibly at some point add way to change placeholder to add a link/class meeting time/whatever if it's in class
-    section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML +
-        '<input type="text" id="' + section.textContent.substring(2) +
+    section.nextElementSibling.innerHTML =
+        section.nextElementSibling.innerHTML +
+        '<input type="text" id="' +
+        section.textContent.substring(2) +
         '" class="new-todo"  placeholder=" New todo item"></input>';
     section.id = section.textContent.substring(2);
     section.addEventListener("click", function () {
         var content = this.nextElementSibling;
         if (content.style.display === "block") {
             content.style.display = "none";
-            this.textContent = this.textContent.replace('-', '+');
+            this.textContent = this.textContent.replace("-", "+");
         } else {
             content.style.display = "block";
-            this.textContent = this.textContent.replace('+', '-');
+            this.textContent = this.textContent.replace("+", "-");
         }
     });
 }
-
-
 
 // adds an input box which can add text to the section (new task, link, etc.)
 function add_todo_input() {
@@ -77,7 +87,9 @@ function add_todo_input() {
                             $(this).val("");
                         } else {
                             to_add_to_list =
-                                '<br><label id="task' + task_counter + '"><input type="checkbox" class="task"></input><span>';
+                                '<br><label id="task' +
+                                task_counter +
+                                '"><input type="checkbox" class="task"></input><span>';
                             add_to_end = "</span></label>";
                             for (var i = 0; i < has_spaces.length; i++) {
                                 if (
@@ -104,11 +116,13 @@ function add_todo_input() {
                     //if it's not a link
                     else {
                         $(this).after(
-                            '<br><label id="task' + task_counter
-                            + '"><input type="checkbox" class="task" id="checkbox'
-                            + task_counter + '"></input><span>'
-                            + content +
-                            '</span><input type = "button" class="remove" value ="x"></input></label>'
+                            '<br><label id="task' +
+                            task_counter +
+                            '"><input type="checkbox" class="task" id="checkbox' +
+                            task_counter +
+                            '"></input><span>' +
+                            content +
+                            '</span><input type="button" class="remove" value ="&times" style="color:--main-bg-color"></input></label>'
                         );
                         $(this).val("");
                     }
@@ -123,15 +137,24 @@ function add_todo_input() {
 
                     // listener for check
                     $("#checkbox" + task_counter).click(function () {
-                        port.postMessage({ action: "Update tasks", task: content, checked: this.checked, section: section_id });
+                        port.postMessage({
+                            action: "Update tasks",
+                            task: content,
+                            checked: this.checked,
+                            section: section_id,
+                        });
                     });
 
                     // listener for removing items
-                    to_remove = document.getElementsByClassName('remove');
+                    to_remove = document.getElementsByClassName("remove");
                     for (var i = 0; i < to_remove.length; i++) {
                         to_remove[i].addEventListener("click", function () {
-                            var to_be_removed = $(this).parentsUntil('div');
-                            port.postMessage({ action: "Remove task", task: content, section: section_id });
+                            var to_be_removed = $(this).parentsUntil("div");
+                            port.postMessage({
+                                action: "Remove task",
+                                task: content,
+                                section: section_id,
+                            });
                             $(to_be_removed[0]).prev().remove();
                             for (var i = 0; i < to_be_removed.length; i++) {
                                 to_be_removed[i].remove();
@@ -153,10 +176,12 @@ function set_task_list() {
     port.onMessage.addListener(function (msg) {
         if (msg.signature === "set_task_list") {
             task_list = msg.tasks;
-            $('option').remove();
+            $("option").remove();
             for (var i = 0; i < task_list.length; i++) {
                 if (!task_list[i][1]) {
-                    $('#inputGroupSelect01').append('<option>' + task_list[i][0] + '</option>');
+                    $("#inputGroupSelect01").append(
+                        "<option>" + task_list[i][0] + "</option>"
+                    );
                 }
             }
         }
@@ -227,13 +252,26 @@ function pop_init() {
             sections = [];
             for (var i = task_list.length - 1; i >= 0; i--) {
                 if (!sections.includes(task_list[i][2])) {
-                    $('#task-list').prepend('<h5 class="section-header"><span>+ </span>' + task_list[i][2] + '</h5><div class="task-section lead"></div>');
+                    $("#task-list").prepend(
+                        '<h5 class="section-header"><span>+ </span>' +
+                        task_list[i][2] +
+                        '</h5><div class="task-section lead"></div>'
+                    );
                     section_setup(document.getElementsByClassName("section-header")[0]);
-                    sections = sections.concat(document.getElementsByClassName("section-header")[0].id);
+                    sections = sections.concat(
+                        document.getElementsByClassName("section-header")[0].id
+                    );
                 }
 
                 // add tasks
-                document.getElementById(task_list[i][2]).nextElementSibling.innerHTML += ('<br><label id="task' + task_counter + '"><input type="checkbox" class="task" id="checkbox' + task_counter + '"></input><span>' + task_list[i][0] + '</span><input type = "button" class="remove" value ="x"></label>');
+                document.getElementById(task_list[i][2]).nextElementSibling.innerHTML +=
+                    '<br><label id="task' +
+                    task_counter +
+                    '"><input type="checkbox" class="task" id="checkbox' +
+                    task_counter +
+                    '"></input><span>' +
+                    task_list[i][0] +
+                    '</span><input type = "button" class="remove" value ="&times"></label>';
                 // check task
                 if (task_list[i][1]) {
                     $("#checkbox" + task_counter).attr("checked", true);
@@ -242,19 +280,27 @@ function pop_init() {
             }
             // add listener for click
             $(".task").click(function () {
-                port.postMessage({ action: "Update tasks", task: this.nextElementSibling.textContent, checked: this.checked, section: this.parentElement.parentElement.previousElementSibling.id });
-            })
+                port.postMessage({
+                    action: "Update tasks",
+                    task: this.nextElementSibling.textContent,
+                    checked: this.checked,
+                    section: this.parentElement.parentElement.previousElementSibling.id,
+                });
+            });
             // add input boxes
-            for (var i = sections.length - 1; i >= 0; i--)
-                add_todo_input();
+            for (var i = sections.length - 1; i >= 0; i--) add_todo_input();
 
             // listener for removing items
-            to_remove = document.getElementsByClassName('remove');
+            to_remove = document.getElementsByClassName("remove");
             for (var i = 0; i < to_remove.length; i++) {
                 to_remove[i].addEventListener("click", function () {
-                    var to_be_removed = $(this).parentsUntil('div');
+                    var to_be_removed = $(this).parentsUntil("div");
                     console.log(to_be_removed[0].parentElement.previousElementSibling.id);
-                    port.postMessage({ action: "Remove task", task: to_be_removed[0].textContent, section: to_be_removed[0].parentElement.previousElementSibling.id });
+                    port.postMessage({
+                        action: "Remove task",
+                        task: to_be_removed[0].textContent,
+                        section: to_be_removed[0].parentElement.previousElementSibling.id,
+                    });
                     $(to_be_removed[0]).prev().remove();
                     for (var i = 0; i < to_be_removed.length; i++) {
                         to_be_removed[i].remove();
@@ -286,6 +332,7 @@ function pop_init() {
 
         }
     });
+    getTheme();
 }
 
 
@@ -331,16 +378,6 @@ $(document).ready(function () {
             }
         });
     });
-    // function remove_item(event) {
-    //     console.log('x');
-    //     var to_be_removed = $(this).parentsUntil('div');
-    //     console.log(to_be_removed);
-    //     for (var i = 0; i < to_be_removed.length; i++) {
-    //         console.log(to_be_removed[i]);
-    //         to_be_removed[i].remove();
-
-    //     }
-    // }
 
     // classes
     $(".new-class").focus(function () {
@@ -399,6 +436,8 @@ $(document).ready(function () {
 
     let isPaused = false;
     let isStarted = false;
+    let timer_zero = false;
+    let remainTime = 0;
 
     update(
         pomodoro_work ? workTime : breakTime,
@@ -406,83 +445,35 @@ $(document).ready(function () {
     ); //refreshes progress bar
     displayTimeLeft(pomodoro_work ? workTime : breakTime);
 
-    function changeWholeTime(seconds) {
-        if (pomodoro_work) {
-            if (workTime + seconds > 0) {
-                workTime += seconds;
-                update(workTime, workTime);
-            }
-        } else {
-            if (breakTime + seconds > 0) {
-                breakTime += seconds;
-                update(breakTime, breakTime);
-            }
-        }
-    }
-
-    /*for (var i = 0; i < setterBtns.length; i++) {
-          setterBtns[i].addEventListener("click", function (event) {
-              var param = this.dataset.setter;
-              switch (param) {
-                  case 'minutes-plus':
-                      changeWholeTime(1 * 60);
-                      break;
-                  case 'minutes-minus':
-                      changeWholeTime(-1 * 60);
-                      break;
-                  case 'seconds-plus':
-                      changeWholeTime(1);
-                      break;
-                  case 'seconds-minus':
-                      changeWholeTime(-1);
-                      break;
-              }
-              displayTimeLeft(wholeTime);
-          });
-      }*/
-
     function timer(seconds) {
         //counts time, takes seconds
-        let remainTime = Date.now() + seconds * 1000;
+        port.postMessage({ signature: "Timer", action: "Timer", seconds: seconds });
+        isStarted = true;
+        isPaused = false;
+        remainTime = Date.now() + seconds * 1000;
         displayTimeLeft(seconds);
-
-        intervalTimer = setInterval(function () {
-            timeLeft = Math.round((remainTime - Date.now()) / 1000);
-            if (timeLeft < 0) {
-                clearInterval(intervalTimer);
-                pomodoro_work = !pomodoro_work;
-                displayTimeLeft(pomodoro_work ? workTime : breakTime);
-                alert(get_message(pomodoro_work));
-                timer(pomodoro_work ? workTime : breakTime);
-                return;
-                // pauseBtn.classList.remove('pause');
-                // pauseBtn.classList.add('play');
-            }
-            displayTimeLeft(timeLeft);
-        }, 1000);
     }
 
     function pauseTimer(event) {
         if (isStarted === false) {
+            // Play
             timer(pomodoro_work ? workTime : breakTime);
             isStarted = true;
             this.classList.remove("play");
             this.classList.add("pause");
             console.log(pomodoro_work ? "Work" : "Break");
-            // setterBtns.forEach(function (btn) {
-            //     btn.disabled = true;
-            //     btn.style.opacity = 0.5;
-            // });
         } else if (isPaused) {
+            // Play from pause
             this.classList.remove("play");
             this.classList.add("pause");
             timer(timeLeft);
-            isPaused = isPaused ? false : true;
+            isPaused = false;
         } else {
+            // Pause
             this.classList.remove("pause");
             this.classList.add("play");
-            clearInterval(intervalTimer);
-            isPaused = isPaused ? false : true;
+            port.postMessage({ signature: "Timer", action: "Stop Timer" })
+            isPaused = true;
         }
     }
 
@@ -498,10 +489,31 @@ $(document).ready(function () {
         update(timeLeft, pomodoro_work ? workTime : breakTime);
     }
 
+    // Listener for timer
+    port.onMessage.addListener(function (msg) {
+        if (msg.signature === "Timer") {
+            timeLeft = msg.timeLeft;
+            timer_zero = (msg.finished);
+            displayTimeLeft(timeLeft);
+            if (timer_zero) {
+                // move to other part of the pomodoro
+                pomodoro_work = !pomodoro_work;
+                displayTimeLeft(pomodoro_work ? workTime : breakTime);
+                port.postMessage({ signature: "Timer", action: "Stop Timer" });
+                alert(get_message(pomodoro_work));
+                timer(pomodoro_work ? workTime : breakTime);
+                return;
+            }
+        }
+
+        if (msg.signature === "End Timer") {
+
+        }
+    });
+
     pauseBtn.addEventListener("click", pauseTimer);
 
     workInput.addEventListener("change", function timerReset() {
-        //pauseTimer();
         if (document.getElementById("work-period").value < 0) {
             alert("Timer value must be greater than or equal to zero!");
             workTime = 0;
@@ -518,7 +530,6 @@ $(document).ready(function () {
     });
 
     breakInput.addEventListener("change", function timerReset() {
-        //pauseTimer();
         if (document.getElementById("break-period").value < 0) {
             alert("Timer value must be greater than or equal to zero!");
             breakTime = 0;

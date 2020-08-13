@@ -1,5 +1,5 @@
 {
-  "key": "dmjanhblfidbiiopdhpoacnnmjengicm",
+  "key": "giapgbikmpbplmimbglkbgilcidpaehm",
   "name": "HomeRoom",
   "version": "0.0.0.3",
   "description": "Productivity Extension for HackThis2020 @ HackIllinois",
@@ -35,6 +35,6 @@
   "manifest_version": 2,
   "oauth2": {
     "client_id": "410341402238-us5vtvjajhqp6ppn5itqij04qisn06om.apps.googleusercontent.com",
-    "scopes": ["https://www.googleapis.com/auth/drive"]
+    "scopes": ["https://www.googleapis.com/auth/calendar"]
   }
 }

@@ -103,7 +103,8 @@
 
         .new-todo,
         .new-class,
-        .new-section {
+        .new-section, 
+        .new-block-link {
             /*border: none;*/
             border: transparent;
             font-size: 1em;
@@ -188,7 +189,7 @@
         .slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 35%;
+            width: 25%;
             height: 25px;
             background: var(--slider-light);
             cursor: pointer;
@@ -196,7 +197,7 @@
         }
 
         .slider::-moz-range-thumb {
-            width: 35%;
+            width: 25%;
             height: 25px;
             background: var(--slider-light);
             cursor: pointer;
@@ -333,12 +334,16 @@
             border-color: #9ecaed;
             box-shadow: 0 0 10px #9ecaed;
         }
+
+        select {
+            margin: 15px 4px
+        }
         
     </style>
 </head>
 
 <body style="margin: 5px;">
-    <input type="range" min="1" max="3" value="1" class="slider" id="choose-tab">
+    <input type="range" min="1" max="4" value="1" class="slider" id="choose-tab">
     <div id="tasks" style="display: none">
         <div>
             <h1 class="featurette-heading">My Tasks</h1>
@@ -366,20 +371,7 @@
         <label class="class-list" style="width: 100%">
             <dl id="class-list">
                 <h5 class="class-header"><span>+ </span>Comp Sci</h5>
-                <div class="task-section lead" style="margin: auto">
-                    <label for="days">Choose class days: (Ctrl or Command to select multiple)</label>
-                    <br>
-                    <select name="days" id="days" multiple>
-                        <option value="M">Monday</option>
-                        <option value="T">Tuesday</option>
-                        <option value="W">Wednesday</option>
-                        <option value="R">Thursday</option>
-                        <option value="F">Friday</option>
-                        <option value="S">Saturday</option>
-                        <option value="U">Sunday</option>
-                    </select>
-                    <br><br>
-                    <input type="submit" value="Submit" class="submit">
+                <div class="task-section lead">
                 </div>
                 <h5 class="class-header"><span>+ </span>American Lit</h5>
                 <div class="task-section lead">
@@ -465,6 +457,12 @@
 
             </div>
         </div>
+    </div>
+    <div id="blocker" style="display: block">
+        <div>
+            <h1 class="featurette-heading">Website Blocker</h1>
+        </div>
+        <dd><input type="text" id="add-blocked" class="new-block-link" placeholder=" Add a link to block while you work!"></input></dd>
     </div>
     <script src="popup.js"></script>
 </body>

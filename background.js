@@ -91,13 +91,15 @@ chrome.runtime.onConnect.addListener(function (port) {
     else if (msg.action == "Timer" || msg.action == "Stop Timer") {
       if (msg.seconds == null || msg.timeLeft < 0 || msg.action == "Stop Timer") {
         clearInterval(intervalTimer);
-        port.postMessage({ signature: "End Timer", timeLeft: timeLeft });
+        try { port.postMessage({ signature: "End Timer", timeLeft: timeLeft }); }
+        catch { console.log("TRYING TO STOP")}
       } else {
         let remainTime = Date.now() + msg.seconds * 1000;
-
+        chrome.tabs.getCurrent(function() { console.log(this) });
         intervalTimer = setInterval(function () {
           timeLeft = Math.round((remainTime - Date.now()) / 1000);
-          port.postMessage({ signature: "Timer", timeLeft: timeLeft, finished: timeLeft < 0 });
+          try { port.postMessage({ signature: "Timer", timeLeft: timeLeft, finished: timeLeft < 0 }); }
+          catch { console.log(timeLeft)}
         }, 1000);
       }
     }

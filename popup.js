@@ -11,56 +11,67 @@ slider.addEventListener("change", function () {
     changetab();
 });
 
-function getTheme() {
-    chrome.storage.sync.get(['mainbgcolor', 'elementcolor', 'textcolor', 'sliderlight', 'sliderdark', 'radiofill', 'timermain'], function (data) {
-        document.documentElement.style.setProperty('--main-bg-color', data.mainbgcolor);
-        document.documentElement.style.setProperty('--element-color', data.elementcolor);
-        document.documentElement.style.setProperty('--text-color', data.textcolor);
-        document.documentElement.style.setProperty('--slider-light', data.sliderlight);
-        document.documentElement.style.setProperty('--slider-dark', data.sliderdark);
-        document.documentElement.style.setProperty('--radio-fill', data.radiofill);
-        document.documentElement.style.setProperty('--timer-main', data.timermain);
-        console.log("SADNESS" + data.mainbgcolor);
-    });
-}
-
-
 // change tabs
 function changetab() {
-    if (current.charAt(0) === "1") {
+    if (current.charAt(0) === '1') {
         document.getElementById("tasks").style.display = "block";
         document.getElementById("classes").style.display = "none";
         document.getElementById("pomodoro").style.display = "none";
-    } else if (current.charAt(0) === "2") {
+        document.getElementById("blocker").style.display = "none";
+    }
+
+    else if (current.charAt(0) === '2') {
         document.getElementById("tasks").style.display = "none";
         document.getElementById("classes").style.display = "block";
         document.getElementById("pomodoro").style.display = "none";
-    } else {
+        document.getElementById("blocker").style.display = "none";
+    }
+
+    else if (current.charAt(0) === '3') {
         document.getElementById("tasks").style.display = "none";
         document.getElementById("classes").style.display = "none";
         document.getElementById("pomodoro").style.display = "block";
+        document.getElementById("blocker").style.display = "none";
         set_task_list();
+    }
+
+    else {
+        document.getElementById("tasks").style.display = "none";
+        document.getElementById("classes").style.display = "none";
+        document.getElementById("pomodoro").style.display = "none";
+        document.getElementById("blocker").style.display = "block";
     }
 }
 
 // adds a subsection with input box and collapsible header
 function section_setup(section) {
-    console.log("IN SECTION SETPU");
     // possibly at some point add way to change placeholder to add a link/class meeting time/whatever if it's in class
-    section.nextElementSibling.innerHTML =
-        section.nextElementSibling.innerHTML +
-        '<input type="text" id="' +
-        section.textContent.substring(2) +
-        '" class="new-todo"  placeholder=" New todo item"></input>';
+    if (section.parentElement.id === "class-list") {
+        section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML +
+            '<label for="days">Choose class days:</label><br>' +
+            '<select name="days" class="days"><option value="Monday">Monday</option>' +
+            '<option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option>' +
+            '<option value="Thursday">Thursday</option><option value="Friday">Friday</option>' +
+            '<option value="Saturday">Saturday</option><option value="Sunday">Sunday</option></select>' +
+            '<select name="time" class="time"><option value="9">9:00</option>' +
+            '<option value="10">10:00</option><option value="11">11:00</option>' +
+            '<option value="12">12:00</option><option value="1">1:00</option>' +
+            '<option value="2">2:00</option><option value="3">3:00</option></select>' +
+            '<br><input type="submit" value="Submit" class="submit"><br><br>';
+    } else {
+        section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML +
+            '<input type="text" id="' + section.textContent.substring(2) +
+            '" class="new-todo"  placeholder=" New todo item"></input>';
+    }
     section.id = section.textContent.substring(2);
     section.addEventListener("click", function () {
         var content = this.nextElementSibling;
         if (content.style.display === "block") {
             content.style.display = "none";
-            this.textContent = this.textContent.replace("-", "+");
+            this.textContent = this.textContent.replace('-', '+');
         } else {
             content.style.display = "block";
-            this.textContent = this.textContent.replace("+", "-");
+            this.textContent = this.textContent.replace('+', '-');
         }
     });
 }
@@ -83,13 +94,13 @@ function add_todo_input() {
                     ) {
                         var has_spaces = $.trim(content).split(" ");
                         if (has_spaces.length == 1) {
-                            $(this).after('<br><a href=">' + content + '" target = "_blank">' + content + "</a>");
+                            if (!content.includes("http") || content.includes("https")) 
+                                content = "http://" + content;
+                            $(this).after('<br><a href="' + content + '" target = "_blank">' + content + "</a>");
                             $(this).val("");
                         } else {
                             to_add_to_list =
-                                '<br><label id="task' +
-                                task_counter +
-                                '"><input type="checkbox" class="task"></input><span>';
+                                '<br><label id="task' + task_counter + '"><input type="checkbox" class="task"></input><span>';
                             add_to_end = "</span></label>";
                             for (var i = 0; i < has_spaces.length; i++) {
                                 if (
@@ -97,6 +108,8 @@ function add_todo_input() {
                                     has_spaces[i].includes("https") ||
                                     has_spaces[i].includes("www")
                                 ) {
+                                    if (!has_spaces[i].includes("http") || has_spaces[i].includes("https")) 
+                                        has_spaces[i] = "http://" + has_spaces[i];
                                     to_add_to_list +=
                                         '<a href="' +
                                         has_spaces[i] +
@@ -116,13 +129,11 @@ function add_todo_input() {
                     //if it's not a link
                     else {
                         $(this).after(
-                            '<br><label id="task' +
-                            task_counter +
-                            '"><input type="checkbox" class="task" id="checkbox' +
-                            task_counter +
-                            '"></input><span>' +
-                            content +
-                            '</span><input type="button" class="remove" value ="&times" style="color:--main-bg-color"></input></label>'
+                            '<br><label id="task' + task_counter
+                            + '"><input type="checkbox" class="task" id="checkbox'
+                            + task_counter + '"></input><span>'
+                            + content +
+                            '</span><input type = "button" class="remove" value ="x"></input></label>'
                         );
                         $(this).val("");
                     }
@@ -137,30 +148,19 @@ function add_todo_input() {
 
                     // listener for check
                     $("#checkbox" + task_counter).click(function () {
-                        port.postMessage({
-                            action: "Update tasks",
-                            task: content,
-                            checked: this.checked,
-                            section: section_id,
-                        });
+                        port.postMessage({ action: "Update tasks", task: content, checked: this.checked, section: section_id });
                     });
 
                     // listener for removing items
-                    to_remove = document.getElementsByClassName("remove");
-                    for (var i = 0; i < to_remove.length; i++) {
-                        to_remove[i].addEventListener("click", function () {
-                            var to_be_removed = $(this).parentsUntil("div");
-                            port.postMessage({
-                                action: "Remove task",
-                                task: content,
-                                section: section_id,
-                            });
-                            $(to_be_removed[0]).prev().remove();
-                            for (var i = 0; i < to_be_removed.length; i++) {
-                                to_be_removed[i].remove();
-                            }
-                        });
-                    }
+                    $(".remove").off("click");
+                    $(".remove").click(function () {
+                        var to_be_removed = $(this).parentsUntil('div');
+                        port.postMessage({ action: "Remove task", task: content, section: section_id });
+                        $(to_be_removed[0]).prev().remove();
+                        for (var i = 0; i < to_be_removed.length; i++) {
+                            to_be_removed[i].remove();
+                        }
+                    });
 
                     task_counter++;
                 }
@@ -169,6 +169,53 @@ function add_todo_input() {
     });
 }
 
+$("#add-blocked").focus(function () {
+    $(this).keypress(function (event) {
+        if (event.which == 13) {
+            var content = $(this).val();
+            if (content != "") {
+                // if it's a valid link
+                if (
+                    content.includes("http") ||
+                    content.includes("https") ||
+                    content.includes("www")
+                ) {
+                    var has_spaces = $.trim(content).split(" ");
+                    if (has_spaces.length == 1) {
+                        $(this).after('<br><a href=">' + content + '" target = "_blank">' + content + "</a>");
+                        $(this).val("");
+                    } else {
+                        alert("Please enter only the link of the website you would like to block.");
+                    }
+                }
+                //if it's not a link
+                else {
+                    alert("Please enter a valid link.");
+                }
+                // add to background list
+                // var section_id = this.id;
+                // port.postMessage({
+                //     action: "Update tasks",
+                //     task: content,
+                //     checked: false,
+                //     section: section_id,
+                // });
+
+                // listener for removing items
+                // $(".remove").off("click");
+                // $(".remove").click(function () {
+                //     var to_be_removed = $(this).parentsUntil('div');
+                //     port.postMessage({ action: "Remove task", task: content, section: section_id });
+                //     $(to_be_removed[0]).prev().remove();
+                //     for (var i = 0; i < to_be_removed.length; i++) {
+                //         to_be_removed[i].remove();
+                //     }
+                // });
+            }
+        }
+    });
+});
+
 // finds all unchecked items and adds them to pomodoro task list
 function set_task_list() {
     var task_list = [];
@@ -176,12 +223,10 @@ function set_task_list() {
     port.onMessage.addListener(function (msg) {
         if (msg.signature === "set_task_list") {
             task_list = msg.tasks;
-            $("option").remove();
+            $('option').remove();
             for (var i = 0; i < task_list.length; i++) {
                 if (!task_list[i][1]) {
-                    $("#inputGroupSelect01").append(
-                        "<option>" + task_list[i][0] + "</option>"
-                    );
+                    $('#inputGroupSelect01').append('<option>' + task_list[i][0] + '</option>');
                 }
             }
         }
@@ -229,6 +274,36 @@ function get_message(work) {
     }
 }
 
+function meet_setup() {
+    $('.submit').off('click');
+    $('.submit').click(function () {
+        console.log('submitted days');
+        sibs = $(this).siblings();
+        console.log(sibs);
+
+        var content = "Meets on ";
+        select_list = [];
+
+        for (var i = 0; i < sibs.length; i++) {
+            if ($(sibs[i]).hasClass('days') || $(sibs[i]).hasClass('time')) {
+                select_list = select_list.concat(sibs[i]);
+                console.log(select_list);
+            }
+        }
+
+        // for (var i = 0; i < select_list.length; i++) {
+        // if ($(select_list[i]).is("option:selected") && (i != select_list.length - 1))
+        content += String($(select_list[0][select_list[0].selectedIndex]).attr('value')) + "s ";
+        // else if ($(select_list[i]).is("option:selected"))
+        content += "at " + String($(select_list[1][select_list[1].selectedIndex]).attr('value'));
+        // }
+
+        console.log(content);
+        $(this).after('<br><label id="task"><input type="checkbox" class="task" id="checkbox"></input><span>'
+            + content + '</span><input type = "button" class="remove" value ="x"></input></label>');
+    });
+}
+
 function get_days(submit) {
     submit.addEventListener("click", function () {
         console.log(this.values);
@@ -252,26 +327,13 @@ function pop_init() {
             sections = [];
             for (var i = task_list.length - 1; i >= 0; i--) {
                 if (!sections.includes(task_list[i][2])) {
-                    $("#task-list").prepend(
-                        '<h5 class="section-header"><span>+ </span>' +
-                        task_list[i][2] +
-                        '</h5><div class="task-section lead"></div>'
-                    );
+                    $('#task-list').prepend('<h5 class="section-header"><span>+ </span>' + task_list[i][2] + '</h5><div class="task-section lead"></div>');
                     section_setup(document.getElementsByClassName("section-header")[0]);
-                    sections = sections.concat(
-                        document.getElementsByClassName("section-header")[0].id
-                    );
+                    sections = sections.concat(document.getElementsByClassName("section-header")[0].id);
                 }
 
                 // add tasks
-                document.getElementById(task_list[i][2]).nextElementSibling.innerHTML +=
-                    '<br><label id="task' +
-                    task_counter +
-                    '"><input type="checkbox" class="task" id="checkbox' +
-                    task_counter +
-                    '"></input><span>' +
-                    task_list[i][0] +
-                    '</span><input type = "button" class="remove" value ="&times"></label>';
+                document.getElementById(task_list[i][2]).nextElementSibling.innerHTML += ('<br><label id="task' + task_counter + '"><input type="checkbox" class="task" id="checkbox' + task_counter + '"></input><span>' + task_list[i][0] + '</span><input type = "button" class="remove" value ="x"></label>');
                 // check task
                 if (task_list[i][1]) {
                     $("#checkbox" + task_counter).attr("checked", true);
@@ -280,41 +342,31 @@ function pop_init() {
             }
             // add listener for click
             $(".task").click(function () {
-                port.postMessage({
-                    action: "Update tasks",
-                    task: this.nextElementSibling.textContent,
-                    checked: this.checked,
-                    section: this.parentElement.parentElement.previousElementSibling.id,
-                });
-            });
+                port.postMessage({ action: "Update tasks", task: this.nextElementSibling.textContent, checked: this.checked, section: this.parentElement.parentElement.previousElementSibling.id });
+            })
             // add input boxes
-            for (var i = sections.length - 1; i >= 0; i--) add_todo_input();
+            add_todo_input();
+            //allow the calendar to return a to-do of the days the class meets
+            meet_setup();
 
             // listener for removing items
-            to_remove = document.getElementsByClassName("remove");
-            for (var i = 0; i < to_remove.length; i++) {
-                to_remove[i].addEventListener("click", function () {
-                    var to_be_removed = $(this).parentsUntil("div");
-                    console.log(to_be_removed[0].parentElement.previousElementSibling.id);
-                    port.postMessage({
-                        action: "Remove task",
-                        task: to_be_removed[0].textContent,
-                        section: to_be_removed[0].parentElement.previousElementSibling.id,
-                    });
-                    $(to_be_removed[0]).prev().remove();
-                    for (var i = 0; i < to_be_removed.length; i++) {
-                        to_be_removed[i].remove();
-                    }
-                });
-            }
+            $(".remove").click(function () {
+                var to_be_removed = $(this).parentsUntil('div');
+                console.log(to_be_removed[0].parentElement.previousElementSibling.id);
+                port.postMessage({ action: "Remove task", task: to_be_removed[0].textContent, section: to_be_removed[0].parentElement.previousElementSibling.id });
+                $(to_be_removed[0]).prev().remove();
+                for (var i = 0; i < to_be_removed.length; i++) {
+                    to_be_removed[i].remove();
+                }
+            });
 
             //listener for clicking a
             /*
             $('a').click(function(){
                 chrome.tabs.create({url: $(this).attr('href')});
                 return false;
-            });
-            */
+            }); 
+            
 
             links = document.getElementsByTagName('a');
             console.log(links.length + "@32423");
@@ -327,24 +379,18 @@ function pop_init() {
                     console.log(link_address);
                     
 
-                });
-            }
+                }); 
+            } */
+
 
         }
     });
-    getTheme();
 }
 
-
-
-//playing around with remove feature 
-/*
-
-*/
-var remove_class
+var remove_class;
 $(document).ready(function () {
     pop_init();
-    
+
 
     let tasks = document.getElementsByClassName("task");
     let sections = document.getElementsByClassName("section-header");
@@ -397,7 +443,7 @@ $(document).ready(function () {
                     );
                     $(this).val("");
                     section_setup(document.getElementsByClassName("class-header")[0]);
-                    add_todo_input();
+                    meet_setup();
                     section_setup(document.getElementsByClassName("section-header")[0]);
                     add_todo_input();
                 }
@@ -405,6 +451,7 @@ $(document).ready(function () {
         });
     });
     add_todo_input();
+
 
     // pomodoro timer
     let progressBar = document.querySelector(".e-c-progress");
@@ -436,8 +483,6 @@ $(document).ready(function () {
 
     let isPaused = false;
     let isStarted = false;
-    let timer_zero = false;
-    let remainTime = 0;
 
     update(
         pomodoro_work ? workTime : breakTime,
@@ -445,35 +490,83 @@ $(document).ready(function () {
     ); //refreshes progress bar
     displayTimeLeft(pomodoro_work ? workTime : breakTime);
 
+    function changeWholeTime(seconds) {
+        if (pomodoro_work) {
+            if (workTime + seconds > 0) {
+                workTime += seconds;
+                update(workTime, workTime);
+            }
+        } else {
+            if (breakTime + seconds > 0) {
+                breakTime += seconds;
+                update(breakTime, breakTime);
+            }
+        }
+    }
+
+    /*for (var i = 0; i < setterBtns.length; i++) {
+          setterBtns[i].addEventListener("click", function (event) {
+              var param = this.dataset.setter;
+              switch (param) {
+                  case 'minutes-plus':
+                      changeWholeTime(1 * 60);
+                      break;
+                  case 'minutes-minus':
+                      changeWholeTime(-1 * 60);
+                      break;
+                  case 'seconds-plus':
+                      changeWholeTime(1);
+                      break;
+                  case 'seconds-minus':
+                      changeWholeTime(-1);
+                      break;
+              }
+              displayTimeLeft(wholeTime);
+          });
+      }*/
+
     function timer(seconds) {
         //counts time, takes seconds
-        port.postMessage({ signature: "Timer", action: "Timer", seconds: seconds });
-        isStarted = true;
-        isPaused = false;
-        remainTime = Date.now() + seconds * 1000;
+        let remainTime = Date.now() + seconds * 1000;
         displayTimeLeft(seconds);
+
+        intervalTimer = setInterval(function () {
+            timeLeft = Math.round((remainTime - Date.now()) / 1000);
+            if (timeLeft < 0) {
+                clearInterval(intervalTimer);
+                pomodoro_work = !pomodoro_work;
+                displayTimeLeft(pomodoro_work ? workTime : breakTime);
+                alert(get_message(pomodoro_work));
+                timer(pomodoro_work ? workTime : breakTime);
+                return;
+                // pauseBtn.classList.remove('pause');
+                // pauseBtn.classList.add('play');
+            }
+            displayTimeLeft(timeLeft);
+        }, 1000);
     }
 
     function pauseTimer(event) {
         if (isStarted === false) {
-            // Play
             timer(pomodoro_work ? workTime : breakTime);
             isStarted = true;
             this.classList.remove("play");
             this.classList.add("pause");
             console.log(pomodoro_work ? "Work" : "Break");
+            // setterBtns.forEach(function (btn) {
+            //     btn.disabled = true;
+            //     btn.style.opacity = 0.5;
+            // });
         } else if (isPaused) {
-            // Play from pause
             this.classList.remove("play");
             this.classList.add("pause");
             timer(timeLeft);
-            isPaused = false;
+            isPaused = isPaused ? false : true;
         } else {
-            // Pause
             this.classList.remove("pause");
             this.classList.add("play");
-            port.postMessage({ signature: "Timer", action: "Stop Timer" })
-            isPaused = true;
+            clearInterval(intervalTimer);
+            isPaused = isPaused ? false : true;
         }
     }
 
@@ -489,31 +582,10 @@ $(document).ready(function () {
         update(timeLeft, pomodoro_work ? workTime : breakTime);
     }
 
-    // Listener for timer
-    port.onMessage.addListener(function (msg) {
-        if (msg.signature === "Timer") {
-            timeLeft = msg.timeLeft;
-            timer_zero = (msg.finished);
-            displayTimeLeft(timeLeft);
-            if (timer_zero) {
-                // move to other part of the pomodoro
-                pomodoro_work = !pomodoro_work;
-                displayTimeLeft(pomodoro_work ? workTime : breakTime);
-                port.postMessage({ signature: "Timer", action: "Stop Timer" });
-                alert(get_message(pomodoro_work));
-                timer(pomodoro_work ? workTime : breakTime);
-                return;
-            }
-        }
-
-        if (msg.signature === "End Timer") {
-
-        }
-    });
-
     pauseBtn.addEventListener("click", pauseTimer);
 
     workInput.addEventListener("change", function timerReset() {
+        //pauseTimer();
         if (document.getElementById("work-period").value < 0) {
             alert("Timer value must be greater than or equal to zero!");
             workTime = 0;
@@ -530,6 +602,7 @@ $(document).ready(function () {
     });
 
     breakInput.addEventListener("change", function timerReset() {
+        //pauseTimer();
         if (document.getElementById("break-period").value < 0) {
             alert("Timer value must be greater than or equal to zero!");
             breakTime = 0;

@@ -146,7 +146,7 @@ function add_todo_input() {
                             + '"><input type="checkbox" class="task" id="checkbox'
                             + task_counter + '"></input><span>'
                             + content +
-                            '</span><input type = "button" class="remove" value ="x"></input></label>'
+                            '</span><input type = "button" class="remove" value ="&times"></input></label>'
                         );
                         $(this).val("");
                     }
@@ -313,7 +313,7 @@ function meet_setup() {
 
         console.log(content);
         $(this).after('<br><label id="task"><input type="checkbox" class="task" id="checkbox"></input><span>'
-            + content + '</span><input type = "button" class="remove" value ="x"></input></label>');
+            + content + '</span><input type = "button" class="remove" value ="&times"></input></label>');
     });
 }
 
@@ -346,7 +346,7 @@ function pop_init() {
                 }
 
                 // add tasks
-                document.getElementById(task_list[i][2]).nextElementSibling.innerHTML += ('<br><label id="task' + task_counter + '"><input type="checkbox" class="task" id="checkbox' + task_counter + '"></input><span>' + task_list[i][0] + '</span><input type = "button" class="remove" value ="x"></label>');
+                document.getElementById(task_list[i][2]).nextElementSibling.innerHTML += ('<br><label id="task' + task_counter + '"><input type="checkbox" class="task" id="checkbox' + task_counter + '"></input><span>' + task_list[i][0] + '</span><input type = "button" class="remove" value ="&times"></label>');
                 // check task
                 if (task_list[i][1]) {
                     $("#checkbox" + task_counter).attr("checked", true);

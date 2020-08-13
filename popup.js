@@ -43,6 +43,19 @@ function changetab() {
     }
 }
 
+function getTheme() {
+    chrome.storage.sync.get(['mainbgcolor', 'elementcolor', 'textcolor', 'sliderlight', 'sliderdark', 'radiofill', 'timermain'], function (data) {
+        document.documentElement.style.setProperty('--main-bg-color', data.mainbgcolor);
+        document.documentElement.style.setProperty('--element-color', data.elementcolor);
+        document.documentElement.style.setProperty('--text-color', data.textcolor);
+        document.documentElement.style.setProperty('--slider-light', data.sliderlight);
+        document.documentElement.style.setProperty('--slider-dark', data.sliderdark);
+        document.documentElement.style.setProperty('--radio-fill', data.radiofill);
+        document.documentElement.style.setProperty('--timer-main', data.timermain);
+        console.log("SADNESS" + data.mainbgcolor);
+    });
+}
+
 // adds a subsection with input box and collapsible header
 function section_setup(section) {
     // possibly at some point add way to change placeholder to add a link/class meeting time/whatever if it's in class
@@ -385,6 +398,7 @@ function pop_init() {
 
         }
     });
+    getTheme();
 }
 
 var remove_class;

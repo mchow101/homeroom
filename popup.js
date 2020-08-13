@@ -43,6 +43,19 @@ function changetab() {
     }
 }
 
+function getTheme() {
+    chrome.storage.sync.get(['mainbgcolor', 'elementcolor', 'textcolor', 'sliderlight', 'sliderdark', 'radiofill', 'timermain'], function (data) {
+        document.documentElement.style.setProperty('--main-bg-color', data.mainbgcolor);
+        document.documentElement.style.setProperty('--element-color', data.elementcolor);
+        document.documentElement.style.setProperty('--text-color', data.textcolor);
+        document.documentElement.style.setProperty('--slider-light', data.sliderlight);
+        document.documentElement.style.setProperty('--slider-dark', data.sliderdark);
+        document.documentElement.style.setProperty('--radio-fill', data.radiofill);
+        document.documentElement.style.setProperty('--timer-main', data.timermain);
+        console.log("SADNESS" + data.mainbgcolor);
+    });
+}
+
 // adds a subsection with input box and collapsible header
 function section_setup(section) {
     // possibly at some point add way to change placeholder to add a link/class meeting time/whatever if it's in class
@@ -115,8 +128,7 @@ function add_todo_input() {
                                         has_spaces[i] +
                                         '" target = "_blank">' +
                                         has_spaces[i] +
-                                        " " +
-                                        "</a>"; //space in the back
+                                        "</a>"; 
                                 } else {
                                     to_add_to_list += has_spaces[i] + " ";
                                 }
@@ -133,7 +145,7 @@ function add_todo_input() {
                             + '"><input type="checkbox" class="task" id="checkbox'
                             + task_counter + '"></input><span>'
                             + content +
-                            '</span><input type = "button" class="remove" value ="x"></input></label>'
+                            '</span><input type = "button" class="remove" value ="&times"></input></label>'
                         );
                         $(this).val("");
                     }
@@ -300,7 +312,7 @@ function meet_setup() {
 
         console.log(content);
         $(this).after('<br><label id="task"><input type="checkbox" class="task" id="checkbox"></input><span>'
-            + content + '</span><input type = "button" class="remove" value ="x"></input></label>');
+            + content + '</span><input type = "button" class="remove" value ="&times"></input></label>');
     });
 }
 
@@ -346,7 +358,7 @@ function pop_init() {
                         for (var j = 0; j < has_spaces.length; j++) {
                             if (has_spaces[j].includes("http") || has_spaces[j].includes("https") || has_spaces[j].includes("www")) {
                                 to_add_to_list += '<a href="' + has_spaces[j] + '" target = "_blank">' +
-                                    has_spaces[j] + " " + "</a>"; //space in the back
+                                    has_spaces[j] + "</a>"; 
                             } else {
                                 to_add_to_list += has_spaces[j] + " ";
                             }
@@ -416,6 +428,7 @@ function pop_init() {
 
         }
     });
+    getTheme();
 }
 
 var remove_class;

@@ -305,16 +305,6 @@ $(document).ready(function () {
             }
         });
     });
-    // function remove_item(event) {
-    //     console.log('x');
-    //     var to_be_removed = $(this).parentsUntil('div');
-    //     console.log(to_be_removed);
-    //     for (var i = 0; i < to_be_removed.length; i++) {
-    //         console.log(to_be_removed[i]);
-    //         to_be_removed[i].remove();
-
-    //     }
-    // }
 
     // classes
     $(".new-class").focus(function () {
@@ -373,6 +363,8 @@ $(document).ready(function () {
 
     let isPaused = false;
     let isStarted = false;
+    let timer_zero = false;
+    let remainTime = 0;
 
     update(
         pomodoro_work ? workTime : breakTime,
@@ -380,83 +372,35 @@ $(document).ready(function () {
     ); //refreshes progress bar
     displayTimeLeft(pomodoro_work ? workTime : breakTime);
 
-    function changeWholeTime(seconds) {
-        if (pomodoro_work) {
-            if (workTime + seconds > 0) {
-                workTime += seconds;
-                update(workTime, workTime);
-            }
-        } else {
-            if (breakTime + seconds > 0) {
-                breakTime += seconds;
-                update(breakTime, breakTime);
-            }
-        }
-    }
-
-    /*for (var i = 0; i < setterBtns.length; i++) {
-          setterBtns[i].addEventListener("click", function (event) {
-              var param = this.dataset.setter;
-              switch (param) {
-                  case 'minutes-plus':
-                      changeWholeTime(1 * 60);
-                      break;
-                  case 'minutes-minus':
-                      changeWholeTime(-1 * 60);
-                      break;
-                  case 'seconds-plus':
-                      changeWholeTime(1);
-                      break;
-                  case 'seconds-minus':
-                      changeWholeTime(-1);
-                      break;
-              }
-              displayTimeLeft(wholeTime);
-          });
-      }*/
-
     function timer(seconds) {
         //counts time, takes seconds
-        let remainTime = Date.now() + seconds * 1000;
+        port.postMessage({ signature: "Timer", action: "Timer", seconds: seconds });
+        isStarted = true;
+        isPaused = false;
+        remainTime = Date.now() + seconds * 1000;
         displayTimeLeft(seconds);
-
-        intervalTimer = setInterval(function () {
-            timeLeft = Math.round((remainTime - Date.now()) / 1000);
-            if (timeLeft < 0) {
-                clearInterval(intervalTimer);
-                pomodoro_work = !pomodoro_work;
-                displayTimeLeft(pomodoro_work ? workTime : breakTime);
-                alert(get_message(pomodoro_work));
-                timer(pomodoro_work ? workTime : breakTime);
-                return;
-                // pauseBtn.classList.remove('pause');
-                // pauseBtn.classList.add('play');
-            }
-            displayTimeLeft(timeLeft);
-        }, 1000);
     }
 
     function pauseTimer(event) {
         if (isStarted === false) {
+            // Play
             timer(pomodoro_work ? workTime : breakTime);
             isStarted = true;
             this.classList.remove("play");
             this.classList.add("pause");
             console.log(pomodoro_work ? "Work" : "Break");
-            // setterBtns.forEach(function (btn) {
-            //     btn.disabled = true;
-            //     btn.style.opacity = 0.5;
-            // });
         } else if (isPaused) {
+            // Play from pause
             this.classList.remove("play");
             this.classList.add("pause");
             timer(timeLeft);
-            isPaused = isPaused ? false : true;
+            isPaused = false;
         } else {
+            // Pause
             this.classList.remove("pause");
             this.classList.add("play");
-            clearInterval(intervalTimer);
-            isPaused = isPaused ? false : true;
+            port.postMessage({ signature: "Timer", action: "Stop Timer" })
+            isPaused = true;
         }
     }
 
@@ -472,10 +416,31 @@ $(document).ready(function () {
         update(timeLeft, pomodoro_work ? workTime : breakTime);
     }
 
+    // Listener for timer
+    port.onMessage.addListener(function (msg) {
+        if (msg.signature === "Timer") {
+            timeLeft = msg.timeLeft;
+            timer_zero = (msg.finished);
+            displayTimeLeft(timeLeft);
+            if (timer_zero) {
+                // move to other part of the pomodoro
+                pomodoro_work = !pomodoro_work;
+                displayTimeLeft(pomodoro_work ? workTime : breakTime);
+                port.postMessage({ signature: "Timer", action: "Stop Timer" });
+                alert(get_message(pomodoro_work));
+                timer(pomodoro_work ? workTime : breakTime);
+                return;
+            }
+        }
+
+        if (msg.signature === "End Timer") {
+            
+        }
+    });
+
     pauseBtn.addEventListener("click", pauseTimer);
 
     workInput.addEventListener("change", function timerReset() {
-        //pauseTimer();
         if (document.getElementById("work-period").value < 0) {
             alert("Timer value must be greater than or equal to zero!");
             workTime = 0;
@@ -492,7 +457,6 @@ $(document).ready(function () {
     });
 
     breakInput.addEventListener("change", function timerReset() {
-        //pauseTimer();
         if (document.getElementById("break-period").value < 0) {
             alert("Timer value must be greater than or equal to zero!");
             breakTime = 0;

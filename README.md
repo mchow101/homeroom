@@ -6,17 +6,28 @@ Built for students and educators of all ages, HomeRoom is the center you need to
 ## Todo Lists
 A staple of every productive student or educator's life is the todo list. HomeRoom's Tasks feature allows you to create multiple lists to subdivide your work into manageable task lists. You can also store links for your reference in this section!
 
+<img src="https://github.com/mchow101/productivity-extension/blob/todo/images/giphy.gif" alt="todo">
+
 ## Class Reminders
 To manage your online classes, HomeRoom keeps track of what classes you are taking and when those classes meet. In addition, the extension will allow you to store a recurring video meeting link, and will create a section in the Tasks tab to help you keep track of assignments.
+
+<img src="https://github.com/mchow101/productivity-extension/blob/todo/images/gud.gif" alt="classes">
 
 ## Pomodoro Timer
 Following the principles of the Pomodoro productivity model, the HomeRoom timer will help you stay on track throughout the day. With this timer in the background as you work, you can easily alternate between longer periods of focused work and short breaks to keep yourself refreshed!
 
+<img src="https://github.com/mchow101/productivity-extension/blob/todo/images/giphy%20(1).gif" alt="timer">        <img src="images/pomodoro.png" height="275px" alt="break-msg">
+
 ## Website Blocker 
 To further help you stay on track during your periods of work, HomeRoom will block you from a custom list of distracting websites. The extension can prevent you from wasting time by adding the URLs of sites you want to avoid when focusing. 
 
+<img src="images/pasted image 0.png" height="250px" alt="blocker">
+
 ## Additional Features
 In extension options, choose between light mode and dark mode to meet your preference!
+<img src="images/light-1.png" height="250px" alt="light1">     <img src="images/dark-1.png" height="250px" alt="dark1">
+
+<img src="images/light-2.png" height="300px" alt="light2">     <img src="images/dark-2.png" height="300px" alt="dark2">
 
 ## How to Install
 1. Download source files from this repository. 

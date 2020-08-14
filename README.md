@@ -4,14 +4,18 @@
 Built for students and educators of all ages, HomeRoom is the center you need to stay focused when studying or teaching online. As an easy-to-use interactive browser extension, HomeRoom meets all your productivity needs in one simple format - always just a click away. Given its format as an extension, HomeRoom can be used on nearly every device!
 
 ## Inspiration
-At the beginning of HackThis 2020, our team put together some of the biggest challenges we faced in our online education. During our brainstorming session, we realized that we didn't have to choose which of our major issues to tackle. We knew that the problem we wanted to solve was related to time management, which has become increasingly important due COVID-19's impact on our work and school lives. We came down to four main features that fit the overall theme of time management and productivity. We then put those four major components into a format we don't usually see for productivity apps - a browser extension. HomeRoom comes in the form of a browser extension because we want such services to be quickly accessible to users rather than embedded into a complex UI (e.g. Trello). We brought our vision to life in HomeRoom, where students and educators alike can use these components in a streamlined manner.
+At the beginning of HackThis 2020, our team put together some of the biggest challenges we faced in our online education. During our brainstorming session, we realized that we didn't have to choose which of our major issues to tackle. We knew that the problem we wanted to solve was related to time management, which has become increasingly important due COVID-19's impact on our work and school lives. We came down to four main features that fit the overall theme of time management and productivity. We then put those four major components into a format we don't usually see for productivity apps - a browser extension. Our solution comes in the form of a browser extension because we want such services to be quickly accessible to users rather than embedded in a complex UI (e.g. Trello). We brought our vision to life in HomeRoom, where students and educators alike can use these components in a streamlined manner.
 
-## Todo Lists
+## What We Learned
+
+## Major Features
+
+### Todo Lists
 A staple of every productive student or educator's life is the todo list. HomeRoom's Tasks feature allows you to create multiple lists to subdivide your work into manageable task lists. You can also store links for your reference in this section!
 
 <img src="https://github.com/mchow101/productivity-extension/blob/todo/images/giphy.gif" alt="todo">
 
-## Class Reminders
+### Class Reminders
 To manage your online classes, HomeRoom keeps track of what classes you are taking and when those classes meet. In addition, the extension will allow you to store a recurring video meeting link, and will create a section in the Tasks tab to help you keep track of assignments.
 
 <img src="https://github.com/mchow101/productivity-extension/blob/todo/images/gud.gif" alt="classes">
@@ -21,12 +25,12 @@ Following the principles of the Pomodoro productivity model, the HomeRoom timer 
 
 <img src="https://github.com/mchow101/productivity-extension/blob/todo/images/giphy%20(1).gif" alt="timer">        <img src="images/pomodoro.png" height="275px" alt="break-msg">
 
-## Website Blocker 
+### Website Blocker 
 To further help you stay on track during your periods of work, HomeRoom will block you from a custom list of distracting websites. The extension can prevent you from wasting time by adding the URLs of sites you want to avoid when focusing. 
 
 <img src="images/pasted image 0.png" height="250px" alt="blocker">
 
-## Additional Features
+### Additional Features
 In extension options, choose between light mode and dark mode to meet your preference!
 
 <img src="images/light-1.png" height="250px" alt="light1">     <img src="images/dark-1.png" height="250px" alt="dark1">

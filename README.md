@@ -37,7 +37,7 @@ To further help you stay on track during your periods of work, HomeRoom will blo
 <img src="images/pasted image 0.png" height="250px" alt="blocker">
 
 ### Additional Features
-In extension options, choose between light mode and dark mode to meet your preference!
+In extension options, choose between light mode and dark mode to meet your preference! In chrome://extensions, click "Details", then near the bottom of the page click "Extension options." A page should pop up in the browser with buttons for changing the color theme to either light mode or dark mode.
 
 <img src="images/light-1.png" height="250px" alt="light1">     <img src="images/dark-1.png" height="250px" alt="dark1">
 
@@ -45,7 +45,7 @@ In extension options, choose between light mode and dark mode to meet your prefe
 
 ## How to Install
 1. Download source files from this repository. 
-2. Go to chrome://extensions/.
+2. Go to chrome://extensions.
 3. Turn on Developer Mode.
 4. Click the "Load Unpacked" button at the top.
 5. Select the local folder with downloaded files. 

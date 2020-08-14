@@ -82,7 +82,7 @@
             border-radius: 10px;
             border: transparent;
             padding: 5px 10px;
-            background-color: var(--pomodoro-input);
+            background: var(--pomodoro-input);
             color: var(--text-color);
         }
 
@@ -108,8 +108,18 @@
             /*border: none;*/
             border: transparent;
             font-size: 1em;
+            background-color: var(--element-color);
+            background-blend-mode: screen;
         }
 
+        input[type="button"], input[type="submit"]{
+            background-color: var(--main-bg-color);
+        }
+
+        select {
+            background: var(--main-bg-color);
+            color: var(--text-color);
+        }
 
         input:checked {
             background-color: var(--radio-fill);
@@ -119,16 +129,6 @@
             margin-right: 4px;
             margin-bottom: -3px;
         }
-
-        /*
-        input:checked:after {
-           
-            /*left: 0.2em;
-            content: "\2713";
-            font-size: 0.5em;
-            color: white;
-            
-        }*/
 
         input {
             color: var(--text-color);
@@ -203,12 +203,6 @@
             cursor: pointer;
             border-radius: 10px;
         }
-
-        /* hr {
-            border-color: #ffffff;
-            border-style: solid none;
-            border-width: 2px 0;
-        } */
 
         button[data-setter] {
             outline: none;
@@ -429,8 +423,7 @@
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="inputGroupSelect01">Task:</label>
                     </div>
-                    <select class="custom-select timer-input" id="inputGroupSelect01">
-                    </select>
+                    <select class="custom-select timer-input" id="inputGroupSelect01" style="background-color: var(--element-color); color: var(--text-color)"></select>
                 </div>
             </div>
 

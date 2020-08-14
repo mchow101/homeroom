@@ -43,6 +43,19 @@ function changetab() {
     }
 }
 
+function getTheme() {
+    chrome.storage.sync.get(['mainbgcolor', 'elementcolor', 'textcolor', 'sliderlight', 'sliderdark', 'radiofill', 'timermain'], function (data) {
+        document.documentElement.style.setProperty('--main-bg-color', data.mainbgcolor);
+        document.documentElement.style.setProperty('--element-color', data.elementcolor);
+        document.documentElement.style.setProperty('--text-color', data.textcolor);
+        document.documentElement.style.setProperty('--slider-light', data.sliderlight);
+        document.documentElement.style.setProperty('--slider-dark', data.sliderdark);
+        document.documentElement.style.setProperty('--radio-fill', data.radiofill);
+        document.documentElement.style.setProperty('--timer-main', data.timermain);
+        console.log("SADNESS" + data.mainbgcolor);
+    });
+}
+
 // adds a subsection with input box and collapsible header
 function section_setup(section) {
     // possibly at some point add way to change placeholder to add a link/class meeting time/whatever if it's in class
@@ -94,7 +107,7 @@ function add_todo_input() {
                     ) {
                         var has_spaces = $.trim(content).split(" ");
                         if (has_spaces.length == 1) {
-                            if (!content.includes("http") || content.includes("https")) 
+                            if (!content.includes("http") || content.includes("https"))
                                 content = "http://" + content;
                             $(this).after('<br><a href="' + content + '" target = "_blank">' + content + "</a>");
                             $(this).val("");
@@ -108,21 +121,20 @@ function add_todo_input() {
                                     has_spaces[i].includes("https") ||
                                     has_spaces[i].includes("www")
                                 ) {
-                                    if (!has_spaces[i].includes("http") || has_spaces[i].includes("https")) 
+                                    if (!has_spaces[i].includes("http") || has_spaces[i].includes("https"))
                                         has_spaces[i] = "http://" + has_spaces[i];
                                     to_add_to_list +=
                                         '<a href="' +
                                         has_spaces[i] +
                                         '" target = "_blank">' +
                                         has_spaces[i] +
-                                        " " +
-                                        "</a>"; //space in the back
+                                        "</a>"; 
                                 } else {
                                     to_add_to_list += has_spaces[i] + " ";
                                 }
                             }
                             to_add_to_list = to_add_to_list + add_to_end;
-                            $(this).before(to_add_to_list);
+                            $(this).after(to_add_to_list);
                             $(this).val("");
                         }
                     }
@@ -133,7 +145,7 @@ function add_todo_input() {
                             + '"><input type="checkbox" class="task" id="checkbox'
                             + task_counter + '"></input><span>'
                             + content +
-                            '</span><input type = "button" class="remove" value ="x"></input></label>'
+                            '</span><input type = "button" class="remove" value ="&times"></input></label>'
                         );
                         $(this).val("");
                     }
@@ -300,7 +312,7 @@ function meet_setup() {
 
         console.log(content);
         $(this).after('<br><label id="task"><input type="checkbox" class="task" id="checkbox"></input><span>'
-            + content + '</span><input type = "button" class="remove" value ="x"></input></label>');
+            + content + '</span><input type = "button" class="remove" value ="&times"></input></label>');
     });
 }
 
@@ -333,7 +345,38 @@ function pop_init() {
                 }
 
                 // add tasks
-                document.getElementById(task_list[i][2]).nextElementSibling.innerHTML += ('<br><label id="task' + task_counter + '"><input type="checkbox" class="task" id="checkbox' + task_counter + '"></input><span>' + task_list[i][0] + '</span><input type = "button" class="remove" value ="x"></label>');
+                var label_content = "";
+                // if it's a valid link
+                if (task_list[i][0].includes("http") || task_list[i][0].includes("https") || task_list[i][0].includes("www")) {
+                    var has_spaces = $.trim(task_list[i][0]).split(" ");
+                    if (has_spaces.length == 1) {
+                        label_content = ('<br><a href="' + task_list[i][0] + '" target = "_blank">' + task_list[i][0] + "</a>");
+                    } else {
+                        to_add_to_list =
+                            '<br><label id="task' + task_counter + '"><input type="checkbox" class="task"></input><span>';
+                        add_to_end = "</span></label>";
+                        for (var j = 0; j < has_spaces.length; j++) {
+                            if (has_spaces[j].includes("http") || has_spaces[j].includes("https") || has_spaces[j].includes("www")) {
+                                to_add_to_list += '<a href="' + has_spaces[j] + '" target = "_blank">' +
+                                    has_spaces[j] + "</a>"; 
+                            } else {
+                                to_add_to_list += has_spaces[j] + " ";
+                            }
+                        }
+                        label_content = to_add_to_list + add_to_end;
+                    }
+                }
+                //if it's not a link
+                else {
+                    label_content = 
+                        '<br><label id="task' + task_counter
+                        + '"><input type="checkbox" class="task" id="checkbox'
+                        + task_counter + '"></input><span>'
+                        + task_list[i][0] +
+                        '</span><input type = "button" class="remove" value ="x"></input></label>';
+                }
+                document.getElementById(task_list[i][2]).nextElementSibling.innerHTML += label_content;
+
                 // check task
                 if (task_list[i][1]) {
                     $("#checkbox" + task_counter).attr("checked", true);
@@ -385,6 +428,7 @@ function pop_init() {
 
         }
     });
+    getTheme();
 }
 
 var remove_class;

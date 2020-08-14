@@ -62,7 +62,8 @@ function getTheme() {
 // adds a subsection with input box and collapsible header
 function section_setup(section) {
     // possibly at some point add way to change placeholder to add a link/class meeting time/whatever if it's in class
-    if (section.parentElement.id === "class-list") {
+    if (section.parentElement.id === "class-list" || section.parentElement.id === "new-class") {
+        console.log(section.nextElementSibling);
         section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML +
             '<label for="days">Choose class days:</label><br>' +
             '<select name="days" class="days"><option value="Monday">Monday</option>' +
@@ -75,7 +76,7 @@ function section_setup(section) {
             '<option value="2">2:00</option><option value="3">3:00</option></select>' +
             '<br><input type="submit" value="Submit" class="submit"><br><br>';
 
-        port.postMessage({ action: "Update classes", class: section.textContent.substring(2) })
+        port.postMessage({ action: "Update classes", class: section.textContent.substring(2) });
     } else {
         section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML +
             '<input type="text" id="' + section.textContent.substring(2) +
@@ -505,26 +506,26 @@ function pop_init() {
     });
 
     // New class list selection for user
-    port.postMessage({ action: "Get classes", signature: "class_init" });
-    port.onMessage.addListener(function (msg) {
-        if (msg.signature === "class_init") {
-            classes = msg.classes;
-            for (var i = 0; i < classes.length; i++) {
-                console.log(i);
-                $('#new-class').append('<h5 class="class-header"><span>+ </span>' + 
-                classes[i] + '</h5><div class="task-section lead"><label for="days">Choose class days:</label><br>' +
-                    '<select name="days" class="days"><option value="Monday">Monday</option>' +
-                    '<option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option>' +
-                    '<option value="Thursday">Thursday</option><option value="Friday">Friday</option>' +
-                    '<option value="Saturday">Saturday</option><option value="Sunday">Sunday</option></select>' +
-                    '<select name="time" class="time"><option value="9">9:00</option>' +
-                    '<option value="10">10:00</option><option value="11">11:00</option>' +
-                    '<option value="12">12:00</option><option value="1">1:00</option>' +
-                    '<option value="2">2:00</option><option value="3">3:00</option></select>' +
-                    '<br><input type="submit" value="Submit" class="submit"><br><br><div>');
-            }
-        }
-    });
+    // port.postMessage({ action: "Get classes", signature: "class_init" });
+    // port.onMessage.addListener(function (msg) {
+    //     if (msg.signature === "class_init") {
+    //         classes = msg.classes;
+    //         for (var i = 0; i < classes.length; i++) {
+    //             console.log(i);
+    //             $('#new-class').append('<h5 class="class-header"><span>+ </span>' + 
+    //             classes[i] + '</h5><div class="task-section lead"><label for="days">Choose class days:</label><br>' +
+    //                 '<select name="days" class="days"><option value="Monday">Monday</option>' +
+    //                 '<option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option>' +
+    //                 '<option value="Thursday">Thursday</option><option value="Friday">Friday</option>' +
+    //                 '<option value="Saturday">Saturday</option><option value="Sunday">Sunday</option></select>' +
+    //                 '<select name="time" class="time"><option value="9">9:00</option>' +
+    //                 '<option value="10">10:00</option><option value="11">11:00</option>' +
+    //                 '<option value="12">12:00</option><option value="1">1:00</option>' +
+    //                 '<option value="2">2:00</option><option value="3">3:00</option></select>' +
+    //                 '<br><input type="submit" value="Submit" class="submit"><br><br><div>');
+    //         }
+    //     }
+    // });
     
     // reload all existing links, if any
     port.postMessage({ action: "Get links", signature: "pop_init_links" });
@@ -592,8 +593,8 @@ $(document).ready(function () {
                 var content = $(this).val();
                 if (content != "") {
                     $("#class-list").prepend(
-                        '<h5 class="class-header"><span>+ </span>' +
-                        content +
+                        '<h5 class="class-header" id="' + content + 
+                        '"><span>+ </span>' + content +
                         '</h5><div class="task-section lead"></div>'
                     );
                     $("#task-list").prepend(

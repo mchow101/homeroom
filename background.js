@@ -1,6 +1,9 @@
 // tasks
 var tasks = [];
 
+// links
+var links = [];
+
 // classes
 var classes = [];
 
@@ -39,10 +42,8 @@ chrome.identity.getProfileUserInfo(function (info) {
   // console.log(id);
 });
 
-
-
-
-chrome.runtime.onInstalled.addListener(function (request) {
+// MongoDB Connection Request Draft
+/*chrome.runtime.onInstalled.addListener(function (request) {
   console.log("Getting message");
   var settings = {
     url: "https://us-central1-aiot-fit-xlab.cloudfunctions.net/gettasksbyuser",
@@ -63,7 +64,7 @@ chrome.runtime.onInstalled.addListener(function (request) {
   };
 
   $.ajax(settings);
-});
+});*/
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   console.log(

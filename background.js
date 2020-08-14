@@ -16,9 +16,9 @@ var break_time = 5;
 var work_time = 25;
 
 chrome.runtime.onInstalled.addListener(function () {
-  
+
   // Automatically set to light mode upon installation
-  chrome.storage.sync.set({mainbgcolor: '#F2F2F2', elementcolor:'#ffffff', textcolor: '#404040', sliderlight: '#A7ACC6', sliderdark: '#4E598C', radiofill: '#f7a191', timermain: '#4E598C'}, function() {
+  chrome.storage.sync.set({ mainbgcolor: '#F2F2F2', elementcolor: '#ffffff', textcolor: '#404040', sliderlight: '#A7ACC6', sliderdark: '#4E598C', radiofill: '#f7a191', timermain: '#4E598C' }, function () {
     console.log('Value is set for light mode');
   });
 
@@ -81,19 +81,47 @@ chrome.runtime.onConnect.addListener(function (port) {
       }
     }
 
+    // Update classes
+    if (msg.action == "Update classes") {
+
+      classes = classes.concat(msg.class);
+    }
+
+    // Get class list
+    else if (msg.action == "Get classes") {
+      port.postMessage({ classes: classes, signature: msg.signature });
+    }
+
+    // Set new break and work time
+    else if (msg.action == "Update times") {
+      break_time = msg.break_time;
+      work_time = msg.work_time;
+    }
+
+    // Get set times
+    else if (msg.action == "Get times") {
+      port.postMessage({ break_time: break_time, work_time: work_time, signature: msg.signature });
+    }
+
     // Update Timer Data
     else if (msg.action == "Timer" || msg.action == "Stop Timer") {
       if (msg.seconds == null || msg.timeLeft < 0 || msg.action == "Stop Timer") {
         clearInterval(intervalTimer);
-        try { port.postMessage({ signature: "End Timer", timeLeft: timeLeft }); }
-        catch { console.log("TRYING TO STOP")}
+        timerRunning = false;
+        try { port.postMessage({ signature: "End Timer", timeLeft: localTimeLeft }); }
+        catch {  }
       } else {
         let remainTime = Date.now() + msg.seconds * 1000;
-        chrome.tabs.getCurrent(function() { console.log(this) });
+        chrome.tabs.getCurrent(function () { console.log(this) });
         intervalTimer = setInterval(function () {
-          timeLeft = Math.round((remainTime - Date.now()) / 1000);
-          try { port.postMessage({ signature: "Timer", timeLeft: timeLeft, finished: timeLeft < 0 }); }
-          catch { console.log(timeLeft)}
+          timerRunning = true;
+          localTimeLeft = Math.round((remainTime - Date.now()) / 1000);
+          if (localTimeLeft < 0) {
+            console.log("TIMES UP!!");
+            clearInterval(intervalTimer);
+          }
+          try { port.postMessage({ signature: "Timer", timeLeft: localTimeLeft, finished: localTimeLeft < 0 }); }
+          catch { }
         }, 1000);
       }
     }

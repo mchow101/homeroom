@@ -1,4 +1,4 @@
-# <img src="https://github.com/mchow101/productivity-extension/blob/todo/homeroom-lite.png" alt="logo" width="35px"> Homeroom
+# <img src="https://github.com/mchow101/productivity-extension/blob/todo/images/homeroom.png" alt="logo" width="35px"> Homeroom
 *Accessibility. Connectivity. Productivity.*
 
 Built for students and educators of all ages, HomeRoom is the center you need to stay focused when studying or teaching online. As an easy-to-use interactive browser extension, HomeRoom meets all your productivity needs in one simple, streamlined format - always just a click away. Given its format as an extension, HomeRoom can be used on nearly every device!

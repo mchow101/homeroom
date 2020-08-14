@@ -92,22 +92,6 @@ chrome.runtime.onConnect.addListener(function (port) {
     else if (msg.action == "Get tasks") {
       port.postMessage({ tasks: tasks, signature: msg.signature });
     }
-    
-    if (msg.action == "Update classes") {
-      // var in_list = false;
-      // for (var i = 0; i < tasks.length; i++) {
-      //   if (tasks[i].includes(msg.task) && tasks[i].includes(msg.section)) {
-      //     tasks[i] = [msg.task, msg.checked, msg.section];
-      //     in_list = true;
-      //   }
-      // }
-      // if (!in_list)
-        classes = classes.concat(msg.class);
-    }
-
-    else if (msg.action == "Get classes") {
-      port.postMessage({ classes: classes, signature: msg.signature });
-    }
 
     else if (msg.action == "Remove task") {
       for (var i = 0; i < tasks.length; i++) {
@@ -116,37 +100,36 @@ chrome.runtime.onConnect.addListener(function (port) {
       }
     }
 
-    else if (msg.action == "Update times") {
-      break_time = msg.break_time;
-      work_time = msg.work_time;
-    }
-
-    else if (msg.action == "Get times") {
-      port.postMessage({ break_time: break_time, work_time: work_time, signature: msg.signature });
-    }
-
     else if (msg.action == "Timer" || msg.action == "Stop Timer") {
-      console.log("Timer");
       if (msg.seconds == null || msg.timeLeft < 0 || msg.action == "Stop Timer") {
         clearInterval(intervalTimer);
-        timerRunning = false;
-        try { port.postMessage({ signature: "End Timer", timeLeft: localTimeLeft }); }
+        try { port.postMessage({ signature: "End Timer", timeLeft: timeLeft }); }
         catch { console.log("TRYING TO STOP")}
       } else {
         let remainTime = Date.now() + msg.seconds * 1000;
         chrome.tabs.getCurrent(function() { console.log(this) });
         intervalTimer = setInterval(function () {
-          timerRunning = true;
-          localTimeLeft = Math.round((remainTime - Date.now()) / 1000);
-          if (localTimeLeft < 0) {
-            console.log("TIMES UP!!");
-            clearInterval(intervalTimer);
-          }
-          try { port.postMessage({ signature: "Timer", timeLeft: localTimeLeft, finished: localTimeLeft < 0 }); }
-          catch { }
-          console.log(localTimeLeft);
+          timeLeft = Math.round((remainTime - Date.now()) / 1000);
+          try { port.postMessage({ signature: "Timer", timeLeft: timeLeft, finished: timeLeft < 0 }); }
+          catch { console.log(timeLeft)}
         }, 1000);
       }
+    }
+
+    else if (msg.action == "Get links") {
+      port.postMessage({ links: links, signature: msg.signature });
+    }
+
+    else if (msg.action == "Update links") {
+      var in_list = false;
+      for (var i = 0; i < links.length; i++) {
+        if (links[i].includes(msg.link)) {
+          links[i] = [msg.link];
+          in_list = true;
+        }
+      }
+      if (!in_list)
+        links = links.concat([[msg.link]]);
     }
   });
 });

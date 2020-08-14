@@ -46,7 +46,6 @@ The code for the extension popup is located in the `popup.html` and `popup.js` f
 
 ## Marketing Presentation
 View our team's product demo [here](https://youtu.be/nAbmWyKtlj0)!
-[![Demo Video](https://img.youtube.com/vi/VIDEO-ID/0.jpg)](https://youtu.be/nAbmWyKtlj0)
 
 ## Next Steps
 This extension was initially built during the HackThis, HackIllinois Event. While our submission has some incomplete features and glitches, the product currently has some level of functionality for each of our four primary features. We plan to fix all these issues in the coming days and publish this extension to the Chrome App Store, so that students learning from home during the COVID-19 crisis can utilize our app and better focus during distance learning. 

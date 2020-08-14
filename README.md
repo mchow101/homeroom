@@ -25,6 +25,7 @@ To further help you stay on track during your periods of work, HomeRoom will blo
 
 ## Additional Features
 In extension options, choose between light mode and dark mode to meet your preference!
+
 <img src="images/light-1.png" height="250px" alt="light1">     <img src="images/dark-1.png" height="250px" alt="dark1">
 
 <img src="images/light-2.png" height="300px" alt="light2">     <img src="images/dark-2.png" height="300px" alt="dark2">
@@ -39,7 +40,9 @@ In extension options, choose between light mode and dark mode to meet your prefe
 7. Right-click to pin HomeRoom for quick access.
 
 ## Technical Summary
+The front end of this software is developed with HTML, CSS, and JavaScript, including JQuery and Bootstrap functions. Data is stored in the Chrome background using browser functions, and will be associated with user Google accounts through an implementation of OAuth. Furthermore, user data will be stored in a MongoDB database, which uses Google Cloud Platform and Python functions.
 
+The code for the extension popup is located in the `popup.html` and `popup.js` files, background functions in `background.js`, and extension options in `options.js` and `options.html`.
 
 ## Next Steps
 This extension was initially built during the HackThis, HackIllinois Event. While our submission has some incomplete features and glitches, the product currently has some level of functionality for each of our four primary features. We plan to fix all these issues in the coming days and publish this extension to the Chrome App Store, so that students learning from home during the COVID-19 crisis can utilize our app and better focus during distance learning. 

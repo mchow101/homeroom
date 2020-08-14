@@ -11,7 +11,7 @@ changeToLight.addEventListener('click', function() {
 var changeToDark = document.getElementById('darkbtn');
 changeToDark.addEventListener('click', function(){
   
-        chrome.storage.sync.set({mainbgcolor: '#17181c', elementcolor:'#313135', textcolor: '#eaebf1', sliderlight: '#8b8c8d', sliderdark: '#48484b', radiofill: '#873121', timermain: '#eaebf1'}, function() {
+        chrome.storage.sync.set({mainbgcolor: '#17181c', elementcolor:'#313135', textcolor: '#eaebf1', sliderlight: '#8b8c8d', sliderdark: '#48484b', radiofill: '#873121', timermain: '#eaebf1', pomodoroinput: '#313135'}, function() {
             console.log('Value is set for dark mode');
         });
 

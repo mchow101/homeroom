@@ -344,16 +344,7 @@
         </div>
         <dd><input type="text" id="new-section" class="new-section" placeholder=" Add a new to-do list!"></input></dd>
         <label class="task-list" style="width: 100%">
-            <dl id="task-list">
-                <!--
-                <h5 class="section-header"><span>+ </span>Programming</h5>
-                <div class="task-section lead">
-                </div>
-                <h5 class="section-header"><span>+ </span>For Fun</h5>
-                <div class="task-section lead">
-                </div>
-            -->
-            </dl>
+            <dl id="task-list"></dl>
         </label>
     </div>
 
@@ -379,20 +370,6 @@
         <div>
             <h1 class="featurette-heading">Pomodoro Timer</h1>
         </div>
-
-        <!-- Title Row -->
-
-        <!-- Pomodoro Circle Timer Buttons -->
-        <!-- <div class="setters">
-            <div class="minutes-set">
-                <button data-setter="minutes-plus">+</button>
-                <button data-setter="minutes-minus">-</button>
-            </div>
-            <div class="seconds-set">
-                <button data-setter="seconds-plus">+</button>
-                <button data-setter="seconds-minus">-</button>
-            </div>
-        </div> -->
 
         <!-- Pomodoro Circle Timer SVG Display -->
         <div class="circle">
@@ -451,11 +428,16 @@
             </div>
         </div>
     </div>
+    </div>
     <div id="blocker" style="display: block">
         <div>
             <h1 class="featurette-heading">Website Blocker</h1>
         </div>
-        <dd><input type="text" id="add-blocked" class="new-block-link" placeholder=" Add a link to block!"></input></dd>
+        <dd><input type="text" style="width: 275px" id="add-blocked" class="new-block-link" placeholder=" Add a link to block while you work!"></input></dd>
+        <label class="task-list" style="width: 100%">
+            <dl id="link-list">
+            </dl>
+        </label>
     </div>
     <script src="popup.js"></script>
 </body>

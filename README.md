@@ -52,4 +52,4 @@ This extension was initially built during the HackThis, HackIllinois Event. Whil
 
 In addition, we will soon add a database backend, integration with Google calendar, and sharing features to build a more immersive experience for our users. HomeRoom will also be expanded to Firefox and other web browsers to reach a wider audience. 
 
-*Contributors: Shruthik M, Kaylin L, Mallika P, Abby M, Mitali C, Muntaser S, Sebastian O
+*Contributors: Shruthik M, Kaylin L, Mallika P, Abby M, Mitali C, Muntaser S, Sebastian O*

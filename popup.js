@@ -1,4 +1,5 @@
-var pomodoro_work = true;
+var pomodoro_work;
+var timeLeft;
 var port = chrome.runtime.connect({ name: "conn" });
 var pom_port = chrome.runtime.connect({ name: "pomodoro" });
 var task_counter = 0;
@@ -71,6 +72,8 @@ function section_setup(section) {
             '<option value="12">12:00</option><option value="1">1:00</option>' +
             '<option value="2">2:00</option><option value="3">3:00</option></select>' +
             '<br><input type="submit" value="Submit" class="submit"><br><br>';
+
+        port.postMessage({ action: "Update classes", class: section.textContent.substring(2) })
     } else {
         section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML +
             '<input type="text" id="' + section.textContent.substring(2) +
@@ -128,7 +131,7 @@ function add_todo_input() {
                                         has_spaces[i] +
                                         '" target = "_blank">' +
                                         has_spaces[i] +
-                                        "</a>"; 
+                                        "</a>";
                                 } else {
                                     to_add_to_list += has_spaces[i] + " ";
                                 }
@@ -313,19 +316,97 @@ function meet_setup() {
         console.log(content);
         $(this).after('<br><label id="task"><input type="checkbox" class="task" id="checkbox"></input><span>'
             + content + '</span><input type = "button" class="remove" value ="&times"></input></label>');
+
+
+        $(".remove").click(function () {
+            var to_be_removed = $(this).parentsUntil('div');
+            // port.postMessage({ action: "Remove task", task: content, section: section_id });
+            $(to_be_removed[0]).prev().remove();
+            for (var i = 0; i < to_be_removed.length; i++) {
+                to_be_removed[i].remove();
+            }
+        });
     });
 }
 
-function get_days(submit) {
-    submit.addEventListener("click", function () {
-        console.log(this.values);
-    });
+// pomodoro timer
+let progressBar = document.querySelector(".e-c-progress");
+let indicator = document.getElementById("e-indicator");
+let pointer = document.getElementById("e-pointer");
+let length = Math.PI * 2 * 100;
+progressBar.style.strokeDasharray = length;
+function update(value, timePercent) {
+    var offset = -length - (length * value) / timePercent;
+    progressBar.style.strokeDashoffset = offset;
+    pointer.style.transform = `rotate(${(360 * value) / timePercent}deg)`;
+}
+//circle ends
+const displayOutput = document.querySelector(".display-remain-time");
+const pauseBtn = document.getElementById("pause");
+const setterBtns = document.querySelectorAll("button[data-setter]");
+const workInput = document.getElementById("work-period");
+const breakInput = document.getElementById("break-period");
+
+let intervalTimer;
+//let wholeTime = 25;
+let workTime = document.getElementById("work-period").value * 60; // manage this to set the whole time
+let breakTime = document.getElementById("break-period").value * 60;
+let isPaused = false;
+let isStarted = false;
+let timer_zero = false;
+let remainTime = 0;
+
+function timer(seconds) {
+    //counts time, takes seconds
+    port.postMessage({ signature: "Timer", action: "Timer", seconds: seconds });
+    isStarted = true;
+    isPaused = false;
+    remainTime = Date.now() + seconds * 1000;
+    displayTimeLeft(seconds);
+}
+function pauseTimer(event) {
+    if (isStarted === false) {
+        // Play
+        timer(pomodoro_work ? workTime : breakTime);
+        isStarted = true;
+        this.classList.remove("play");
+        this.classList.add("pause");
+        console.log(pomodoro_work ? "Work" : "Break");
+    } else if (isPaused) {
+        // Play from pause
+        this.classList.remove("play");
+        this.classList.add("pause");
+        timer(timeLeft);
+        isPaused = false;
+    } else {
+        // Pause
+        this.classList.remove("pause");
+        this.classList.add("play");
+        port.postMessage({ signature: "Timer", action: "Stop Timer" })
+        isPaused = true;
+    }
+}
+function displayTimeLeft(timeLeft) {
+    //displays time on the input
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    let displayString = `${minutes < 10 ? "0" : ""}${minutes}:${
+        seconds < 10 ? "0" : ""
+        }${seconds}`;
+    displayOutput.textContent = displayString;
+    update(timeLeft, pomodoro_work ? workTime : breakTime);
 }
 
-subs = document.getElementsByClassName("submit");
-for (var i = 0; i < subs.length; i++) {
-    get_days(subs[i]);
-}
+// function get_days(submit) {
+//     submit.addEventListener("click", function () {
+//         console.log(this.values);
+//     });
+// }
+
+// subs = document.getElementsByClassName("submit");
+// for (var i = 0; i < subs.length; i++) {
+//     get_days(subs[i]);
+// }
 
 // initialize the popup with saved data
 function pop_init() {
@@ -358,7 +439,7 @@ function pop_init() {
                         for (var j = 0; j < has_spaces.length; j++) {
                             if (has_spaces[j].includes("http") || has_spaces[j].includes("https") || has_spaces[j].includes("www")) {
                                 to_add_to_list += '<a href="' + has_spaces[j] + '" target = "_blank">' +
-                                    has_spaces[j] + "</a>"; 
+                                    has_spaces[j] + "</a>";
                             } else {
                                 to_add_to_list += has_spaces[j] + " ";
                             }
@@ -368,7 +449,7 @@ function pop_init() {
                 }
                 //if it's not a link
                 else {
-                    label_content = 
+                    label_content =
                         '<br><label id="task' + task_counter
                         + '"><input type="checkbox" class="task" id="checkbox'
                         + task_counter + '"></input><span>'
@@ -403,29 +484,65 @@ function pop_init() {
                 }
             });
 
-            //listener for clicking a
-            /*
-            $('a').click(function(){
-                chrome.tabs.create({url: $(this).attr('href')});
-                return false;
-            }); 
-            
+            // find out if timer is running
+            chrome.runtime.sendMessage({ get: "timer" }, function (response) {
+                timeLeft = response.timeLeft;
+                pomodoro_work = response.pomodoro_work;
+                port.postMessage( { action: "Get times", signature: "getting times" } );
+                port.onMessage.addListener(function(msg) {
+                    if (msg.signature === "getting times") {
+                        workTime = msg.work_time * 60;
+                        breakTime = msg.break_time * 60;
+                        document.getElementById("work-period").value = workTime / 60;
+                        document.getElementById("break-period").value = breakTime / 60;
+                    }
+                })
 
-            links = document.getElementsByTagName('a');
-            console.log(links.length + "@32423");
-            for (var i = 0; i< links.length; i++){
-                links[i].addEventListener("click", function (){
-                    
-                    var link_address = $(this).attr('href');
-                    console.log(link_address);
-                    port.postMessage({action: "link", signature: "open_a_link", url: link_address});
-                    console.log(link_address);
-                    
+                if (timeLeft < 0) {
+                    update(
+                        pomodoro_work ? workTime : breakTime,
+                        pomodoro_work ? workTime : breakTime
+                    ); //refreshes progress bar
+                    displayTimeLeft(pomodoro_work ? workTime : breakTime);
+                }
+                else {
+                    update(timeLeft, pomodoro_work ? workTime : breakTime);
+                    displayTimeLeft(timeLeft);
+                    if (response.timer_running) {
+                        isStarted = true;
+                        isPaused = false;
+                        document.getElementById('pause').classList.remove("play");
+                        document.getElementById('pause').classList.add("pause");
+                        port.postMessage({ signature: "Timer", action: "Stop Timer" })
+                        timer(timeLeft);
+                    } else {
+                        isStarted = true;
+                        isPaused = true;
+                    }
+                }
+            });
+        }
+    });
 
-                }); 
-            } */
-
-
+    // FIX THIS
+    port.postMessage({ action: "Get classes", signature: "class_init" });
+    port.onMessage.addListener(function (msg) {
+        if (msg.signature === "class_init") {
+            classes = msg.classes;
+            for (var i = 0; i < classes.length; i++) {
+                console.log(i);
+                $('#new-class').append('<h5 class="class-header"><span>+ </span>' + 
+                classes[i] + '</h5><div class="task-section lead"><label for="days">Choose class days:</label><br>' +
+                    '<select name="days" class="days"><option value="Monday">Monday</option>' +
+                    '<option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option>' +
+                    '<option value="Thursday">Thursday</option><option value="Friday">Friday</option>' +
+                    '<option value="Saturday">Saturday</option><option value="Sunday">Sunday</option></select>' +
+                    '<select name="time" class="time"><option value="9">9:00</option>' +
+                    '<option value="10">10:00</option><option value="11">11:00</option>' +
+                    '<option value="12">12:00</option><option value="1">1:00</option>' +
+                    '<option value="2">2:00</option><option value="3">3:00</option></select>' +
+                    '<br><input type="submit" value="Submit" class="submit"><br><br><div>');
+            }
         }
     });
     getTheme();
@@ -497,139 +614,31 @@ $(document).ready(function () {
     add_todo_input();
 
 
-    // pomodoro timer
-    let progressBar = document.querySelector(".e-c-progress");
-    let indicator = document.getElementById("e-indicator");
-    let pointer = document.getElementById("e-pointer");
-    let length = Math.PI * 2 * 100;
-
-    progressBar.style.strokeDasharray = length;
-
-    function update(value, timePercent) {
-        var offset = -length - (length * value) / timePercent;
-        progressBar.style.strokeDashoffset = offset;
-        pointer.style.transform = `rotate(${(360 * value) / timePercent}deg)`;
-    }
-
-    //circle ends
-    const displayOutput = document.querySelector(".display-remain-time");
-    const pauseBtn = document.getElementById("pause");
-    const setterBtns = document.querySelectorAll("button[data-setter]");
-    const workInput = document.getElementById("work-period");
-    const breakInput = document.getElementById("break-period");
-
-    let intervalTimer;
-    let timeLeft;
-    //let wholeTime = 25;
-
-    let workTime = document.getElementById("work-period").value * 60; // manage this to set the whole time
-    let breakTime = document.getElementById("break-period").value * 60;
-
-    let isPaused = false;
-    let isStarted = false;
-
-    update(
-        pomodoro_work ? workTime : breakTime,
-        pomodoro_work ? workTime : breakTime
-    ); //refreshes progress bar
-    displayTimeLeft(pomodoro_work ? workTime : breakTime);
-
-    function changeWholeTime(seconds) {
-        if (pomodoro_work) {
-            if (workTime + seconds > 0) {
-                workTime += seconds;
-                update(workTime, workTime);
-            }
-        } else {
-            if (breakTime + seconds > 0) {
-                breakTime += seconds;
-                update(breakTime, breakTime);
-            }
-        }
-    }
-
-    /*for (var i = 0; i < setterBtns.length; i++) {
-          setterBtns[i].addEventListener("click", function (event) {
-              var param = this.dataset.setter;
-              switch (param) {
-                  case 'minutes-plus':
-                      changeWholeTime(1 * 60);
-                      break;
-                  case 'minutes-minus':
-                      changeWholeTime(-1 * 60);
-                      break;
-                  case 'seconds-plus':
-                      changeWholeTime(1);
-                      break;
-                  case 'seconds-minus':
-                      changeWholeTime(-1);
-                      break;
-              }
-              displayTimeLeft(wholeTime);
-          });
-      }*/
-
-    function timer(seconds) {
-        //counts time, takes seconds
-        let remainTime = Date.now() + seconds * 1000;
-        displayTimeLeft(seconds);
-
-        intervalTimer = setInterval(function () {
-            timeLeft = Math.round((remainTime - Date.now()) / 1000);
-            if (timeLeft < 0) {
-                clearInterval(intervalTimer);
+    // Listener for timer
+    port.onMessage.addListener(function (msg) {
+        if (msg.signature === "Timer") {
+            timeLeft = msg.timeLeft;
+            timer_zero = (msg.finished);
+            displayTimeLeft(timeLeft);
+            if (timer_zero) {
+                // move to other part of the pomodoro
                 pomodoro_work = !pomodoro_work;
                 displayTimeLeft(pomodoro_work ? workTime : breakTime);
+                port.postMessage({ signature: "Timer", action: "Stop Timer" });
                 alert(get_message(pomodoro_work));
                 timer(pomodoro_work ? workTime : breakTime);
                 return;
-                // pauseBtn.classList.remove('pause');
-                // pauseBtn.classList.add('play');
             }
-            displayTimeLeft(timeLeft);
-        }, 1000);
-    }
-
-    function pauseTimer(event) {
-        if (isStarted === false) {
-            timer(pomodoro_work ? workTime : breakTime);
-            isStarted = true;
-            this.classList.remove("play");
-            this.classList.add("pause");
-            console.log(pomodoro_work ? "Work" : "Break");
-            // setterBtns.forEach(function (btn) {
-            //     btn.disabled = true;
-            //     btn.style.opacity = 0.5;
-            // });
-        } else if (isPaused) {
-            this.classList.remove("play");
-            this.classList.add("pause");
-            timer(timeLeft);
-            isPaused = isPaused ? false : true;
-        } else {
-            this.classList.remove("pause");
-            this.classList.add("play");
-            clearInterval(intervalTimer);
-            isPaused = isPaused ? false : true;
         }
-    }
 
-    function displayTimeLeft(timeLeft) {
-        //displays time on the input
-        console.log("Changing time...");
-        let minutes = Math.floor(timeLeft / 60);
-        let seconds = timeLeft % 60;
-        let displayString = `${minutes < 10 ? "0" : ""}${minutes}:${
-            seconds < 10 ? "0" : ""
-            }${seconds}`;
-        displayOutput.textContent = displayString;
-        update(timeLeft, pomodoro_work ? workTime : breakTime);
-    }
+        if (msg.signature === "End Timer") {
+
+
+        }
+    });
 
     pauseBtn.addEventListener("click", pauseTimer);
-
     workInput.addEventListener("change", function timerReset() {
-        //pauseTimer();
         if (document.getElementById("work-period").value < 0) {
             alert("Timer value must be greater than or equal to zero!");
             workTime = 0;
@@ -637,16 +646,16 @@ $(document).ready(function () {
         } else {
             workTime = document.getElementById("work-period").value * 60;
             document.getElementById("work-period").value = workTime / 60;
+            port.postMessage({ action: "Update times", break_time: breakTime / 60, work_time: workTime / 60 });
         }
         if (pomodoro_work) {
-            timeLeft = workTime;
-            displayTimeLeft(workTime);
-            update(workTime, workTime);
+            timeLeft = timeLeft < workTime ? timeLeft : workTime;
+            displayTimeLeft(timeLeft);
+            update(timeLeft, workTime);
         }
     });
 
     breakInput.addEventListener("change", function timerReset() {
-        //pauseTimer();
         if (document.getElementById("break-period").value < 0) {
             alert("Timer value must be greater than or equal to zero!");
             breakTime = 0;
@@ -654,10 +663,11 @@ $(document).ready(function () {
         } else {
             breakTime = document.getElementById("break-period").value * 60;
             document.getElementById("break-period").value = breakTime / 60;
+            port.postMessage({ action: "Update times", break_time: breakTime / 60, work_time: workTime / 60 });
         }
         if (!pomodoro_work) {
-            timeLeft = breakTime;
-            displayTimeLeft(breakTime);
+            timeLeft = timeLeft < breakTime ? timeLeft : breakTime;
+            displayTimeLeft(timeLeft);
             update(breakTime, breakTime);
         }
     });

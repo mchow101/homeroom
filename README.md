@@ -37,7 +37,9 @@ To further help you stay on track during your periods of work, HomeRoom will blo
 <img src="images/pasted image 0.png" height="250px" alt="blocker">
 
 ### Additional Features
-In extension options, choose between light mode and dark mode to meet your preference! In chrome://extensions, click "Details", then near the bottom of the page click "Extension options." A page should pop up in the browser with buttons for changing the color theme to either light mode or dark mode.
+In extension options, choose between light mode and dark mode to meet your preference! 
+
+To change color themes, go to the extension management page, either by (1) going to chrome://extensions and clicking "Details", or (2) right clicking the extension icon in the right hand corner and clicking "Manage extensions". Near the bottom of the extension management page click "Extension options." A page should pop up in the browser with buttons for changing the color theme to either light mode or dark mode.
 
 <img src="images/light-1.png" height="250px" alt="light1">     <img src="images/dark-1.png" height="250px" alt="dark1">
 

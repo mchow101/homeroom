@@ -45,9 +45,11 @@ The front end of this software is developed with HTML, CSS, and JavaScript, incl
 The code for the extension popup is located in the `popup.html` and `popup.js` files, background functions in `background.js`, and extension options in `options.js` and `options.html`.
 
 ## Marketing Presentation
-View our team's marketing presentation for HackThis, HackIllinois at [this link](https://drive.google.com/file/d/1rlnUxzgIlamMPPozcLfD8pvT9FeFPeil/view?usp=sharing)!
+View our team's product demo at [this link](https://drive.google.com/file/d/1rlnUxzgIlamMPPozcLfD8pvT9FeFPeil/view?usp=sharing)!
 
 ## Next Steps
 This extension was initially built during the HackThis, HackIllinois Event. While our submission has some incomplete features and glitches, the product currently has some level of functionality for each of our four primary features. We plan to fix all these issues in the coming days and publish this extension to the Chrome App Store, so that students learning from home during the COVID-19 crisis can utilize our app and better focus during distance learning. 
 
 In addition, we will soon add a database backend, integration with Google calendar, and sharing features to build a more immersive experience for our users. HomeRoom will also be expanded to Firefox and other web browsers to reach a wider audience. 
+
+*Contributors: Shruthik M, Kaylin L, Mallika P, Abby M, Mitali C, Muntaser S, Sebastian O

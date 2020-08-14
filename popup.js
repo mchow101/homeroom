@@ -1,6 +1,7 @@
+// Initialize important pomodoro, connection, and task/link list variables
 var pomodoro_work;
 var timeLeft;
-var port = chrome.runtime.connect({ name: "conn" });
+var port = chrome.runtime.connect({ name: "conn" }); // establishes connection to background.js
 var pom_port = chrome.runtime.connect({ name: "pomodoro" });
 var task_counter = 0;
 var link_counter = 0;
@@ -15,29 +16,29 @@ slider.addEventListener("change", function () {
 
 // change tabs
 function changetab() {
-    if (current.charAt(0) === '1') {
+    if (current.charAt(0) === '1') { // Tab #1
         document.getElementById("tasks").style.display = "block";
         document.getElementById("classes").style.display = "none";
         document.getElementById("pomodoro").style.display = "none";
         document.getElementById("blocker").style.display = "none";
     }
 
-    else if (current.charAt(0) === '2') {
+    else if (current.charAt(0) === '2') { // Tab #2
         document.getElementById("tasks").style.display = "none";
         document.getElementById("classes").style.display = "block";
         document.getElementById("pomodoro").style.display = "none";
         document.getElementById("blocker").style.display = "none";
     }
 
-    else if (current.charAt(0) === '3') {
+    else if (current.charAt(0) === '3') { // Tab #3
         document.getElementById("tasks").style.display = "none";
         document.getElementById("classes").style.display = "none";
         document.getElementById("pomodoro").style.display = "block";
         document.getElementById("blocker").style.display = "none";
         set_task_list();
     }
-
-    else {
+ 
+    else { // Tab #4
         document.getElementById("tasks").style.display = "none";
         document.getElementById("classes").style.display = "none";
         document.getElementById("pomodoro").style.display = "none";
@@ -45,6 +46,7 @@ function changetab() {
     }
 }
 
+// Get Theme Mode from options file
 function getTheme() {
     chrome.storage.sync.get(['mainbgcolor', 'elementcolor', 'textcolor', 'sliderlight', 'sliderdark', 'radiofill', 'timermain'], function (data) {
         document.documentElement.style.setProperty('--main-bg-color', data.mainbgcolor);
@@ -54,7 +56,6 @@ function getTheme() {
         document.documentElement.style.setProperty('--slider-dark', data.sliderdark);
         document.documentElement.style.setProperty('--radio-fill', data.radiofill);
         document.documentElement.style.setProperty('--timer-main', data.timermain);
-        console.log("SADNESS" + data.mainbgcolor);
     });
 }
 
@@ -83,6 +84,7 @@ function section_setup(section) {
     section.id = section.textContent.substring(2);
     section.addEventListener("click", function () {
         var content = this.nextElementSibling;
+        // change + and - when list is expanded vs. not expanded
         if (content.style.display === "block") {
             content.style.display = "none";
             this.textContent = this.textContent.replace('-', '+');
@@ -100,8 +102,6 @@ function add_todo_input() {
             if (event.which == 13) {
                 var content = $(this).val();
                 if (content != "") {
-                    //console.log(content);
-                    // if time: add more ors
 
                     // if it's a valid link
                     if (
@@ -178,6 +178,7 @@ function add_todo_input() {
                         }
                     });
 
+                    // update task_counter
                     task_counter++;
                 }
             }
@@ -185,6 +186,7 @@ function add_todo_input() {
     });
 }
 
+// add blocked links to Website Blocker Tab
 $("#add-blocked").focus(function () {
     $(this).keypress(function (event) {
         if (event.which == 13) {
@@ -277,6 +279,7 @@ function get_message(work) {
     }
 }
 
+// Display meet dates for each class list
 function meet_setup() {
     $('.submit').off('click');
     $('.submit').click(function () {
@@ -384,17 +387,6 @@ function displayTimeLeft(timeLeft) {
     displayOutput.textContent = displayString;
     update(timeLeft, pomodoro_work ? workTime : breakTime);
 }
-
-// function get_days(submit) {
-//     submit.addEventListener("click", function () {
-//         console.log(this.values);
-//     });
-// }
-
-// subs = document.getElementsByClassName("submit");
-// for (var i = 0; i < subs.length; i++) {
-//     get_days(subs[i]);
-// }
 
 // initialize the popup with saved data
 function pop_init() {
@@ -512,7 +504,7 @@ function pop_init() {
         }
     });
 
-    // FIX THIS
+    // New class list selection for user
     port.postMessage({ action: "Get classes", signature: "class_init" });
     port.onMessage.addListener(function (msg) {
         if (msg.signature === "class_init") {
@@ -554,6 +546,8 @@ function pop_init() {
 }
 
 var remove_class;
+
+// basic function that runs at the load-in stage
 $(document).ready(function () {
     pop_init();
 
@@ -642,6 +636,7 @@ $(document).ready(function () {
         }
     });
 
+    // pause button
     pauseBtn.addEventListener("click", pauseTimer);
     workInput.addEventListener("change", function timerReset() {
         if (document.getElementById("work-period").value < 0) {
@@ -660,6 +655,7 @@ $(document).ready(function () {
         }
     });
 
+    // break timer input
     breakInput.addEventListener("change", function timerReset() {
         if (document.getElementById("break-period").value < 0) {
             alert("Timer value must be greater than or equal to zero!");

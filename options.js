@@ -1,4 +1,4 @@
-
+// Light Mode
 var changeToLight = document.getElementById('lightbtn');
 changeToLight.addEventListener('click', function() {
         chrome.storage.sync.set({mainbgcolor: '#F2F2F2', elementcolor:'#ffffff', textcolor: '#404040', sliderlight: '#A7ACC6', sliderdark: '#4E598C', radiofill: '#f7a191', timermain: '#4E598C', pomodoroinput: 0}, function() {
@@ -7,7 +7,7 @@ changeToLight.addEventListener('click', function() {
         console.log('Let there be light!');
 });
 
-
+// Dark Mode
 var changeToDark = document.getElementById('darkbtn');
 changeToDark.addEventListener('click', function(){
   

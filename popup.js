@@ -3,6 +3,7 @@ var timeLeft;
 var port = chrome.runtime.connect({ name: "conn" });
 var pom_port = chrome.runtime.connect({ name: "pomodoro" });
 var task_counter = 0;
+var link_counter = 0;
 
 // top slider to change tabs
 var slider = document.getElementById("choose-tab");
@@ -197,8 +198,14 @@ $("#add-blocked").focus(function () {
                 ) {
                     var has_spaces = $.trim(content).split(" ");
                     if (has_spaces.length == 1) {
-                        $(this).after('<br><a href=">' + content + '" target = "_blank">' + content + "</a>");
+                        if (!content.includes("http") || content.includes("https"))
+                            content = "http://" + content;
+                        $(this).after('<br><a href="' + content + '" target = "_blank">' + content + "</a>");
                         $(this).val("");
+                        port.postMessage({
+                            action: "Update links",
+                            link: content
+                        });
                     } else {
                         alert("Please enter only the link of the website you would like to block.");
                     }
@@ -207,25 +214,6 @@ $("#add-blocked").focus(function () {
                 else {
                     alert("Please enter a valid link.");
                 }
-                // add to background list
-                // var section_id = this.id;
-                // port.postMessage({
-                //     action: "Update tasks",
-                //     task: content,
-                //     checked: false,
-                //     section: section_id,
-                // });
-
-                // listener for removing items
-                // $(".remove").off("click");
-                // $(".remove").click(function () {
-                //     var to_be_removed = $(this).parentsUntil('div');
-                //     port.postMessage({ action: "Remove task", task: content, section: section_id });
-                //     $(to_be_removed[0]).prev().remove();
-                //     for (var i = 0; i < to_be_removed.length; i++) {
-                //         to_be_removed[i].remove();
-                //     }
-                // });
             }
         }
     });
@@ -545,6 +533,23 @@ function pop_init() {
             }
         }
     });
+    
+    // reload all existing links, if any
+    port.postMessage({ action: "Get links", signature: "pop_init_links" });
+    port.onMessage.addListener(function (msg) {
+        if (msg.signature === "pop_init_links") {
+            var link_list = msg.links;
+            console.log(link_list);
+            for (var i = link_list.length - 1; i >= 0; i--) {
+                // add list of links
+                var link_content = "";
+                link_content = ('<br><a href="' + link_list[i] + '" id="' + link_list[i] + '" target = "_blank">' + link_list[i] + "</a>");
+                $('#link-list').append(link_content);
+                link_counter++;
+            }
+        };
+    });
+    
     getTheme();
 }
 

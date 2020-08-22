@@ -118,7 +118,7 @@ function add_todo_input() {
                             $(this).val("");
                         } else {
                             to_add_to_list =
-                                '<br><label id="task' + task_counter + '"><input type="checkbox" class="task"></input><span>';
+                                '<br><label id="task' + task_counter + '" style="font-size:17px;"><input type="checkbox" class="task"></input><span>';
                             add_to_end = "</span></label>";
                             for (var i = 0; i < has_spaces.length; i++) {
                                 if (
@@ -147,7 +147,7 @@ function add_todo_input() {
                     else {
                         $(this).after(
                             '<br><label id="task' + task_counter
-                            + '"><input type="checkbox" class="task" id="checkbox'
+                            + '" style="font-size:17px;"><input type="checkbox" class="task" id="checkbox'
                             + task_counter + '"></input><span>'
                             + content +
                             '</span><input type = "button" class="remove" value ="&times"></input></label>'

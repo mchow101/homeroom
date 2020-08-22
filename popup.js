@@ -80,7 +80,7 @@ function section_setup(section) {
     } else {
         section.nextElementSibling.innerHTML = section.nextElementSibling.innerHTML +
             '<input type="text" id="' + section.textContent.substring(2) +
-            '" class="new-todo"  placeholder=" New todo item"></input>';
+            '" class="new-todo"  placeholder=" New todo item" style="font-size: 16px; "></input>';
     }
     section.id = section.textContent.substring(2);
     section.addEventListener("click", function () {

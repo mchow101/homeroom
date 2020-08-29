@@ -1,3 +1,6 @@
+// tab
+var currentTab = "1";
+
 // tasks
 var tasks = [];
 
@@ -49,12 +52,17 @@ chrome.identity.getProfileUserInfo(function (info) {
 
 // Sets timer to run in the background
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.get == "timer" && !sender.tab) sendResponse({ timeLeft: localTimeLeft, pomodoro_work: pomodoro_work, timer_running: timerRunning });
+  if (request.get == "timer" && !sender.tab) sendResponse({ timeLeft: localTimeLeft, pomodoro_work: pomodoro_work, timer_running: timerRunning, current: currentTab });
 });
 
 // Message handler
 chrome.runtime.onConnect.addListener(function (port) {
   port.onMessage.addListener(function (msg) {
+    // Change message
+    if (msg.action == "Change tab") {
+      currentTab = msg.tab;
+    }
+
     // Update tasks
     if (msg.action == "Update tasks") {
       var in_list = false;

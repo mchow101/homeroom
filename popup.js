@@ -16,6 +16,8 @@ slider.addEventListener("change", function () {
 
 // change tabs
 function changetab() {
+    port.postMessage({ action: "Change tab", tab: current });
+
     if (current.charAt(0) === '1') { // Tab #1
         document.getElementById("tasks").style.display = "block";
         document.getElementById("classes").style.display = "none";
@@ -37,7 +39,7 @@ function changetab() {
         document.getElementById("blocker").style.display = "none";
         set_task_list();
     }
- 
+
     else { // Tab #4
         document.getElementById("tasks").style.display = "none";
         document.getElementById("classes").style.display = "none";
@@ -391,7 +393,6 @@ function displayTimeLeft(timeLeft) {
 
 // initialize the popup with saved data
 function pop_init() {
-    changetab();
     port.postMessage({ action: "Get tasks", signature: "pop_init" });
     port.onMessage.addListener(function (msg) {
         if (msg.signature === "pop_init") {
@@ -469,8 +470,8 @@ function pop_init() {
             chrome.runtime.sendMessage({ get: "timer" }, function (response) {
                 timeLeft = response.timeLeft;
                 pomodoro_work = response.pomodoro_work;
-                port.postMessage( { action: "Get times", signature: "getting times" } );
-                port.onMessage.addListener(function(msg) {
+                port.postMessage({ action: "Get times", signature: "getting times" });
+                port.onMessage.addListener(function (msg) {
                     if (msg.signature === "getting times") {
                         workTime = msg.work_time * 60;
                         breakTime = msg.break_time * 60;
@@ -501,7 +502,13 @@ function pop_init() {
                         isPaused = true;
                     }
                 }
+
+                // set tab to last opened
+                current = response.current;
+                slider.value = current;
+                changetab();
             });
+
         }
     });
 
@@ -526,7 +533,7 @@ function pop_init() {
     //         }
     //     }
     // });
-    
+
     // reload all existing links, if any
     port.postMessage({ action: "Get links", signature: "pop_init_links" });
     port.onMessage.addListener(function (msg) {
@@ -542,7 +549,7 @@ function pop_init() {
             }
         };
     });
-    
+
     getTheme();
 }
 
@@ -593,7 +600,7 @@ $(document).ready(function () {
                 var content = $(this).val();
                 if (content != "") {
                     $("#class-list").prepend(
-                        '<h5 class="class-header" id="' + content + 
+                        '<h5 class="class-header" id="' + content +
                         '"><span>+ </span>' + content +
                         '</h5><div class="task-section lead"></div>'
                     );
